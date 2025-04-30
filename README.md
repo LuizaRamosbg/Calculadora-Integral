@@ -1,2 +1,8 @@
 # Estudo-Geral
-blahblah
+Avisos:
+
+
+Alterações:
+
+
+
