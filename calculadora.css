@@ -1,0 +1,59 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('imagens/background_teste.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-image: url('imagens/madeira_pixel.jpg');
+    border-radius: 10px;
+    box-shadow: 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .titulo{
+    background-color: rgb(66, 33, 20);
+    border-radius: 5px;
+    color: rgb(160, 89, 60);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  
+  input, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  input {
+    font-style: oblique;
+  }
+  
+  button {
+    background-color: #311a0f;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font: larger;
+    font-weight: bold;
+    color: rgb(160, 89, 60);
+    cursor: pointer;
+    border: none;
+  }
+  
+  button:hover {
+    background-color: #80503b;
+    color: rgb(66, 33, 20);
+  }
+  
+ 
