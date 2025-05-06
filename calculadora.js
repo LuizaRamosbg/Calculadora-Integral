@@ -37,16 +37,16 @@ function separarFuncao(){
     return termos;
   }
 
-function derivada1ordem(){
-
+function derivada1ordem(f, x, h = 1e-5) {
+  return (f(x + h) - f(x - h)) / (2 * h);
 }
 
-function derivada2ordem(){
-
+function derivada2ordem(f, x, h = 1e-5) {
+  return (f(x + h) - 2 * f(x) + f(x - h)) / (h * h);
 }
 
 function minmax(){
-
+  
 }
 
 function ptcritco(){
