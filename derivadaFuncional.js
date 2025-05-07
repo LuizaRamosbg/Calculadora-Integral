@@ -71,7 +71,6 @@ function calculadoraDerivadaIntegral() {
           expoente = true;
           break;
         default:
-          expoente = false;
           termoAtual += char; // Se o caractere não for um separador de termo, adiciona-o ao 'termoAtual'.
       }
     }
@@ -150,7 +149,7 @@ function calculadoraDerivadaIntegral() {
           break;
         case '+':
         case '-':
-          sinalExpoente = atual
+          if (encontrouPotencia) sinalExpoente = atual
           break;
         case '^':
           if (temX) encontrouPotencia = true
@@ -169,10 +168,6 @@ function calculadoraDerivadaIntegral() {
     let expoente = parseInt(expoenteStr === '' ? '1' : expoenteStr);
     if (isNaN(expoente)) expoente = 0;
     if (sinalExpoente === '-') expoente *= -1;
-
-    //console.log(expoenteStr)
-    //console.log(coeficiente)
-    //console.log(expoente)
 
     if (temX) {
       const novoCoeficiente = coeficiente * expoente;
