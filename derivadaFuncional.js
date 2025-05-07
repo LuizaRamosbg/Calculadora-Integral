@@ -44,23 +44,38 @@ function calculadoraDerivadaIntegral() {
   function separarFuncao(funcaoOriginal) {
     const termos = []; // Inicializa um array vazio para armazenar os termos separados.
     let termoAtual = ""; // Inicializa uma string vazia para construir o termo atual que está sendo lido.
+    let expoente = false
+
     for (let i = 0; i < funcaoOriginal.length; i++) { // Loop através de cada caractere da função original.
       const char = funcaoOriginal[i]; // Obtém o caractere atual.
-      if (i > 0 && (char === '+' || char === '-')) { // Se não for o primeiro caractere E o caractere atual for '+' ou '-' (indicando o início de um novo termo)...
-        termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
-        termoAtual = char; // Começa um novo 'termoAtual' com o sinal ('+' ou '-').
-      } else {
-        termoAtual += char; // Se o caractere não for um separador de termo, adiciona-o ao 'termoAtual'.
+
+      switch (char){
+        case '+':
+        case '-':
+          if(expoente){
+            termoAtual += char;
+            expoente = false;
+          } else {
+            termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
+            termoAtual = char; // Começa um novo 'termoAtual' com o sinal ('+' ou '-').
+          }
+          break;
+        case '(':
+
+          break;
+        case ')':
+          
+          break;
+        case '^':
+          termoAtual += char;
+          expoente = true;
+          break;
+        default:
+          expoente = false;
+          termoAtual += char; // Se o caractere não for um separador de termo, adiciona-o ao 'termoAtual'.
       }
     }
-    let termoSemEspacos = "";
-    for (let k = 0; k < termoAtual.length; k++) {
-        if (termoAtual[k] !== ' ') {
-            termoSemEspacos += termoAtual[k];
-        }
-    }
-    termos.push(termoAtual); // Adiciona o 'termoSemEspacos' ao array 'termos'.
-    console.log(termoAtual)
+    termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
     return termos; // Retorna o array 'termos' contendo os termos separados da função.
   }
   /**
@@ -122,41 +137,42 @@ function calculadoraDerivadaIntegral() {
       return sinalFinal + coefFinal + parteExp;
     }
 
-
-    if(termo[0] === '-') sinalCoeficiente = '-'
+    if (termo[0] === '-') sinalCoeficiente = '-'
     else sinalCoeficiente = '+'
     sinalExpoente = '+'
-    // Se não for uma expressão exponencial, tratamos como um polinômio
-    for (let i = 0; i < termo.length; i++) {
-      const char = termo[i];
-      console.log(char, i)
-      if (char === 'x') {
-        temX = true;
-      } else if (encontrouPotencia) {
-        expoenteStr += char;
-      } else if (temX && char === '^') {
-        encontrouPotencia = true;
-        switch (termo[i+1]){
-          case '-':
-            sinalExpoente = '-'
-            i++;
+
+    for (i = 0; i < termo.length; i++) {
+      atual = termo[i]
+
+      switch (atual) {
+        case 'x':
+          temX = true
           break;
-          case '+':
-            i++;
+        case '+':
+        case '-':
+          sinalExpoente = atual
           break;
-          default:
-        }
-      } else if (!temX && char !== ' ') {
-        coeficienteStr += char;
+        case '^':
+          if (temX) encontrouPotencia = true
+          break;
+        case '':
+          break;
+        default:
+          if (!temX) coeficienteStr += atual
+          if (encontrouPotencia) expoenteStr += atual
       }
     }
 
     let coeficiente = parseFloat(sinalCoeficiente + (coeficienteStr === '' ? '1' : coeficienteStr));
     if (isNaN(coeficiente)) coeficiente = sinalCoeficiente === '-' ? -1 : 1;
-
+    
     let expoente = parseInt(expoenteStr === '' ? '1' : expoenteStr);
     if (isNaN(expoente)) expoente = 0;
     if (sinalExpoente === '-') expoente *= -1;
+
+    //console.log(expoenteStr)
+    //console.log(coeficiente)
+    //console.log(expoente)
 
     if (temX) {
       const novoCoeficiente = coeficiente * expoente;
