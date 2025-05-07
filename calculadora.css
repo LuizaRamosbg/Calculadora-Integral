@@ -15,7 +15,7 @@
     max-width: 600px;
     margin: 40px auto;
     padding: 20px;
-    background-image: url('imagens/madeira_pixel.jpg');
+    background-size: 100%;
     border-radius: 10px;
     box-shadow: 10px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -26,6 +26,15 @@
     border-radius: 5px;
     color: rgb(160, 89, 60);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+
+  .pokedex{
+    background-image: url('imagens/pokedex_vermelha_simples.jpg');
+    background-size: 100%;
+    background-size: cover;       
+    background-position: center;  
+    background-repeat: no-repeat;  
+      
   }
   
   input, button {
