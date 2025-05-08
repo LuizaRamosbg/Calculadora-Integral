@@ -56,12 +56,12 @@ function calculadoraDerivadaIntegral() {
             termoAtual += char;
             expoente = false;
           } else {
-            termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
+            if (termoAtual !== '') termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
             termoAtual = char; // Começa um novo 'termoAtual' com o sinal ('+' ou '-').
           }
           break;
         case '(':
-
+          
           break;
         case ')':
           
@@ -71,10 +71,12 @@ function calculadoraDerivadaIntegral() {
           expoente = true;
           break;
         default:
+          expoente = false;
           termoAtual += char; // Se o caractere não for um separador de termo, adiciona-o ao 'termoAtual'.
       }
     }
     termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
+
     return termos; // Retorna o array 'termos' contendo os termos separados da função.
   }
   /**
@@ -131,7 +133,6 @@ function calculadoraDerivadaIntegral() {
       let sinalFinal = derivadaCoef < 0 ? '-' : '';
       let coefFinal = Math.abs(derivadaCoef) === 1 ? '' : Math.abs(derivadaCoef);
 
-      // Agora a parte exponencial deve ser corrigida
       let parteExp = 'e^' + (b < 0 ? '(' + b + 'x)' : b === 1 ? 'x' : b + 'x');
       return sinalFinal + coefFinal + parteExp;
     }
@@ -154,7 +155,7 @@ function calculadoraDerivadaIntegral() {
         case '^':
           if (temX) encontrouPotencia = true
           break;
-        case '':
+        case ' ':
           break;
         default:
           if (!temX) coeficienteStr += atual
@@ -180,11 +181,9 @@ function calculadoraDerivadaIntegral() {
       } else {
         return novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x^' + novoExpoente;
       }
-    } else if (!temX && !isNaN(parseFloat(termo))) {
-      return '0';
-    }
-
-    return termo;
+    } 
+    
+    return '0';
   }
 
 
@@ -194,6 +193,7 @@ function calculadoraDerivadaIntegral() {
    */
   function calcularDerivadaPrimeiraOrdem(funcaoOriginal) {
     const termos = separarFuncao(funcaoOriginal); // Separa a função original em um array de termos.
+    console.log(termos)
     const derivadas = []; // Inicializa um array para armazenar as derivadas de cada termo.
     for (let i = 0; i < termos.length; i++) { // Loop através de cada termo.
       derivadas.push(derivarTermo(termos[i])); // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
@@ -202,11 +202,12 @@ function calculadoraDerivadaIntegral() {
     let resultado = ""; // Inicializa uma string vazia para construir a string da derivada resultante.
     for (let i = 0; i < derivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
       const derivada = derivadas[i]; // Obtém a derivada atual.
+      console.log(derivadas)
       if (derivada !== '0') { // Se a derivada não for zero...
         if (resultado.length > 0) { // E se já houver algo na string 'resultado' (não é o primeiro termo não-zero)...
           if (derivada[0] === '-') { // Se a derivada começa com um sinal de menos...
             resultado += ' - '; // ...adiciona " - " à string 'resultado'.
-            resultado += derivada.substring(1); // ...adiciona a derivada (sem o sinal de menos inicial) à string 'resultado'.
+            resultado += derivada.substring(1);
           } else { // Se a derivada for positiva...
             resultado += ' + '; // ...adiciona " + " à string 'resultado'.
             resultado += derivada; // ...adiciona a derivada à string 'resultado'.
