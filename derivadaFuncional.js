@@ -94,6 +94,7 @@ function calculadoraDerivadaIntegral() {
     let sinalExpoente
     let temParenteses = false
     let parenteses = ''
+    let qtdParenteses = 0
 
     // Identificando o padrão e^(bx)
     let i = 0;
@@ -149,6 +150,7 @@ function calculadoraDerivadaIntegral() {
 
       switch (atual) {
         case 'x':
+        case 'X':
           temX = true
           break;
         case '+':
@@ -160,11 +162,14 @@ function calculadoraDerivadaIntegral() {
           break;
         case '(':
           temParenteses = true
+          qtdParenteses++
           parenteses = atual
           do{
             i++
             parenteses += termo[i]
-          } while(termo[i] !== ')');
+            if(termo[i] === '(') qtdParenteses++
+            if(termo[i] === ')') qtdParenteses--
+          } while(qtdParenteses > 0);
           break;
         case ' ':
           break;
@@ -203,9 +208,10 @@ function calculadoraDerivadaIntegral() {
       }
 
       parenteses = parenteses.slice(1, -1)
+      if(parenteses.charAt(0) === '+') parenteses.slice(1)
 
-      res += ' ' + parenteses.charAt(0) === '+' || '-' ? parenteses.charAt(0) : '+' + ' ' + calcularDerivadaPrimeiraOrdem(parenteses)
-
+      res += ' * (' + calcularDerivadaPrimeiraOrdem(parenteses) + ')'
+      
       return res;
     }
     
