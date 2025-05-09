@@ -58,6 +58,7 @@
     border: 1px solid #ccc;
     border-width: 2px;
     border-color: black;
+    position: block;
   }
 
   input {
@@ -77,6 +78,7 @@
     font: larger;
     color: rgb(255, 249, 249);
     background-color:#f56868;
+    
   }
   
   button:hover {
