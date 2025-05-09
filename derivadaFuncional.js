@@ -288,9 +288,11 @@ function calculadoraDerivadaIntegral() {
     const funcao = obterFuncaoDoUsuario(); // Obtém a função inserida pelo usuário.
     const primeiraDerivada = calcularDerivadaPrimeiraOrdem(funcao); // Calcula a primeira derivada da função.
     console.log(`A primeira derivada é: ${primeiraDerivada}`); // Exibe a primeira derivada no console.
-    console.log(separarFuncao(primeiraDerivada))
-    const segundaDerivada = calcularDerivadaPrimeiraOrdem(primeiraDerivada); // Calcula a segunda derivada da função.
-    console.log(`A segunda derivada é: ${segundaDerivada}`); // Exibe a segunda derivada no console.
+    /*
+      console.log(separarFuncao(primeiraDerivada))
+      const segundaDerivada = calcularDerivadaPrimeiraOrdem(primeiraDerivada); // Calcula a segunda derivada da função.
+      console.log(`A segunda derivada é: ${segundaDerivada}`); // Exibe a segunda derivada no console.
+    */
 
   }
 
