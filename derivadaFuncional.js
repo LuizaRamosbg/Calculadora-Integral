@@ -234,21 +234,21 @@ function calculadoraDerivadaIntegral() {
   function calcularDerivadaPrimeiraOrdem(funcaoOriginal) {
     const termos = separarFuncao(funcaoOriginal); // Separa a função original em um array de termos.
     const derivadas = []; // Inicializa um array para armazenar as derivadas de cada termo.
-    let produto 
+    let produto, i
 
-    for (let i = 0; i < termos.length; i++) { // Loop através de cada termo.
+    for (i = 0; i < termos.length; i++) { // Loop através de cada termo.
       if (termos[i].charAt(0) === '*') {
         produto = ''
         produto += derivadas[i-1] + ' ' + termos[i] + " + " + termos[i -1] + ` * ${derivarTermo(termos[i])}`
         derivadas[i-1] = '0'
         termos[i] = termos[i-1] + ' ' + termos[i]
         derivadas.push(produto)
-        break;
+        /*
         derivadas.push(derivarTermo(termos[i]))
         derivadas.push(termos[i + 1])
         derivadas.push(termos[i])
         derivadas.push(`* ${derivarTermo(termos[i + 1])}`)
-        i++
+        i++*/
       } else {
         derivadas.push(derivarTermo(termos[i])); // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
       }
