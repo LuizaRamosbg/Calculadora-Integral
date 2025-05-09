@@ -76,6 +76,7 @@ function calculadoraDerivadaIntegral() {
       }
       termoAtual += char; // Se o caractere não for um separador de termo, adiciona-o ao 'termoAtual'.
       //termoAtual = char; // Começa um novo 'termoAtual' com o sinal ('+' ou '-').
+      
     }
     termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
 
@@ -172,6 +173,7 @@ function calculadoraDerivadaIntegral() {
             if (termo[i] === ')') qtdParenteses--
           } while (qtdParenteses > 0);
           break;
+        case '*':
         case ' ':
           break;
         default:
@@ -225,7 +227,6 @@ function calculadoraDerivadaIntegral() {
     return '0';
   }
 
-
   /**
    * Calcula a derivada de primeira ordem da função inserida sem usar métodos restritos.
    * Retorna A string representando a primeira derivada.
@@ -233,10 +234,15 @@ function calculadoraDerivadaIntegral() {
   function calcularDerivadaPrimeiraOrdem(funcaoOriginal) {
     const termos = separarFuncao(funcaoOriginal); // Separa a função original em um array de termos.
     const derivadas = []; // Inicializa um array para armazenar as derivadas de cada termo.
+    let produto 
 
-    termos.push('')
-    for (let i = 0; i < termos.length - 1; i++) { // Loop através de cada termo.
-      if (termos[i + 1].charAt(0) === '*') {
+    for (let i = 0; i < termos.length; i++) { // Loop através de cada termo.
+      if (termos[i].charAt(0) === '*') {
+        produto = ''
+        produto += derivadas[i-1] + ' ' + termos[i] + " * " + termos[i -1] + `* ${derivarTermo(termos[i])}`
+        derivadas[i-1] = '0'
+        derivadas.push(produto)
+        break;
         derivadas.push(derivarTermo(termos[i]))
         derivadas.push(termos[i + 1])
         derivadas.push(termos[i])
@@ -245,7 +251,6 @@ function calculadoraDerivadaIntegral() {
       } else {
         derivadas.push(derivarTermo(termos[i])); // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
       }
-
     }
 
     let resultado = ""; // Inicializa uma string vazia para construir a string da derivada resultante.
