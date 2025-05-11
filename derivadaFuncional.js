@@ -284,6 +284,52 @@ function calculadoraDerivadaIntegral() {
     return resultado === "" ? "0" : resultado; // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
   }
 
+    function pontoCritico(primeiraDerivada) {
+    const pontosCriticos = [];
+    let expressaoComValor = '';
+    let primeiroX = false;
+    let temCritico = false;
+
+
+    for (let i = -10; i <= 10; i++) { // intervalo de busca
+        expressaoComValor = '';
+        if(primeiraDerivada[0] === 'x'){
+            primeiroX = true
+        }
+       
+
+        for (let j = 0; j < primeiraDerivada.length; j++) {
+            const char = primeiraDerivada[j];
+
+            if (char === 'x') {
+                if (primeiroX) {
+                    expressaoComValor += '('+i+')';// se começar com x faz a troca
+                    primeiroX = false;
+                } else {
+                    expressaoComValor += '*' + '('+i+')';// se tiver algum numero atras, faz a troca com o sinal de multiplicação
+                }
+            } else if (char === '^') {// troca o sinal '^' para '**' potencia
+                expressaoComValor += '**' + primeiraDerivada[j + 1];
+                j++;
+            } else {
+                expressaoComValor += char;
+            }
+        }
+
+        const resultado = eval(expressaoComValor);
+        if (Math.abs(resultado) < 0.00001) {// compara o resultado da conta com um valor bem proximo de 0;
+            let pontoCriticoArredondado = Math.trunc(i)// arredonda o valor
+            pontosCriticos.push(pontoCriticoArredondado);
+            temCritico = true;
+        }
+    }
+  if(temCritico){
+    console.log("Pontos Críticos:", pontosCriticos);
+    return pontosCriticos;
+  }
+  return "Ponto critico Indefinido";
+}
+
   /**
    * Calcula a derivada de primeira ordem da função inserida sem usar métodos restritos.
    * Retorna A string representando a primeira derivada.
@@ -308,6 +354,7 @@ function calculadoraDerivadaIntegral() {
     const funcao = obterFuncaoDoUsuario(); // Obtém a função inserida pelo usuário.
     const primeiraDerivada = calcularDerivada(funcao); // Calcula a primeira derivada da função.
     console.log(`A primeira derivada é: ${primeiraDerivada}`); // Exibe a primeira derivada no console.
+    const Xpc = pontoCritico(primeiraDerivada);
     /*
       console.log(separarFuncao(primeiraDerivada))
       const segundaDerivada = calcularDerivada(primeiraDerivada); // Calcula a segunda derivada da função.
