@@ -292,7 +292,7 @@ function calculadoraDerivadaIntegral() {
     function avaliarExpressao(expr, x) {// função para substituir o x na derivada
         let expressaoComValor = '';
         let primeiroX = false
-        let temMultiplicacao = false;
+  
 
         if (expr[0] === 'x') {
             primeiroX = true;
@@ -301,18 +301,13 @@ function calculadoraDerivadaIntegral() {
         for (let i = 0; i < expr.length; i++) {
             const char = expr[i];
 
-            if (char === '*') {
-                temMultiplicacao = true;
-            }
 
             if (char === 'x') {
                 if (primeiroX) {
                     expressaoComValor += `(${x})`;
                     primeiroX = false;
-                } else if (!temMultiplicacao) {
+                }  else {
                     expressaoComValor += `*(${x})`;
-                } else {
-                    expressaoComValor += `${x}`;
                 }
             } else if (char === '^') {
                 expressaoComValor += '**' + expr[i + 1];
@@ -322,6 +317,7 @@ function calculadoraDerivadaIntegral() {
             }
             
         }
+        
         return eval(expressaoComValor);
     }
 
