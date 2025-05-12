@@ -284,58 +284,92 @@ function calculadoraDerivadaIntegral() {
     return resultado === "" ? "0" : resultado; // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
   }
 
-    function pontoCritico(primeiraDerivada) {
+  function pontoCritico(primeiraDerivada) {
     const pontosCriticos = [];
-    let expressaoComValor = '';
-    let primeiroX = false;
     let temCritico = false;
-    let temMulti = false;
 
+    
+    function avaliarExpressao(expr, x) {// função para substituir o x na derivada
+        let expressaoComValor = '';
+        let primeiroX = false
+        let temMultiplicacao = false;
 
-    for (let i = -10; i <= 10; i++) { // intervalo de busca
-        expressaoComValor = '';
-        if(primeiraDerivada[0] === 'x'){
-            primeiroX = true
+        if (expr[0] === 'x') {
+            primeiroX = true;
         }
-       
 
-        for (let j = 0; j < primeiraDerivada.length; j++) {
-            const char = primeiraDerivada[j];
-            if(primeiraDerivada[j] === '*'){
-              temMulti = true;
+        for (let i = 0; i < expr.length; i++) {
+            const char = expr[i];
+
+            if (char === '*') {
+                temMultiplicacao = true;
             }
 
             if (char === 'x') {
                 if (primeiroX) {
-                    expressaoComValor += '('+i+')';// se começar com x faz a troca
+                    expressaoComValor += `(${x})`;
                     primeiroX = false;
-                } else if(!temMulti){
-                    expressaoComValor += '*' + '('+i+')';// se tiver algum numero atras, faz a troca com o sinal de multiplicação
+                } else if (!temMultiplicacao) {
+                    expressaoComValor += `*(${x})`;
+                } else {
+                    expressaoComValor += `${x}`;
                 }
-                else{
-                  expressaoComValor += i
-                }
-            } else if (char === '^') {// troca o sinal '^' para '**' potencia
-                expressaoComValor += '**' + primeiraDerivada[j + 1];
-                j++;
+            } else if (char === '^') {
+                expressaoComValor += '**' + expr[i + 1];
+                i++;
             } else {
                 expressaoComValor += char;
             }
+            
         }
+        return eval(expressaoComValor);
+    }
 
-        const resultado = eval(expressaoComValor);
-        if (Math.abs(resultado) < 0.00001) {// compara o resultado da conta com um valor bem proximo de 0;
-            let pontoCriticoArredondado = Math.trunc(i)// arredonda o valor
-            pontosCriticos.push(pontoCriticoArredondado);
+    // Esse Loop procura a troca de sinal das funções
+    for (let i = -10; i < 10; i++) {
+        const f1 = avaliarExpressao(primeiraDerivada, i);
+        const f2 = avaliarExpressao(primeiraDerivada, i + 1);
+
+        if (Math.abs(f1) < 0.00001) {
+            pontosCriticos.push(i);
+            temCritico = true;
+        } else if (f1 * f2 < 0) {
+            // Busca Binaria entre i e i+1
+            let ini = i;
+            let fim = i + 1;
+            let meio;
+            let fa = f1;
+            let fb = f2;
+
+            while ((fim - ini) > 0.00001) {
+                meio = (ini + fim) / 2;
+                const fm = avaliarExpressao(primeiraDerivada, meio);                
+
+                if (Math.abs(fm) < 0.00001) {
+                    break;
+                }
+
+                if (fa * fm < 0) {
+                    fim = meio;
+                    fb = fm;
+                } else {
+                    ini = meio;
+                    fa = fm;
+                }
+            }
+
+            pontosCriticos.push(((ini + fim) / 2).toFixed(2));
             temCritico = true;
         }
     }
-  if(temCritico){
-    console.log("Pontos Críticos:", pontosCriticos);
-    return pontosCriticos;
+
+    if (temCritico) {
+        console.log("Pontos Críticos:", pontosCriticos);
+        return pontosCriticos;
+    }
+
+    return console.log("Ponto crítico indefinido");
   }
-  return console.log("Ponto critico Indefinido");
-}
 
   /**
    * Calcula a derivada de primeira ordem da função inserida sem usar métodos restritos.
