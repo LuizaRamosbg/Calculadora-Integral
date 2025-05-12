@@ -289,36 +289,49 @@ function calculadoraDerivadaIntegral() {
     let temCritico = false;
 
     
-    function avaliarExpressao(expr, x) {// função para substituir o x na derivada
-        let expressaoComValor = '';
-        let primeiroX = false
-  
+    function avaliarExpressao(expr, x) {
+    let expressaoComValor = '';
 
-        if (expr[0] === 'x') {
-            primeiroX = true;
-        }
+    for (let i = 0; i < expr.length; i++) {
+        const char = expr[i];
 
-        for (let i = 0; i < expr.length; i++) {
-            const char = expr[i];
+        if (char === 'x') {
+            let precisaMultiplicar = false;
+            let comParenteses = false;
+            if (i > 0) {
+                const anterior = expr[i - 1];
 
-
-            if (char === 'x') {
-                if (primeiroX) {
-                    expressaoComValor += `(${x})`;
-                    primeiroX = false;
-                }  else {
-                    expressaoComValor += `*(${x})`;
+                // Verifica se o caractere anterior é um número ou ')'
+                if (
+                    (anterior >= '0' && anterior <= '9' || anterior === ')')
+                ) {
+                    precisaMultiplicar = true;
                 }
-            } else if (char === '^') {
-                expressaoComValor += '**' + expr[i + 1];
-                i++;
-            } else {
-                expressaoComValor += char;
+                else if(anterior === '('){
+                  comParenteses = true;
+                }
             }
-            
+
+            if (precisaMultiplicar) {
+                expressaoComValor += `*(${x})`;
+            } 
+            else if(comParenteses){
+              expressaoComValor += `${x}`
+            }
+            else {
+                expressaoComValor += `(${x})`;
+            }
+        } 
+        else if (char === '^') {
+            expressaoComValor += '**' + expr[i + 1];
+            i++;
+        } 
+        else {
+            expressaoComValor += char;
         }
-        
-        return eval(expressaoComValor);
+    }
+    
+    return eval(expressaoComValor);
     }
 
     // Esse Loop procura a troca de sinal das funções
