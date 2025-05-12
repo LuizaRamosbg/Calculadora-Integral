@@ -289,6 +289,7 @@ function calculadoraDerivadaIntegral() {
     let expressaoComValor = '';
     let primeiroX = false;
     let temCritico = false;
+    let temMulti = false;
 
 
     for (let i = -10; i <= 10; i++) { // intervalo de busca
@@ -300,13 +301,19 @@ function calculadoraDerivadaIntegral() {
 
         for (let j = 0; j < primeiraDerivada.length; j++) {
             const char = primeiraDerivada[j];
+            if(primeiraDerivada[j] === '*'){
+              temMulti = true;
+            }
 
             if (char === 'x') {
                 if (primeiroX) {
                     expressaoComValor += '('+i+')';// se começar com x faz a troca
                     primeiroX = false;
-                } else {
+                } else if(!temMulti){
                     expressaoComValor += '*' + '('+i+')';// se tiver algum numero atras, faz a troca com o sinal de multiplicação
+                }
+                else{
+                  expressaoComValor += i
                 }
             } else if (char === '^') {// troca o sinal '^' para '**' potencia
                 expressaoComValor += '**' + primeiraDerivada[j + 1];
@@ -327,7 +334,7 @@ function calculadoraDerivadaIntegral() {
     console.log("Pontos Críticos:", pontosCriticos);
     return pontosCriticos;
   }
-  return "Ponto critico Indefinido";
+  return console.log("Ponto critico Indefinido");
 }
 
   /**
