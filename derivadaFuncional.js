@@ -286,11 +286,7 @@ function calculadoraDerivadaIntegral() {
     return resultado === "" ? "0" : resultado; // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
   }
 
-  function calcularsegundaDerivada(funcaoOriginal) { // Repassa a function derivada 2 vezes -_-
-    let primeira = calcularDerivada(funcaoOriginal);
-    let segunda = calcularDerivada(primeira);
-    return segunda;
-  }    
+ 
 
   function avaliarExpressao(expr, x) {
     let expressaoComValor = '';
@@ -332,7 +328,6 @@ function calculadoraDerivadaIntegral() {
           expressaoComValor += char
       }
     }
-
     return eval(expressaoComValor)
   }
 
@@ -413,10 +408,10 @@ function calculadoraDerivadaIntegral() {
   function main() {
     const funcao = obterFuncaoDoUsuario(); // Obtém a função inserida pelo usuário.
     const primeiraDerivada = calcularDerivada(funcao); // Calcula a primeira derivada da função.
-    const segundaDerivada = calcularsegundaDerivada(funcao); // Calcula a segunda derivada da função.
     console.log(`A primeira derivada é: ${primeiraDerivada}`); // Exibe a primeira derivada no console.
-    console.log(`A segunda derivada é: ${segundaDerivada}`); // Exibe a segunda derivada da função.
     const Xpc = pontoCritico(primeiraDerivada); // Exibe o ponto crítico da função da função.
+    const segundaDerivada = calcularDerivada(primeiraDerivada);
+    console.log(`A segunda derivada é: ${segundaDerivada}`); // Exibe a segunda derivada da função.
     /*
       console.log(separarFuncao(primeiraDerivada))
       const segundaDerivada = calcularDerivada(primeiraDerivada); // Calcula a segunda derivada da função.
