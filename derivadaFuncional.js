@@ -283,64 +283,61 @@ function calculadoraDerivadaIntegral() {
     return resultado === "" ? "0" : resultado; // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
   }
 
+  function avaliarExpressao(expr, x) {
+    let expressaoComValor = '';
+
+    let char
+    let anterior
+    for (let i = 0; i < expr.length; i++) {
+      char = expr[i];
+
+      switch (char) {
+        case 'x':
+          if (i > 0) {
+            anterior = expr[i - 1];
+
+            // Verifica se o caractere anterior é um número ou ')'
+            if (anterior >= '0' && anterior <= '9' || anterior === ')') {
+              expressaoComValor += `*(${x})`
+            }
+            else if (anterior === '(') {
+              expressaoComValor += `${x}`
+            } else {
+              expressaoComValor += `(${x})`
+            }
+          }
+          break;
+        case '^':
+          expressaoComValor += '**' + expr[i + 1];
+          i++
+          break;
+        case '(':
+          anterior = expr[i - 1];
+
+          if (anterior >= '0' && anterior <= '9' || anterior === ')' || anterior === 'x') 
+            expressaoComValor += '*('
+          else 
+            expressaoComValor += char
+          break;
+        default:
+          expressaoComValor += char
+      }
+    }
+    
+    return eval(expressaoComValor)
+  }
+
   function pontoCritico(primeiraDerivada) {
     if (Number(primeiraDerivada) === 0) return console.log("Ponto crítico indefinido");
 
     const pontosCriticos = [];
     let temCritico = false;
 
-
-    function avaliarExpressao(expr, x) {
-      let expressaoComValor = '';
-
-      let char
-      let anterior
-      for (let i = 0; i < expr.length; i++) {
-        char = expr[i];
-
-        switch (char) {
-          case 'x':
-            let precisaMultiplicar = false;
-            let comParenteses = false;
-            if (i > 0) {
-              anterior = expr[i - 1];
-
-              // Verifica se o caractere anterior é um número ou ')'
-              if (anterior >= '0' && anterior <= '9' || anterior === ')') {
-                precisaMultiplicar = true;
-              }
-              else if (anterior === '(') {
-                comParenteses = true;
-              }
-            }
-
-            if (precisaMultiplicar) {
-              expressaoComValor += `*(${x})`;
-            }
-            else if (comParenteses) {
-              expressaoComValor += `${x}`
-            }
-            else {
-              expressaoComValor += `(${x})`;
-            }
-            break;
-          case '^':
-            expressaoComValor += '**' + expr[i + 1];
-            i++;
-            break;
-          default:
-            expressaoComValor += char;
-        }
-      }
-
-      return eval(expressaoComValor);
-    }
-
     // Esse Loop procura a troca de sinal das funções
     let f1, f2
     for (let i = -10; i < 10; i++) {
-      f1 = avaliarExpressao(primeiraDerivada, i);
-      f2 = avaliarExpressao(primeiraDerivada, i + 1);
+      f1 = avaliarExpressao(primeiraDerivada, i)
+      f2 = avaliarExpressao(primeiraDerivada, i + 1)
 
       if (Math.abs(f1) < 0.00001) {
         pontosCriticos.push(i);
@@ -356,18 +353,18 @@ function calculadoraDerivadaIntegral() {
 
         while ((fim - ini) > 0.00001) {
           meio = (ini + fim) / 2;
-          fm = avaliarExpressao(primeiraDerivada, meio);
+          fm = avaliarExpressao(primeiraDerivada, meio)
 
           if (Math.abs(fm) < 0.00001) {
             break;
           }
 
           if (fa * fm < 0) {
-            fim = meio;
-            fb = fm;
+            fim = meio
+            fb = fm
           } else {
-            ini = meio;
-            fa = fm;
+            ini = meio
+            fa = fm
           }
         }
 
