@@ -49,7 +49,7 @@ function calculadoraDerivadaIntegral() {
     let charAtual         // Guarda o caractere atual.
 
     for (let i = 0; i < funcaoOriginal.length; i++) { // Loop através de cada caractere da função original.
-      while (funcaoOriginal[0] === '(' && funcaoOriginal[funcaoOriginal.length-1] === ')')
+      while (funcaoOriginal[0] === '(' && funcaoOriginal[funcaoOriginal.length - 1] === ')')
         funcaoOriginal = funcaoOriginal.slice(1, -1) //remove redundâncias como (((2x^2))) -> 2x^2
 
       charAtual = funcaoOriginal[i]; // Obtém o caractere atual.
@@ -74,13 +74,13 @@ function calculadoraDerivadaIntegral() {
             if (funcaoOriginal[i] === ')') qtdParenteses-- // Ao encontrar o fim de um  parênteses decrementa a quantidade de parênteses
           } while (qtdParenteses > 0); // Repete enquanto tiver algum parênteses aberto
           charAtual = funcaoOriginal[i]
-          expoente = false 
+          expoente = false
           break;
         case '^':
-          expoente = true; 
+          expoente = true;
           break;
         default:
-          expoente = false; 
+          expoente = false;
       }
       termoAtual += charAtual; // Adiciona o caratere encontrado ao termo atual
 
@@ -201,8 +201,8 @@ function calculadoraDerivadaIntegral() {
     if (isNaN(expoenteOriginal)) expoenteOriginal = 0; // Caso algo errado tenha sido inserido reseta expoenteOriginal para 0
 
     // A regra do tombo é aplicada utilizando coeficienteOriginal e expoenteOriginal
-    const novoCoeficiente = coeficienteOriginal * expoenteOriginal; 
-    const novoExpoente = expoenteOriginal - 1; 
+    const novoCoeficiente = coeficienteOriginal * expoenteOriginal;
+    const novoExpoente = expoenteOriginal - 1;
 
     if (temX) { // Tratamento para quando o termo tem um x
       if (novoExpoente === 0) {
@@ -226,7 +226,7 @@ function calculadoraDerivadaIntegral() {
 
       if (conteudoParenteses.charAt(0) === '+') conteudoParenteses.slice(1); // Se o conteúdo do parenteses começar com um + (pode ser omitido), o retira
 
-      let derivadaParenteses = calcularDerivadaPrimeiraOrdem(conteudoParenteses) // Guarda o valor da derivada do parênteses(g'(x))
+      let derivadaParenteses = calcularDerivada(conteudoParenteses) // Guarda o valor da derivada do parênteses(g'(x))
       if (separarFuncao(derivadaParenteses).length > 1 || res !== '') derivadaParenteses = '(' + derivadaParenteses + ')' // Caso a derivada do parênteses tenha mais de um termo ou f(g(x)) não seja vazio, adiciona coloca a derivada do parênteses em um parênteses
 
       if (temPotencia) res += ' * ' // Caso não haja potência, ou seja, o resultado é somente um número, não e adicionado o ' * ' para que a vizualização fique melhor
@@ -285,96 +285,101 @@ function calculadoraDerivadaIntegral() {
   }
 
   function pontoCritico(primeiraDerivada) {
+    if (Number(primeiraDerivada) === 0) return console.log("Ponto crítico indefinido");
+
     const pontosCriticos = [];
     let temCritico = false;
 
-    
+
     function avaliarExpressao(expr, x) {
-    let expressaoComValor = '';
+      let expressaoComValor = '';
 
-    for (let i = 0; i < expr.length; i++) {
-        const char = expr[i];
+      let char
+      let anterior
+      for (let i = 0; i < expr.length; i++) {
+        char = expr[i];
 
-        if (char === 'x') {
+        switch (char) {
+          case 'x':
             let precisaMultiplicar = false;
             let comParenteses = false;
             if (i > 0) {
-                const anterior = expr[i - 1];
+              anterior = expr[i - 1];
 
-                // Verifica se o caractere anterior é um número ou ')'
-                if (
-                    (anterior >= '0' && anterior <= '9' || anterior === ')')
-                ) {
-                    precisaMultiplicar = true;
-                }
-                else if(anterior === '('){
-                  comParenteses = true;
-                }
+              // Verifica se o caractere anterior é um número ou ')'
+              if (anterior >= '0' && anterior <= '9' || anterior === ')') {
+                precisaMultiplicar = true;
+              }
+              else if (anterior === '(') {
+                comParenteses = true;
+              }
             }
 
             if (precisaMultiplicar) {
-                expressaoComValor += `*(${x})`;
-            } 
-            else if(comParenteses){
+              expressaoComValor += `*(${x})`;
+            }
+            else if (comParenteses) {
               expressaoComValor += `${x}`
             }
             else {
-                expressaoComValor += `(${x})`;
+              expressaoComValor += `(${x})`;
             }
-        } 
-        else if (char === '^') {
+            break;
+          case '^':
             expressaoComValor += '**' + expr[i + 1];
             i++;
-        } 
-        else {
+            break;
+          default:
             expressaoComValor += char;
         }
-    }
-    
-    return eval(expressaoComValor);
+      }
+
+      return eval(expressaoComValor);
     }
 
     // Esse Loop procura a troca de sinal das funções
+    let f1, f2
     for (let i = -10; i < 10; i++) {
-        const f1 = avaliarExpressao(primeiraDerivada, i);
-        const f2 = avaliarExpressao(primeiraDerivada, i + 1);
+      f1 = avaliarExpressao(primeiraDerivada, i);
+      f2 = avaliarExpressao(primeiraDerivada, i + 1);
 
-        if (Math.abs(f1) < 0.00001) {
-            pontosCriticos.push(i);
-            temCritico = true;
-        } else if (f1 * f2 < 0) {
-            // Busca Binaria entre i e i+1
-            let ini = i;
-            let fim = i + 1;
-            let meio;
-            let fa = f1;
-            let fb = f2;
+      if (Math.abs(f1) < 0.00001) {
+        pontosCriticos.push(i);
+        temCritico = true;
+      } else if (f1 * f2 < 0) {
+        // Busca Binaria entre i e i+1
+        let ini = i;
+        let fim = i + 1;
+        let meio;
+        let fa = f1;
+        let fb = f2;
+        let fm
 
-            while ((fim - ini) > 0.00001) {
-                meio = (ini + fim) / 2;
-                const fm = avaliarExpressao(primeiraDerivada, meio);                
+        while ((fim - ini) > 0.00001) {
+          meio = (ini + fim) / 2;
+          fm = avaliarExpressao(primeiraDerivada, meio);
 
-                if (Math.abs(fm) < 0.00001) {
-                    break;
-                }
+          if (Math.abs(fm) < 0.00001) {
+            break;
+          }
 
-                if (fa * fm < 0) {
-                    fim = meio;
-                    fb = fm;
-                } else {
-                    ini = meio;
-                    fa = fm;
-                }
-            }
-
-            pontosCriticos.push(((ini + fim) / 2).toFixed(2));
-            temCritico = true;
+          if (fa * fm < 0) {
+            fim = meio;
+            fb = fm;
+          } else {
+            ini = meio;
+            fa = fm;
+          }
         }
+
+        pontosCriticos.push(Number(meio.toFixed(2)));
+        temCritico = true;
+      }
     }
 
     if (temCritico) {
-        console.log("Pontos Críticos:", pontosCriticos);
-        return pontosCriticos;
+      console.log("Pontos Críticos:", pontosCriticos);
+      return pontosCriticos;
     }
 
     return console.log("Ponto crítico indefinido");
