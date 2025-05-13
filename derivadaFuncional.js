@@ -68,8 +68,8 @@ function calculadoraDerivadaIntegral() {
         case '(': // Ao encontrar o início de um parênteses colocorá todo o seu conteúdo em um único termo
           qtdParenteses++ // Incrementa a quantidade de parênteses
           do {
-            termoAtual += funcaoOriginal[i] // Adciona o próximo termo do parênteses
-            i++                             // Incrementa i para continuar verificar o próximo termo
+            termoAtual += funcaoOriginal[i]                // Adciona o próximo termo do parênteses
+            i++                                            // Incrementa i para continuar verificar o próximo termo
             if (funcaoOriginal[i] === '(') qtdParenteses++ // Ao encontrar um ínicio de um novo parênteses incrementa a quantidade de parênteses
             if (funcaoOriginal[i] === ')') qtdParenteses-- // Ao encontrar o fim de um  parênteses decrementa a quantidade de parênteses
           } while (qtdParenteses > 0); // Repete enquanto tiver algum parênteses aberto
@@ -99,15 +99,15 @@ function calculadoraDerivadaIntegral() {
     while(termo[0] === '(' && termo[termo.length-1] === ')') 
       termo = termo.slice(1, -1)*/
 
-    let sinalCoeficiente = "" // Guarda o sinal do coeficiente do termo
-    let coeficienteStr = ""   // Guarda o valor do coeficiente do termo
-    let temX = false          // Guarda se o termo tem um x ou não
-    let temPotencia = false   // Guarda se o termo tem uma potência ou não
-    let sinalExpoente = ""    // Guarda o sinal do expoente do termo
-    let expoenteStr = ""      // Guarda o valor do expoente do termo
-    let temParenteses = false // Guarda se o termo tem um parênteses ou não
-    let conteudoParenteses = ''       // Gurda o conteúdo de um parênteses encontrado
-    let qtdParenteses = 0     // Guarda quantos parênteses estão abertos
+    let sinalCoeficiente = ""   // Guarda o sinal do coeficiente do termo
+    let coeficienteStr = ""     // Guarda o valor do coeficiente do termo
+    let temX = false            // Guarda se o termo tem um x ou não
+    let temPotencia = false     // Guarda se o termo tem uma potência ou não
+    let sinalExpoente = ""      // Guarda o sinal do expoente do termo
+    let expoenteStr = ""        // Guarda o valor do expoente do termo
+    let temParenteses = false   // Guarda se o termo tem um parênteses ou não
+    let conteudoParenteses = '' // Gurda o conteúdo de um parênteses encontrado
+    let qtdParenteses = 0       // Guarda quantos parênteses estão abertos
 
     // Identificando o padrão e^(bx)
     let i = 0;
@@ -250,8 +250,7 @@ function calculadoraDerivadaIntegral() {
 
     for (i = 0; i < termos.length; i++) { // Loop através de cada termo.
       if (termos[i].charAt(0) === '*') { // Caso o termo atual(g(x)) começe com um '*' aplica a regra do produdo com ele e o termo anterior(f(x))
-        produto = '' // Inicia produto vazio
-        produto += `(${derivadas[i - 1]} ${termos[i]} + ${termos[i - 1]} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
+        produto = `(${derivadas[i - 1]} ${termos[i]} + ${termos[i - 1]} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
         derivadas[i - 1] = '0' // Zera a derivada anterior para que não seja repetida
         termos[i] = termos[i - 1] + ' ' + termos[i] // Transforma o termo atual em f(x) * g(x) para corresponder com sua derivada
         derivadas.push(produto) // Adiciona a nova derivada de f(x) * g(x) em derivadas
