@@ -18,19 +18,23 @@ function calculadoraDerivadaIntegral() {
    */
   function limparTermo(termo) {
     let resultado = ""; // Inicializa uma string vazia para armazenar o resultado limpo.
-    let inicio = 0; // Define o índice inicial para começar a busca por caracteres não-espaço.
-    let fim = termo.length - 1; // Define o índice final para começar a busca por caracteres não-espaço a partir do final.
 
-    while (inicio <= fim && termo[inicio] === ' ') { // Enquanto o índice inicial for menor ou igual ao final E o caractere no índice inicial for um espaço...
-      inicio++; // ...avança o índice inicial para encontrar o primeiro caractere não-espaço.
-    }
-
-    while (fim >= inicio && termo[fim] === ' ') { // Enquanto o índice final for maior ou igual ao inicial E o caractere no índice final for um espaço...
-      fim--; // ...retrocede o índice final para encontrar o último caractere não-espaço.
-    }
-
-    for (let i = inicio; i <= fim; i++) { // Loop através da string original, do primeiro caractere não-espaço ao último.
-      resultado += termo[i]; // Adiciona cada caractere não-espaço à string 'resultado'.
+    for (let i = 0; i < termo.length; i++) {
+      charAtual = termo[i]
+      switch (charAtual) {
+        case ' ':
+          break;
+        case 'X':
+          resultado += 'x'
+          break;
+        case '-':
+        case '+':
+        case '*':
+          resultado += charAtual + ' '
+          break;
+        default:
+          resultado += charAtual
+      }
     }
 
     return resultado; // Retorna a string 'resultado' que contém o termo sem espaços nas extremidades.
@@ -55,8 +59,8 @@ function calculadoraDerivadaIntegral() {
       charAtual = funcaoOriginal[i]; // Obtém o caractere atual.
 
       switch (charAtual) {
-        case '+':
         case '-':
+        case '+':
           if (expoente) {
             expoente = false; // Quando um sinal foi encontrado no expoente não inicia um termo novo
             break;
@@ -95,9 +99,6 @@ function calculadoraDerivadaIntegral() {
    * Retorna A derivada do termo.
    */
   function derivarTermo(termo) {
-    /*
-    while(termo[0] === '(' && termo[termo.length-1] === ')') 
-      termo = termo.slice(1, -1)*/
 
     let sinalCoeficiente = ""   // Guarda o sinal do coeficiente do termo
     let coeficienteStr = ""     // Guarda o valor do coeficiente do termo
@@ -250,7 +251,9 @@ function calculadoraDerivadaIntegral() {
 
     for (i = 0; i < termos.length; i++) { // Loop através de cada termo.
       if (termos[i].charAt(0) === '*') { // Caso o termo atual(g(x)) começe com um '*' aplica a regra do produdo com ele e o termo anterior(f(x))
-        produto = `(${derivadas[i - 1]} ${termos[i]} + ${termos[i - 1]} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
+        produto = `(${derivadas[i - 1]} ${termos[i]} `
+        produto += (termos[i - 1].charAt(0) !== '+' && termos[i - 1].charAt(0) !== '-') ? "+ " : ''
+        produto += `${termos[i - 1]} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
         derivadas[i - 1] = '0' // Zera a derivada anterior para que não seja repetida
         termos[i] = termos[i - 1] + ' ' + termos[i] // Transforma o termo atual em f(x) * g(x) para corresponder com sua derivada
         derivadas.push(produto) // Adiciona a nova derivada de f(x) * g(x) em derivadas
@@ -314,16 +317,16 @@ function calculadoraDerivadaIntegral() {
         case '(':
           anterior = expr[i - 1];
 
-          if (anterior >= '0' && anterior <= '9' || anterior === ')' || anterior === 'x') 
+          if (anterior >= '0' && anterior <= '9' || anterior === ')' || anterior === 'x')
             expressaoComValor += '*('
-          else 
+          else
             expressaoComValor += char
           break;
         default:
           expressaoComValor += char
       }
     }
-    
+
     return eval(expressaoComValor)
   }
 
