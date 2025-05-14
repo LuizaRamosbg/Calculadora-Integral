@@ -389,6 +389,9 @@ function MaxeMin(segundaDerivada, Xpc) {
   let maximos = [];
   let minimos = [];
   let inflexao = [];
+  if(!Xpc){
+  return null;
+}
   for (let i = 0; i < Xpc.length; i++) {
     let valor = Number(avaliarExpressao(segundaDerivada, Xpc[i]));
     if (valor > 0) {
@@ -434,9 +437,11 @@ function MaxeMin(segundaDerivada, Xpc) {
     const segundaDerivada = calcularDerivada(primeiraDerivada);
     console.log(`A segunda derivada é: ${segundaDerivada}`); // Exibe a segunda derivada da função.
     const MaxMin = MaxeMin(segundaDerivada, Xpc);
+    if(MaxMin){
     MaxMin.minimos.length > 0 ? console.log(`Ponto min: ${MaxMin.minimos}`) : null;
     MaxMin.inflexao.length > 0 ? console.log(`Ponto de inflexão: ${MaxMin.inflexao}`) : null;   
     MaxMin.maximos.length > 0 ? console.log(`Ponto max: ${MaxMin.maximos}`) : null;
+  }
     
     
 
