@@ -353,7 +353,7 @@ function calculadoraDerivadaIntegral() {
       if (Math.abs(f1) < 0.00001) {
         existe = false;
         for(let j = 0; j < pontosCriticos.length; j++){// Verifica se o ponto no intervalo i. ja foi adicionado
-          if (Math.abs(pontosCriticos[j] - i) < 0.0001){
+          if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 0.0001){
             existe = true;
             break;
           }
@@ -378,10 +378,6 @@ function calculadoraDerivadaIntegral() {
           meio = (ini + fim) / 2;
           fm = avaliarExpressao(primeiraDerivada, meio)
 
-          if (Math.abs(fm) < 0.00001) {
-            break;
-          }
-
           if (fa * fm < 0) {
             fim = meio
             fb = fm
@@ -393,7 +389,7 @@ function calculadoraDerivadaIntegral() {
 
         existe = false;
         for(let j = 0; j < pontosCriticos.length; j++){ // Verifica se o ponto meio já está muito próximo de algum ponto já encontrado se sim evita que seja adicionado o mesmo Ponto critico
-          if(Math.abs(pontosCriticos[j] - meio) < 0.00001){
+          if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 0.0001){
             existe = true;
             break;
           }
@@ -404,8 +400,8 @@ function calculadoraDerivadaIntegral() {
       }
       }
     }
-    for(let i = 0; i < pontoCritico.length; i++){// Evita aparecer [-0] no ponto critico
-      if(Math.abs(pontosCriticos[i] === 0)){
+    for(let i = 0; i < pontosCriticos.length; i++){// Evita aparecer [-0] no ponto critico
+      if(pontosCriticos[i] === 0){
         pontosCriticos[i] = 0;
     }
     }
