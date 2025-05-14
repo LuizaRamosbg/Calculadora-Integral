@@ -341,23 +341,34 @@ function calculadoraDerivadaIntegral() {
   function pontoCritico(primeiraDerivada) {
     if (Number(primeiraDerivada) === 0) return console.log("Ponto crítico indefinido");
 
-    const pontosCriticos = [];
+    let pontosCriticos = [];
     let temCritico = false;
-
+    let existe;
     // Esse Loop procura a troca de sinal das funções
     let f1, f2
-    for (let i = -10; i < 10; i++) {
+    for (let i = -10; i < 10; i+= 0.1) {
       f1 = avaliarExpressao(primeiraDerivada, i)
-      f2 = avaliarExpressao(primeiraDerivada, i + 1)
+      f2 = avaliarExpressao(primeiraDerivada, i + 0.1)
 
       if (Math.abs(f1) < 0.00001) {
-        pontosCriticos.push(i);
-        temCritico = true;
+        existe = false;
+        for(let j = 0; j < pontosCriticos.length; j++){// Verifica se o ponto no intervalo i. ja foi adicionado
+          if (Math.abs(pontosCriticos[j] - i) < 0.0001){
+            existe = true;
+            break;
+          }
+        }
+        if(!existe){
+          pontosCriticos.push(Number(i.toFixed(4)))
+          temCritico = true;
+        }
+        
+        
       } 
       if (f1 * f2 < 0) {
         // Busca Binaria entre i e i+1
         let ini = i;
-        let fim = i + 1;
+        let fim = i + 0.1;
         let meio;
         let fa = f1;
         let fb = f2;
@@ -380,10 +391,25 @@ function calculadoraDerivadaIntegral() {
           }
         }
 
-        pontosCriticos.push(Number(meio.toFixed(2)));
+        existe = false;
+        for(let j = 0; j < pontosCriticos.length; j++){ // Verifica se o ponto meio já está muito próximo de algum ponto já encontrado se sim evita que seja adicionado o mesmo Ponto critico
+          if(Math.abs(pontosCriticos[j] - meio) < 0.00001){
+            existe = true;
+            break;
+          }
+        }
+        if(!existe){
+        pontosCriticos.push(Number(meio.toFixed(4)));// toFixed(4) pra melhorar a busca por numeros muito proximos
         temCritico = true;
       }
+      }
     }
+    for(let i = 0; i < pontoCritico.length; i++){// Evita aparecer [-0] no ponto critico
+      if(Math.abs(pontosCriticos[i] === 0)){
+        pontosCriticos[i] = 0;
+    }
+    }
+
 
     if (temCritico) {
       console.log("Pontos Críticos:", pontosCriticos);
@@ -413,7 +439,6 @@ function calculadoraDerivadaIntegral() {
       }
 
     }
-
 
     return { maximos, minimos, inflexao };
   }
