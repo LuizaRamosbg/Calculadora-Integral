@@ -385,6 +385,27 @@ function calculadoraDerivadaIntegral() {
     return console.log("Ponto crítico indefinido");
   }
 
+function MaxeMin(segundaDerivada, Xpc) {
+  let maximos = [];
+  let minimos = [];
+  let inflexao = [];
+  for (let i = 0; i < Xpc.length; i++) {
+    let valor = Number(avaliarExpressao(segundaDerivada, Xpc[i]));
+    if (valor > 0) {
+      minimos.push(Xpc[i]);
+    } 
+    else if (valor < 0) {
+      maximos.push(Xpc[i]);
+    }
+    else{
+      inflexao.push(Xpc[i]);
+    }
+    
+  }
+
+
+  return { maximos, minimos, inflexao };
+}
   /**
    * Calcula a derivada de primeira ordem da função inserida sem usar métodos restritos.
    * Retorna A string representando a primeira derivada.
@@ -412,6 +433,15 @@ function calculadoraDerivadaIntegral() {
     const Xpc = pontoCritico(primeiraDerivada); // Exibe o ponto crítico da função da função.
     const segundaDerivada = calcularDerivada(primeiraDerivada);
     console.log(`A segunda derivada é: ${segundaDerivada}`); // Exibe a segunda derivada da função.
+    const MaxMin = MaxeMin(segundaDerivada, Xpc);
+    MaxMin.minimos.length > 0 ? console.log(`Ponto min: ${MaxMin.minimos}`) : null;
+    MaxMin.inflexao.length > 0 ? console.log(`Ponto de inflexão: ${MaxMin.inflexao}`) : null;   
+    MaxMin.maximos.length > 0 ? console.log(`Ponto max: ${MaxMin.maximos}`) : null;
+    
+    
+
+
+    
     /*
       console.log(separarFuncao(primeiraDerivada))
       const segundaDerivada = calcularDerivada(primeiraDerivada); // Calcula a segunda derivada da função.
