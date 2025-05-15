@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="calculadora.css">
     <title>Calculadora</title>
 </head>
@@ -21,31 +24,35 @@
         </div>
                 
      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group me-2" role="group" aria-label="Numerais">
+        <div class="botoes btn-group me-2" role="group" aria-label="Numerais">
             <button type="button" class="btn " onclick="inserirInput(this)">1</button>
             <button type="button" class="btn " onclick="inserirInput(this)">2</button>
             <button type="button" class="btn " onclick="inserirInput(this)">3</button>
+            <button type="button" class="btn " onclick="inserirInput(this)">+</button>
+            
             <button type="button" class="btn " onclick="inserirInput(this)">4</button>
             <button type="button" class="btn " onclick="inserirInput(this)">5</button>
             <button type="button" class="btn " onclick="inserirInput(this)">6</button>
+            <button type="button" class="btn " onclick="inserirInput(this)">-</button>
+            
+
             <button type="button" class="btn " onclick="inserirInput(this)">7</button>
             <button type="button" class="btn " onclick="inserirInput(this)">8</button>
             <button type="button" class="btn " onclick="inserirInput(this)">9</button>
-            <button type="button" class="btn " onclick="inserirInput(this)">0</button>
-        </div>
-        <div class="row btn-group me-2" role="group" aria-label="Operadores">
-            <button type="button" class="btn " onclick="inserirInput(this)">+</button>
-            <button type="button" class="btn " onclick="inserirInput(this)">-</button>
             <button type="button" class="btn " onclick="inserirInput(this)">*</button>
+            
+            
+            
             <button type="button" class="btn " onclick="inserirInput(this)">/</button>
+            <button type="button" class="btn " onclick="inserirInput(this)">0</button>
             <button type="button" class="btn " onclick="inserirInput(this)">^</button>
             <button type="button" class="btn " onclick="inserirInput(this)">=</button>
+            
             <button type="button" class="btn " onclick="limpartexto()">C</button>
+            <button type="button" class="botao_calcular">Calcular</button>
             <button type="button" class="btn " onclick="apagar()">c</button>
         </div>
-        <div class="" role="group" aria-label="Botao_calcular">
-            <button type="button" class="botao_calcular">Calcular</button>
-        </div>
+        
     </div>
 
     <script>

@@ -1,9 +1,9 @@
 * {
-    box-sizing: border-box;
-  }
-  
+  box-sizing: border-box;
+}
+
   body {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Press Start 2P', cursive;
     margin: 0;
     padding: 0;
     background-image: url('imagens/background_teste.jpg');
@@ -12,6 +12,13 @@
     
     background-position: center;
   }
+  
+  .press-start-2p-regular {
+  font-family: "Press Start 2P", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  }
+
   
   .container {
     margin: 40px auto;
@@ -43,7 +50,7 @@
     margin-bottom: 4%;
     padding: 3%;
     border-radius: 5px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Press Start 2P', cursive;
     font-size: x-large;
     color: white;
     background-color:#c72929;
@@ -65,25 +72,15 @@
     font-style: oblique;
     width: 45%;
   }
-  
-  .botao_calcular {
-    width: 25%;
-    margin-top: 13.7%;
-    margin-left: 3.3%;
-    padding-top: 30px;
-    padding-bottom: 30px ;
-    cursor: pointer;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    font-weight: bold;
-    font: larger;
-    color: rgb(255, 249, 249);
-    background-color:#f56868;
-    
-  }
 
-.btn{
-  width: 30px;
-}
+   .botoes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+  
+
+
   
   button:hover {
     background-color: #771313;
