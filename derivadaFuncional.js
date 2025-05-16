@@ -1,3 +1,15 @@
+const termoLimpo = {
+  sinalCoeficiente: "",   // Guarda o sinal do coeficiente do termo
+  valorCoeficiente: "",   // Guarda o valor do coeficiente do termo
+  temX: false,            // Guarda se o termo tem um x ou não]
+  temParenteses: false,   // Guarda se o termo tem um parênteses ou não
+  conteudoParenteses: '', // Gurda o conteúdo de um parênteses encontrado
+  temPotencia: false,     // Guarda se o termo tem uma potência ou não
+  sinalExpoente: "",      // Guarda o sinal do expoente do termo
+  valorExpoente: "",      // Guarda o valor do expoente do termo
+  temProduto: false
+}
+
 function calculadoraDerivadaIntegral() {
   const prompt = require("prompt-sync")(); // Importa a biblioteca 'prompt-sync' para ler a entrada do usuário no terminal.
 
@@ -66,7 +78,7 @@ function calculadoraDerivadaIntegral() {
             break;
           }
         case '*':
-          if (termoAtual !== '') termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços no ínicio e fim) ao array 'termos'.
+          if (termoAtual !== '') termos.push(dissecaTermo(limparTermo(termoAtual))); // ...adiciona o 'termoAtual' (removendo quaisquer espaços no ínicio e fim) ao array 'termos'.
           termoAtual = '' // Inicia o próximo termo vazio
           break;
         case '(': // Ao encontrar o início de um parênteses colocorá todo o seu conteúdo em um único termo
@@ -89,80 +101,14 @@ function calculadoraDerivadaIntegral() {
       termoAtual += charAtual; // Adiciona o caratere encontrado ao termo atual
 
     }
-    termos.push(limparTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
+    termos.push(dissecaTermo(limparTermo(termoAtual))); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
 
     return termos; // Retorna o array 'termos' contendo os termos separados da função.
   }
 
-  function dissecaTermo(termo, valsTermo) {
-
-    let qtdParenteses = 0    // Guarda quantos parênteses estão abertos
-
-    if (termo[0] === '-') valsTermo.sinalCoeficiente = '-' // Se o termo começa com menos define o sinal como -
-    else valsTermo.sinalCoeficiente = '+'                  // Senão define o sinal como +
-    valsTermo.sinalExpoente = '+' // Inicia o sinal do expoente como +
-
-    let charAtual // Guarda o caractere atual
-    for (i = 0; i < termo.length; i++) {
-      charAtual = termo[i] // Obtém o caractere atual
-
-      switch (charAtual) {
-        case 'x':
-        case 'X':
-          valsTermo.temX = true // Ao encontrar um x atualiza temX
-          break;
-        case '+':
-        case '-':
-          if (valsTermo.temPotencia) valsTermo.sinalExpoente = charAtual // Ao encontrar um sinal após um ^ atualiza o sinal do expoente 
-          break;
-        case '^':
-          if (valsTermo.temX || valsTermo.temParenteses) valsTermo.temPotencia = true // Ao encontrar uma potência atualiza temPotencia
-          break;
-        case '(': // Ao encontrar o início de um parênteses colocorá seu conteúdo na variável conteudoParenteses
-          valsTermo.temParenteses = true // Atualiza temParenteses
-          qtdParenteses++      // Inicia a contagem de quantos parênteses estão abertos
-          valsTermo.conteudoParenteses = charAtual
-          do {
-            i++                                   // Avança para o próximo termo
-            valsTermo.conteudoParenteses += termo[i]        // Insere o termo atual em conteudoParenteses
-            if (termo[i] === '(') qtdParenteses++ // Ao encontrar um ínicio de um novo parênteses incrementa a quantidade de parênteses
-            if (termo[i] === ')') qtdParenteses-- // Ao encontrar o fim de um  parênteses decrementa a quantidade de parênteses
-          } while (qtdParenteses > 0); // Repete enquanto tiver algum parênteses aberto
-          break;
-        case '*':
-        case ' ':
-          break; // Ignora '*' e espaços vazios
-        default: // qualquer outro caractere será adicionado em valorCoeficiente ou valorExpoente
-          if (!valsTermo.temX && !valsTermo.temParenteses) valsTermo.valorCoeficiente += charAtual // Enquanto um x ou parênteses não tiver sido encontrado, adiciona em valorCoeficiente
-          if (valsTermo.temPotencia) valsTermo.valorExpoente += charAtual                // Após encontrar uma potência adiciona em valorExpoente
-      }
-    }
-
-    valsTermo.valorCoeficiente = parseFloat(valsTermo.sinalCoeficiente + (valsTermo.valorCoeficiente === '' ? '1' : valsTermo.valorCoeficiente)); // Adiciona o sinal e valor do coeficiente em uma váriável nova
-    if (isNaN(valsTermo.valorCoeficiente)) valsTermo.valorCoeficiente = valsTermo.sinalCoeficiente === '-' ? -1 : 1; // Caso algo errado tenha sido inserido reseta coeficienteOriginal para 1 ou -1
-
-    valsTermo.valorExpoente = parseInt(valsTermo.sinalExpoente + (valsTermo.valorExpoente === '' ? '1' : valsTermo.valorExpoente)); // Adiciona o sinal e valor do expoente em uma váriável nova
-    if (isNaN(valsTermo.valorExpoente)) valsTermo.valorExpoente = 0; // Caso algo errado tenha sido inserido reseta expoenteOriginal para 0
-  }
-
-  /**
-   * Deriva um único termo da função (considerando a regra do tombo para polinômios) sem usar métodos restritos.
-   * @param {string} termo O termo a ser derivado.
-   * Retorna A derivada do termo.
-   */
-  function derivarTermo(termo) {
-    let valsTermo = {
-      sinalCoeficiente: "",   // Guarda o sinal do coeficiente do termo
-      valorCoeficiente: "",   // Guarda o valor do coeficiente do termo
-      temX: false,            // Guarda se o termo tem um x ou não]
-      temParenteses: false,   // Guarda se o termo tem um parênteses ou não
-      conteudoParenteses: '', // Gurda o conteúdo de um parênteses encontrado
-      temPotencia: false,     // Guarda se o termo tem uma potência ou não
-      sinalExpoente: "",      // Guarda o sinal do expoente do termo
-      valorExpoente: ""       // Guarda o valor do expoente do termo
-    }
-    dissecaTermo(termo, valsTermo)
-    /*
+  function dissecaTermo(termo) {
+    let valsTermo = { ...termoLimpo }
+/*
         // Identificando o padrão e^(bx)
         let i = 0;
         let achouE = false;
@@ -208,11 +154,84 @@ function calculadoraDerivadaIntegral() {
           return sinalFinal + coefFinal + parteExp;
         }*/
 
-    // A regra do tombo é aplicada utilizando coeficienteOriginal e expoenteOriginal
-    const novoCoeficiente = valsTermo.valorCoeficiente * valsTermo.valorExpoente;
-    const novoExpoente = valsTermo.valorExpoente - 1;
+    let qtdParenteses = 0    // Guarda quantos parênteses estão abertos
 
-    if (valsTermo.temX) { // Tratamento para quando o termo tem um x
+    if (termo[0] === '-') valsTermo.sinalCoeficiente = '-' // Se o termo começa com menos define o sinal como -
+    else valsTermo.sinalCoeficiente = '+'                  // Senão define o sinal como +
+    valsTermo.sinalExpoente = '+' // Inicia o sinal do expoente como +
+
+    let charAtual // Guarda o caractere atual
+    for (i = 0; i < termo.length; i++) {
+      charAtual = termo[i] // Obtém o caractere atual
+
+      switch (charAtual) {
+        case '*':
+          valsTermo.temProduto = true
+          break;
+        case 'x':
+        case 'X':
+          valsTermo.temX = true // Ao encontrar um x atualiza temX
+          break;
+        case '+':
+        case '-':
+          if (valsTermo.temPotencia) valsTermo.sinalExpoente = charAtual // Ao encontrar um sinal após um ^ atualiza o sinal do expoente 
+          break;
+        case '^':
+          if (valsTermo.temX || valsTermo.temParenteses) valsTermo.temPotencia = true // Ao encontrar uma potência atualiza temPotencia
+          break;
+        case '(': // Ao encontrar o início de um parênteses colocorá seu conteúdo na variável conteudoParenteses
+          valsTermo.temParenteses = true // Atualiza temParenteses
+          qtdParenteses++      // Inicia a contagem de quantos parênteses estão abertos
+          valsTermo.conteudoParenteses = charAtual
+          do {
+            i++                                   // Avança para o próximo termo
+            valsTermo.conteudoParenteses += termo[i]        // Insere o termo atual em conteudoParenteses
+            if (termo[i] === '(') qtdParenteses++ // Ao encontrar um ínicio de um novo parênteses incrementa a quantidade de parênteses
+            if (termo[i] === ')') qtdParenteses-- // Ao encontrar o fim de um  parênteses decrementa a quantidade de parênteses
+          } while (qtdParenteses > 0); // Repete enquanto tiver algum parênteses aberto
+          break;
+        case '*':
+        case ' ':
+          break; // Ignora '*' e espaços vazios
+        default: // qualquer outro caractere será adicionado em valorCoeficiente ou valorExpoente
+          if (!valsTermo.temX && !valsTermo.temParenteses) valsTermo.valorCoeficiente += charAtual // Enquanto um x ou parênteses não tiver sido encontrado, adiciona em valorCoeficiente
+          if (valsTermo.temPotencia) valsTermo.valorExpoente += charAtual                // Após encontrar uma potência adiciona em valorExpoente
+      }
+    }
+
+    return valsTermo
+}
+
+  function montaTermo(termo) {
+    termoMontado = ` ${termo.sinalCoeficiente} ${termo.valorCoeficiente}`
+    if(termo.temX) {
+      termoMontado += "x"
+    } else if(termo.temParenteses){
+      termoMontado += termo.conteudoParenteses
+    }
+    if(termo.temPotencia){
+      termoMontado += '^' + (termo.sinalExpoente === '-' ? '-' : '') + termo.valorExpoente
+    }
+    return termoMontado
+  }
+
+  /**
+   * Deriva um único termo da função (considerando a regra do tombo para polinômios) sem usar métodos restritos.
+   * @param {string} termo O termo a ser derivado.
+   * Retorna A derivada do termo.
+   */
+  function derivarTermo(termo) {
+    let coeficienteOriginal = parseFloat(termo.sinalCoeficiente + (termo.valorCoeficiente === '' ? '1' : termo.valorCoeficiente)); // Adiciona o sinal e valor do coeficiente em uma váriável nova
+    if (isNaN(coeficienteOriginal)) coeficienteOriginal = termo.sinalCoeficiente === '-' ? -1 : 1; // Caso algo errado tenha sido inserido reseta coeficienteOriginal para 1 ou -1
+
+    expoenteOriginal = parseInt(termo.sinalExpoente + (termo.valorExpoente === '' ? '1' : termo.valorExpoente)); // Adiciona o sinal e valor do expoente em uma váriável nova
+    if (isNaN(expoenteOriginal)) expoenteOriginal = 0; // Caso algo errado tenha sido inserido reseta expoenteOriginal para 0
+  
+    // A regra do tombo é aplicada utilizando coeficienteOriginal e expoenteOriginal
+    const novoCoeficiente = coeficienteOriginal * expoenteOriginal;
+    const novoExpoente = expoenteOriginal - 1;
+
+    if (termo.temX) { // Tratamento para quando o termo tem um x
       if (novoExpoente === 0) {
         return novoCoeficiente === 0 ? '0' : '' + novoCoeficiente; // Se o novo expoente for 0 (x vai sumir) retorna somente o novo coeficiente
       } else if (novoExpoente === 1) {
@@ -220,24 +239,24 @@ function calculadoraDerivadaIntegral() {
       } else {
         return novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x^' + novoExpoente; // Senão retorna o novo coeficiente seguido de x seguido do expoente
       }
-    } else if (valsTermo.temParenteses) { // Tratamento para quando o termo tem um parênteses
+    } else if (termo.temParenteses) { // Tratamento para quando o termo tem um parênteses
       let res; // Variável para guarda o conteúdo do resultado f'(g(x)) * g'(x)
 
       if (novoExpoente === 0) {
         res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente; // Se o novo expoente for 0 (parenteses vai sumir) guarda somente o novo coeficiente
       } else if (novoExpoente === 1) {
-        res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + valsTermo.conteudoParenteses; // Se o novo expoente for 1 (pode ser omitido) guarda somente o novo coeficiente seguido do parênteses
+        res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + termo.conteudoParenteses; // Se o novo expoente for 1 (pode ser omitido) guarda somente o novo coeficiente seguido do parênteses
       } else {
-        res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + valsTermo.conteudoParenteses + '^' + novoExpoente; // Senão guarda o novo coeficiente seguido do parênteses seguido do expoente
+        res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + termo.conteudoParenteses + '^' + novoExpoente; // Senão guarda o novo coeficiente seguido do parênteses seguido do expoente
       }
       if (res === '1') res = '' // Se o resultado do tombo do parênteses for 1 (pode ser omitido) limpa res para que fique somente g'(x)
 
-      if (valsTermo.conteudoParenteses.charAt(0) === '+') valsTermo.conteudoParenteses.slice(1); // Se o conteúdo do parenteses começar com um + (pode ser omitido), o retira
+      if (termo.conteudoParenteses.charAt(0) === '+') termo.conteudoParenteses.slice(1); // Se o conteúdo do parenteses começar com um + (pode ser omitido), o retira
 
-      let derivadaParenteses = calcularDerivada(valsTermo.conteudoParenteses) // Guarda o valor da derivada do parênteses(g'(x))
+      let derivadaParenteses = calcularDerivada(termo.conteudoParenteses) // Guarda o valor da derivada do parênteses(g'(x))
       if (separarFuncao(derivadaParenteses).length > 1 || res !== '') derivadaParenteses = '(' + derivadaParenteses + ')' // Caso a derivada do parênteses tenha mais de um termo ou f(g(x)) não seja vazio, adiciona coloca a derivada do parênteses em um parênteses
 
-      if (valsTermo.temPotencia) res += ' * ' // Caso não haja potência, ou seja, o resultado é somente um número, não e adicionado o ' * ' para que a vizualização fique melhor
+      if (termo.temPotencia) res += ' * ' // Caso não haja potência, ou seja, o resultado é somente um número, não e adicionado o ' * ' para que a vizualização fique melhor
       res += derivadaParenteses // Adiciona a derivada do parênteses no resultado
 
       return res;
@@ -257,12 +276,17 @@ function calculadoraDerivadaIntegral() {
     let i
 
     for (i = 0; i < termos.length; i++) { // Loop através de cada termo.
-      if (termos[i].charAt(0) === '*') { // Caso o termo atual(g(x)) começe com um '*' aplica a regra do produdo com ele e o termo anterior(f(x))
-        produto = `(${derivadas[i - 1]} ${termos[i]} `
-        produto += (termos[i - 1].charAt(0) !== '+' && termos[i - 1].charAt(0) !== '-') ? "+ " : ''
-        produto += `${termos[i - 1]} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
-        derivadas[i - 1] = '0' // Zera a derivada anterior para que não seja repetida
-        termos[i] = termos[i - 1] + ' ' + termos[i] // Transforma o termo atual em f(x) * g(x) para corresponder com sua derivada
+      //console.log(termos[i])
+      if (termos[i].temProduto) { // Caso o termo atual(g(x)) começe com um '*' aplica a regra do produdo com ele e o termo anterior(f(x))
+        produto = `(${derivadas[i - 1]} *`
+        if (termos[i].sinalCoeficiente === '-'){
+          produto += `-(${montaTermo(termos[i]).slice(2)})`
+        } else {
+          produto += montaTermo(termos[i]).slice(2)
+        }
+        produto += `${montaTermo(termos[i - 1])} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
+        derivadas[i - 1] = '' // Zera a derivada anterior para que não seja repetida
+        termos[i] = dissecaTermo(`(${montaTermo(termos[i - 1])}${montaTermo(termos[i])})`) // Transforma o termo atual em f(x) * g(x) para corresponder com sua derivada
         derivadas.push(produto) // Adiciona a nova derivada de f(x) * g(x) em derivadas
       } else {
         derivadas.push(derivarTermo(termos[i])); // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
@@ -271,24 +295,7 @@ function calculadoraDerivadaIntegral() {
 
     let resultado = ""; // Inicializa uma string vazia para construir a string da derivada resultante.
     for (i = 0; i < derivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
-      const derivada = derivadas[i]; // Obtém a derivada atual.
-      if (derivada !== '0') { // Se a derivada não for zero...
-        if (resultado.length > 0) { // E se já houver algo na string 'resultado' (não é o primeiro termo não-zero)...
-          if (derivada[0] === '*') {
-            resultado += ' ' + derivada; // ...adiciona a derivada à string 'resultado'.
-          } else {
-            if (derivada[0] === '-') { // Se a derivada começa com um sinal de menos...
-              resultado += ' - '; // ...adiciona " - " à string 'resultado'.
-              resultado += derivada.substring(1);
-            } else { // Se a derivada for positiva...
-              resultado += ' + '; // ...adiciona " + " à string 'resultado'.
-              resultado += derivada; // ...adiciona a derivada à string 'resultado'.
-            }
-          }
-        } else { // Se for o primeiro termo não-zero...
-          resultado += derivada; // ...adiciona a derivada diretamente à string 'resultado'.
-        }
-      }
+      resultado += derivadas[i]; // ...adiciona a derivada diretamente à string 'resultado'.
     }
     return resultado === "" ? "0" : resultado; // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
   }
@@ -462,7 +469,7 @@ function calculadoraDerivadaIntegral() {
     const funcao = obterFuncaoDoUsuario(); // Obtém a função inserida pelo usuário.
     const primeiraDerivada = calcularDerivada(funcao); // Calcula a primeira derivada da função.
     console.log(`A primeira derivada é: ${primeiraDerivada}`); // Exibe a primeira derivada no console.
-    const Xpc = pontoCritico(primeiraDerivada); // Exibe o ponto crítico da função da função.
+    /*const Xpc = pontoCritico(primeiraDerivada); // Exibe o ponto crítico da função da função.
     const segundaDerivada = calcularDerivada(primeiraDerivada);
     console.log(`A segunda derivada é: ${segundaDerivada}`); // Exibe a segunda derivada da função.
     const MaxMin = MaxeMin(segundaDerivada, Xpc);
