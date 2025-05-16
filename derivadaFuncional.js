@@ -7,7 +7,7 @@ const termoLimpo = {
   temPotencia: false,     // Guarda se o termo tem uma potência ou não
   sinalExpoente: "",      // Guarda o sinal do expoente do termo
   valorExpoente: "",      // Guarda o valor do expoente do termo
-  temProduto: false
+  temProduto: false       // Guarda se o termo atual deve ter a regra doproduto aplicada
 }
 
 function calculadoraDerivadaIntegral() {
@@ -28,11 +28,11 @@ function calculadoraDerivadaIntegral() {
    * @param {string} termo O termo a ser limpo.
    * Retorna O termo sem espaços em branco nas extremidades.
    */
-  function limparTermo(termo) {
+  function limparFuncao(funcao) {
     let resultado = ""; // Inicializa uma string vazia para armazenar o resultado limpo.
 
-    for (let i = 0; i < termo.length; i++) { // Loop através de cada termo.
-      charAtual = termo[i] // Armazena o caractere atual.
+    for (let i = 0; i < funcao.length; i++) { // Loop através de cada termo.
+      charAtual = funcao[i] // Armazena o caractere atual.
       switch (charAtual) {
         case ' ':
           break;
@@ -42,7 +42,7 @@ function calculadoraDerivadaIntegral() {
         case '-':
         case '+':
         case '*':
-          resultado += charAtual + ' '
+          resultado += charAtual
           break;
         default:
           resultado += charAtual
@@ -61,14 +61,13 @@ function calculadoraDerivadaIntegral() {
     const termos = [];    // Inicializa um array vazio para armazenar os termos separados.
     let termoAtual = "";  // Inicializa uma string vazia para construir o termo atual que está sendo lido.
     let expoente = false  // Utilizado para impedir que um sinal digitado em um expoente seja visto como um novo termo
+    let multiplicacao = false
     let qtdParenteses = 0 // Conta quantos parênteses estão abertos em um dado momento
     let charAtual         // Guarda o caractere atual.
 
-    for (let i = 0; i < funcaoOriginal.length; i++) { // Loop através de cada caractere da função original.
-      while (funcaoOriginal[0] === '(' && funcaoOriginal[funcaoOriginal.length - 1] === ')')
-        funcaoOriginal = funcaoOriginal.slice(1, -1) //remove redundâncias como (((2x^2))) -> 2x^2
-
-      charAtual = funcaoOriginal[i]; // Obtém o caractere atual.
+    let funcaoLimpa = limparFuncao(funcaoOriginal)
+    for (let i = 0; i < funcaoLimpa.length; i++) { // Loop através de cada caractere da função original.
+      charAtual = funcaoLimpa[i]; // Obtém o caractere atual.
 
       switch (charAtual) {
         case '-':
@@ -77,86 +76,93 @@ function calculadoraDerivadaIntegral() {
             expoente = false; // Quando um sinal foi encontrado no expoente não inicia um termo novo
             break;
           }
-        case '*':
-          if (termoAtual !== '') termos.push(dissecaTermo(limparTermo(termoAtual))); // ...adiciona o 'termoAtual' (removendo quaisquer espaços no ínicio e fim) ao array 'termos'.
+          if (multiplicacao) {
+            multiplicacao = false
+            break;
+          }
+          if (termoAtual !== '') termos.push(dissecaTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços no ínicio e fim) ao array 'termos'.
           termoAtual = '' // Inicia o próximo termo vazio
           break;
         case '(': // Ao encontrar o início de um parênteses colocorá todo o seu conteúdo em um único termo
           qtdParenteses++ // Incrementa a quantidade de parênteses
           do {
-            termoAtual += funcaoOriginal[i]                // Adciona o próximo termo do parênteses
+            termoAtual += funcaoLimpa[i]                // Adciona o próximo termo do parênteses
             i++                                            // Incrementa i para continuar verificar o próximo termo
-            if (funcaoOriginal[i] === '(') qtdParenteses++ // Ao encontrar um ínicio de um novo parênteses incrementa a quantidade de parênteses
-            if (funcaoOriginal[i] === ')') qtdParenteses-- // Ao encontrar o fim de um  parênteses decrementa a quantidade de parênteses
+            if (funcaoLimpa[i] === '(') qtdParenteses++ // Ao encontrar um ínicio de um novo parênteses incrementa a quantidade de parênteses
+            if (funcaoLimpa[i] === ')') qtdParenteses-- // Ao encontrar o fim de um  parênteses decrementa a quantidade de parênteses
           } while (qtdParenteses > 0); // Repete enquanto tiver algum parênteses aberto
-          charAtual = funcaoOriginal[i]
+          charAtual = funcaoLimpa[i]
           expoente = false
           break;
         case '^':
           expoente = true;
           break;
+        case '*':
+          multiplicacao = true
+          if (termoAtual !== '') termos.push(dissecaTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços no ínicio e fim) ao array 'termos'.
+          termoAtual = '' // Inicia o próximo termo vazio
+          break;
         default:
           expoente = false;
+          multiplicacao = false
       }
       termoAtual += charAtual; // Adiciona o caratere encontrado ao termo atual
-
     }
-    termos.push(dissecaTermo(limparTermo(termoAtual))); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
-
+    termos.push(dissecaTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
     return termos; // Retorna o array 'termos' contendo os termos separados da função.
   }
 
   function dissecaTermo(termo) {
     let valsTermo = { ...termoLimpo }
-/*
-        // Identificando o padrão e^(bx)
-        let i = 0;
-        let achouE = false;
-        let coefStr = "";
-        while (i < termo.length) {
-          const c = termo[i];
-          if (c === 'e' && i + 1 < termo.length && termo[i + 1] === '^') {
-            achouE = true;
-            break;
-          }
-          coefStr += c;
-          i++;
-        }
-    
-        if (achouE) {
-          let coef = parseFloat(coefStr);
-          if (isNaN(coef)) {
-            coef = 1; // Se não há coeficiente explícito, consideramos 1.
-          }
-    
-          // Agora, extraímos o expoente
-          i += 2; // Pula o "e^"
-          let bStr = "";
-          let sinalExpoente = 1;
-          if (i < termo.length && (termo[i] === '-' || termo[i] === '+')) {
-            sinalExpoente = (termo[i] === '-') ? -1 : 1;
-            i++;
-          }
-          while (i < termo.length && termo[i] !== 'x') {
-            bStr += termo[i];
-            i++;
-          }
-    
-          let b = parseFloat(bStr);
-          if (isNaN(b)) b = 1;
-          b = b * sinalExpoente; // Considera o sinal negativo.
-    
-          let derivadaCoef = coef * b; // A derivada de e^(bx) é b * e^(bx)
-          let sinalFinal = derivadaCoef < 0 ? '-' : '';
-          let coefFinal = Math.abs(derivadaCoef) === 1 ? '' : Math.abs(derivadaCoef);
-    
-          let parteExp = 'e^' + (b < 0 ? '(' + b + 'x)' : b === 1 ? 'x' : b + 'x');
-          return sinalFinal + coefFinal + parteExp;
-        }*/
+    /*
+            // Identificando o padrão e^(bx)
+            let i = 0;
+            let achouE = false;
+            let coefStr = "";
+            while (i < termo.length) {
+              const c = termo[i];
+              if (c === 'e' && i + 1 < termo.length && termo[i + 1] === '^') {
+                achouE = true;
+                break;
+              }
+              coefStr += c;
+              i++;
+            }
+        
+            if (achouE) {
+              let coef = parseFloat(coefStr);
+              if (isNaN(coef)) {
+                coef = 1; // Se não há coeficiente explícito, consideramos 1.
+              }
+        
+              // Agora, extraímos o expoente
+              i += 2; // Pula o "e^"
+              let bStr = "";
+              let sinalExpoente = 1;
+              if (i < termo.length && (termo[i] === '-' || termo[i] === '+')) {
+                sinalExpoente = (termo[i] === '-') ? -1 : 1;
+                i++;
+              }
+              while (i < termo.length && termo[i] !== 'x') {
+                bStr += termo[i];
+                i++;
+              }
+        
+              let b = parseFloat(bStr);
+              if (isNaN(b)) b = 1;
+              b = b * sinalExpoente; // Considera o sinal negativo.
+        
+              let derivadaCoef = coef * b; // A derivada de e^(bx) é b * e^(bx)
+              let sinalFinal = derivadaCoef < 0 ? '-' : '';
+              let coefFinal = Math.abs(derivadaCoef) === 1 ? '' : Math.abs(derivadaCoef);
+        
+              let parteExp = 'e^' + (b < 0 ? '(' + b + 'x)' : b === 1 ? 'x' : b + 'x');
+              return sinalFinal + coefFinal + parteExp;
+            }*/
 
     let qtdParenteses = 0    // Guarda quantos parênteses estão abertos
 
-    if (termo[0] === '-') valsTermo.sinalCoeficiente = '-' // Se o termo começa com menos define o sinal como -
+    if (termo[0] === '-' || termo[1] === '-') valsTermo.sinalCoeficiente = '-' // Se o termo começa com menos define o sinal como -
     else valsTermo.sinalCoeficiente = '+'                  // Senão define o sinal como +
     valsTermo.sinalExpoente = '+' // Inicia o sinal do expoente como +
 
@@ -200,17 +206,25 @@ function calculadoraDerivadaIntegral() {
     }
 
     return valsTermo
-}
+  }
 
-  function montaTermo(termo) {
-    termoMontado = ` ${termo.sinalCoeficiente} ${termo.valorCoeficiente}`
-    if(termo.temX) {
+  function montaTermo(termo, primeiro = false, parenteses = false) {
+    termoMontado = termo.valorCoeficiente
+
+    if (termo.temX) {
       termoMontado += "x"
-    } else if(termo.temParenteses){
+    } else if (termo.temParenteses) {
       termoMontado += termo.conteudoParenteses
     }
-    if(termo.temPotencia){
+    if (termo.temPotencia) {
       termoMontado += '^' + (termo.sinalExpoente === '-' ? '-' : '') + termo.valorExpoente
+    }
+    if (!primeiro || termo.sinalCoeficiente === '-' && !parenteses)
+      termoMontado = ` ${termo.sinalCoeficiente} ${termoMontado}`
+
+    if (parenteses && termo.sinalCoeficiente === '-') {
+      console.log(termoMontado)
+      termoMontado = '(' + termo.sinalCoeficiente + termoMontado + ')'
     }
     return termoMontado
   }
@@ -226,7 +240,7 @@ function calculadoraDerivadaIntegral() {
 
     expoenteOriginal = parseInt(termo.sinalExpoente + (termo.valorExpoente === '' ? '1' : termo.valorExpoente)); // Adiciona o sinal e valor do expoente em uma váriável nova
     if (isNaN(expoenteOriginal)) expoenteOriginal = 0; // Caso algo errado tenha sido inserido reseta expoenteOriginal para 0
-  
+
     // A regra do tombo é aplicada utilizando coeficienteOriginal e expoenteOriginal
     const novoCoeficiente = coeficienteOriginal * expoenteOriginal;
     const novoExpoente = expoenteOriginal - 1;
@@ -278,15 +292,10 @@ function calculadoraDerivadaIntegral() {
     for (i = 0; i < termos.length; i++) { // Loop através de cada termo.
       //console.log(termos[i])
       if (termos[i].temProduto) { // Caso o termo atual(g(x)) começe com um '*' aplica a regra do produdo com ele e o termo anterior(f(x))
-        produto = `(${derivadas[i - 1]} *`
-        if (termos[i].sinalCoeficiente === '-'){
-          produto += `-(${montaTermo(termos[i]).slice(2)})`
-        } else {
-          produto += montaTermo(termos[i]).slice(2)
-        }
+        produto = `(${derivadas[i - 1]} * ${montaTermo(termos[i], true, true)}`
         produto += `${montaTermo(termos[i - 1])} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
         derivadas[i - 1] = '' // Zera a derivada anterior para que não seja repetida
-        termos[i] = dissecaTermo(`(${montaTermo(termos[i - 1])}${montaTermo(termos[i])})`) // Transforma o termo atual em f(x) * g(x) para corresponder com sua derivada
+        termos[i] = dissecaTermo(`(${montaTermo(termos[i - 1], true)}${montaTermo(termos[i])})`) // Transforma o termo atual em f(x) * g(x) para corresponder com sua derivada
         derivadas.push(produto) // Adiciona a nova derivada de f(x) * g(x) em derivadas
       } else {
         derivadas.push(derivarTermo(termos[i])); // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
@@ -353,25 +362,25 @@ function calculadoraDerivadaIntegral() {
     let existe;
     // Esse Loop procura a troca de sinal das funções
     let f1, f2
-    for (let i = -10; i < 10; i+= 0.1) {
+    for (let i = -10; i < 10; i += 0.1) {
       f1 = avaliarExpressao(primeiraDerivada, i)
       f2 = avaliarExpressao(primeiraDerivada, i + 0.1)
 
       if (Math.abs(f1) < 0.00001) {
         existe = false;
-        for(let j = 0; j < pontosCriticos.length; j++){// Verifica se o ponto no intervalo i. ja foi adicionado
-          if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 0.0001){
+        for (let j = 0; j < pontosCriticos.length; j++) {// Verifica se o ponto no intervalo i. ja foi adicionado
+          if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 0.0001) {
             existe = true;
             break;
           }
         }
-        if(!existe){
+        if (!existe) {
           pontosCriticos.push(Number(i.toFixed(4)))
           temCritico = true;
         }
-        
-        
-      } 
+
+
+      }
       if (f1 * f2 < 0) {
         // Busca Binaria entre i e i+1
         let ini = i;
@@ -395,22 +404,22 @@ function calculadoraDerivadaIntegral() {
         }
 
         existe = false;
-        for(let j = 0; j < pontosCriticos.length; j++){ // Verifica se o ponto meio já está muito próximo de algum ponto já encontrado se sim evita que seja adicionado o mesmo Ponto critico
-          if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 0.0001){
+        for (let j = 0; j < pontosCriticos.length; j++) { // Verifica se o ponto meio já está muito próximo de algum ponto já encontrado se sim evita que seja adicionado o mesmo Ponto critico
+          if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 0.0001) {
             existe = true;
             break;
           }
         }
-        if(!existe){
-        pontosCriticos.push(Number(meio.toFixed(4)));// toFixed(4) pra melhorar a busca por numeros muito proximos
-        temCritico = true;
-      }
+        if (!existe) {
+          pontosCriticos.push(Number(meio.toFixed(4)));// toFixed(4) pra melhorar a busca por numeros muito proximos
+          temCritico = true;
+        }
       }
     }
-    for(let i = 0; i < pontosCriticos.length; i++){// Evita aparecer [-0] no ponto critico
-      if(pontosCriticos[i] === 0){
+    for (let i = 0; i < pontosCriticos.length; i++) {// Evita aparecer [-0] no ponto critico
+      if (pontosCriticos[i] === 0) {
         pontosCriticos[i] = 0;
-    }
+      }
     }
 
 
