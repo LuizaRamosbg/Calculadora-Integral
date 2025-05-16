@@ -31,6 +31,16 @@ function calculadoraDerivadaIntegral() {
   function limparFuncao(funcao) {
     let resultado = ""; // Inicializa uma string vazia para armazenar o resultado limpo.
 
+    if(funcao[0] === '(' && funcao[funcao.length -1] === ')'){
+      let qtdParenteses = 0, i = 0
+      do {
+        if(funcao[i] === '(') qtdParenteses++
+        if(funcao[i] === ')') qtdParenteses--
+        i++
+      } while(qtdParenteses > 0)
+      if(i === funcao.length) funcao = funcao.slice(1, -1)
+    }
+
     for (let i = 0; i < funcao.length; i++) { // Loop através de cada termo.
       charAtual = funcao[i] // Armazena o caractere atual.
       switch (charAtual) {
@@ -64,7 +74,7 @@ function calculadoraDerivadaIntegral() {
     let multiplicacao = false
     let qtdParenteses = 0 // Conta quantos parênteses estão abertos em um dado momento
     let charAtual         // Guarda o caractere atual.
-
+    
     let funcaoLimpa = limparFuncao(funcaoOriginal)
     for (let i = 0; i < funcaoLimpa.length; i++) { // Loop através de cada caractere da função original.
       charAtual = funcaoLimpa[i]; // Obtém o caractere atual.
@@ -109,6 +119,7 @@ function calculadoraDerivadaIntegral() {
       termoAtual += charAtual; // Adiciona o caratere encontrado ao termo atual
     }
     termos.push(dissecaTermo(termoAtual)); // ...adiciona o 'termoAtual' (removendo quaisquer espaços internos) ao array 'termos'.
+    
     return termos; // Retorna o array 'termos' contendo os termos separados da função.
   }
 
@@ -222,10 +233,9 @@ function calculadoraDerivadaIntegral() {
     if (!primeiro || termo.sinalCoeficiente === '-' && !parenteses)
       termoMontado = ` ${termo.sinalCoeficiente} ${termoMontado}`
 
-    if (parenteses && termo.sinalCoeficiente === '-') {
-      console.log(termoMontado)
+    if (parenteses && termo.sinalCoeficiente === '-')
       termoMontado = '(' + termo.sinalCoeficiente + termoMontado + ')'
-    }
+
     return termoMontado
   }
 
@@ -290,7 +300,6 @@ function calculadoraDerivadaIntegral() {
     let i
 
     for (i = 0; i < termos.length; i++) { // Loop através de cada termo.
-      //console.log(termos[i])
       if (termos[i].temProduto) { // Caso o termo atual(g(x)) começe com um '*' aplica a regra do produdo com ele e o termo anterior(f(x))
         produto = `(${derivadas[i - 1]} * ${montaTermo(termos[i], true, true)}`
         produto += `${montaTermo(termos[i - 1])} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
@@ -304,7 +313,12 @@ function calculadoraDerivadaIntegral() {
 
     let resultado = ""; // Inicializa uma string vazia para construir a string da derivada resultante.
     for (i = 0; i < derivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
-      resultado += derivadas[i]; // ...adiciona a derivada diretamente à string 'resultado'.
+      if (derivadas[i] !== '') {
+        if (resultado === '')
+          resultado += montaTermo(dissecaTermo(derivadas[i]), true, true);
+        else
+          resultado += montaTermo(dissecaTermo(derivadas[i]))  // ...adiciona a derivada diretamente à string 'resultado'.
+      }
     }
     return resultado === "" ? "0" : resultado; // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
   }
