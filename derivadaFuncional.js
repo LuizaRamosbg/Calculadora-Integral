@@ -242,7 +242,7 @@ function calculadoraDerivadaIntegral() {
       termoMontado += '^' + (termo.sinalExpoente === '-' ? '-' : '') + termo.valorExpoente
     }
 
-    if (!primeiro || termo.sinalCoeficiente === '-' && !parenteses) // Adiciona o sinal no termo, exceto quando o termo é positivo e é o primeiro na expressão(pode ser omitido)
+    if (!primeiro && termo.sinalCoeficiente === '+' || termo.sinalCoeficiente === '-' && !parenteses) // Adiciona o sinal no termo, exceto quando o termo é positivo e é o primeiro na expressão(pode ser omitido)
       termoMontado = ` ${termo.sinalCoeficiente} ${termoMontado}`
 
     if (parenteses && termo.sinalCoeficiente === '-') // Adiciona o termo dentro de parênteses quando parenteses é verdadeiro e o termo é negativo 
@@ -329,7 +329,8 @@ function calculadoraDerivadaIntegral() {
         if (resultado === '')
           resultado += montaTermo(dissecaTermo(derivadas[i]), true) // Primeiro termo e sem parênteses
         else
-          resultado += montaTermo(dissecaTermo(derivadas[i]), false, true) // Não é o primeiro termo e com parênteses
+          resultado += montaTermo(dissecaTermo(derivadas[i])) // Não é o primeiro termo
+          //resultado += montaTermo(dissecaTermo(derivadas[i]), false, true) // Não é o primeiro termo e com parênteses
       }
     }
     return resultado === "" ? "0" : resultado // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
