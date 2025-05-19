@@ -1,92 +1,167 @@
 * {
   box-sizing: border-box;
 }
-
-  body {
-    font-family: 'Press Start 2P', cursive;
-    margin: 0;
-    padding: 0;
-    background-image: url('imagens/background_teste.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    
-    background-position: center;
+  :root {
+  --cor-fundo-claro: #f5e6c9;
+  --cor-fundo-escuro: #1c1c1c;
+  --cor-visor-claro: #fdf6e3;
+  --cor-visor-escuro: #2e2e2e;
+  --cor-texto-claro: #000;
+  --cor-texto-escuro: #fff;
   }
-  
+
   .press-start-2p-regular {
   font-family: "Press Start 2P", system-ui;
   font-weight: 400;
   font-style: normal;
   }
-
   
-  .container {
-    margin: 40px auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  body {
+    font-family: 'Press Start 2P', cursive;
+    background-image: url('imagens/background_teste.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     align-items: center;
-  }
-
-  .pokedex-img{
-    width: 50%;
-  }
-
-  .conjunto{
-    position: absolute;
-    top: 25%;  
-    left: 10%;
-    width: 80%;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-
+    display: flex;
+    padding-top: 100px;
+    margin-top: 100px;
   }
 
+  body.dark-mode {
+      background-image: url('imagens/background_darkmode.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center, fixed;
+      padding-top: 100px;
+      margin-top: 100px;
+      color: var(--cor-texto-escuro);
+    }
+
+  .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 12px;
+      z-index: 1000;
+    }
+
+  .pokeIcon{
+    width: 30px;
+  }
+  
   .titulo{
-    width: 45%;
-    margin-top: 10%;
-    margin-bottom: 4%;
-    padding: 3%;
+    margin: 0;
     border-radius: 5px;
     font-family: 'Press Start 2P', cursive;
-    font-size: x-large;
     color: white;
-    background-color:#c72929;
     box-shadow: black, 10px;
+  }
+  
+  .alternarModo {
+    position: fixed;
+    top: 80px;
+    right: 80px;
+    z-index: 1001;
+    background-color: transparent;
+  }
+  
+  .toggle-dark {
+       background-color: transparent;
+       border: none;
+       cursor: pointer;
+     }
+   
+   .toggle-dark:hover{
+     background-color: #2e2e2e6e;
+ 
+   }
+   .toggle-dark img {
+     width: 40px;
+     transition: transform 0.3s;
+   }
+ 
+   .toggle-dark img {
+     width: 40px;
+     transition: transform 0.3s;
+   }
+ 
+   .toggle-dark img.rotate {
+     transform: rotate(360deg);
+   }
+
+  .calculadora {
+    background-color: #df2f2f;
+    border: 5px solid #3b1c1c;
+    border-radius: 20px;
+    padding: 30px;
+    width: 600px;
+    box-shadow: 0 0 20px #000;
+    margin-bottom: 20px;
   }
   
   input, button {
     padding: 12px;
-    margin-top: 7%;
     font-size: 1rem;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid;
     border-width: 2px;
     border-color: black;
     position: block;
   }
 
   input {
-    font-style: oblique;
-    width: 45%;
+      background-color: var(--cor-visor-claro);
+      color: var(--cor-texto-claro);
+      font-size: 20px;
+      padding: 12px;
+      width: 100%;
+      text-align: right;
+      border: 2px solid #3b1c1c;
+      margin-bottom: 15px;
+      font-family: monospace;
+      border-radius: 6px;
   }
 
-   .botoes {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+  body.dark-mode input {
+      background-color: var(--cor-visor-escuro);
+      color: var(--cor-texto-escuro);
     }
-  
 
+  button {
+    padding: 15px;
+    background-color: #ecca8b;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
 
+  .botoes {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
   
   button:hover {
-    background-color: #771313;
+    background-color: #a13434;
     color: rgb(250, 233, 233);
     border-color: black;
     transform: scale(1.03);
   }
   
- 
+
+  .limpar {
+    background-color: #8e24aa;
+    color: white;
+  }
+
+  .igual {
+    background-color: #43a047;
+    color: white;
+  }
