@@ -1,15 +1,3 @@
-const termoLimpo = {
-  sinalCoeficiente: "+",  // Guarda o sinal do coeficiente do termo
-  valorCoeficiente: "",   // Guarda o valor do coeficiente do termo
-  temX: false,            // Guarda se o termo tem um x ou não]
-  temParenteses: false,   // Guarda se o termo tem um parênteses ou não
-  conteudoParenteses: '', // Gurda o conteúdo de um parênteses encontrado
-  temPotencia: false,     // Guarda se o termo tem uma potência ou não
-  sinalExpoente: "+",     // Guarda o sinal do expoente do termo
-  valorExpoente: "",      // Guarda o valor do expoente do termo
-  temProduto: false       // Guarda se o termo atual deve ter a regra doproduto aplicada
-}
-
 function calculadoraDerivadaIntegral() {
   const prompt = require("prompt-sync")() // Importa a biblioteca 'prompt-sync' para ler a entrada do usuário no terminal.
 
@@ -75,19 +63,19 @@ function calculadoraDerivadaIntegral() {
       switch (charAtual) {
         case '-':
         case '+':
-          if (funcaoLimpa[i-1] === '^' || funcaoLimpa[i-1] === '*') 
+          if (funcaoLimpa[i - 1] === '^' || funcaoLimpa[i - 1] === '*')
             break; // Se o ultimo caractere for um * ou ^ considera que o sinal é da multiplicação ou expoente, respectivamente
           if (termoAtual !== '') termos.push(dissecaTermo(termoAtual)) // adiciona o termoAtual como um termo dissecado.
           termoAtual = '' // Inicia o próximo termo vazio
           break;
         case 'x':
-          if(dissecaTermo(termoAtual).temParenteses){ // Se o termo atual já tem um parenteses, considera que são dois termos distintos se multiplicando
+          if (funcaoLimpa[i - 1] === ')') { // Se o termo atual já tem um parenteses, considera que são dois termos distintos se multiplicando
             termos.push(dissecaTermo(termoAtual)) // adiciona o termoAtual como um termo dissecado.
             termoAtual = '*' // Inicia o próximo termo com '*'
           }
-        break;
+          break;
         case '(': // Ao encontrar o início de um parênteses colocorá todo o seu conteúdo em um único termo
-          if(dissecaTermo(termoAtual).temX){ // Se o termo atual já tem um x, considera que são dois termos distintos se multiplicando
+          if (funcaoLimpa[i - 1] === 'x') { // Se o termo atual já tem um x, considera que são dois termos distintos se multiplicando
             termos.push(dissecaTermo(termoAtual)) // adiciona o termoAtual como um termo dissecado.
             termoAtual = '*' // Inicia o próximo termo com '*'
           }
@@ -107,10 +95,10 @@ function calculadoraDerivadaIntegral() {
           termoAtual = '' // Inicia o próximo termo vazio
           break;
         default:
-          if(funcaoLimpa[i-1] === 'x' || funcaoLimpa[i-1] === ')'){
+          if (funcaoLimpa[i - 1] === 'x' || funcaoLimpa[i - 1] === ')') {
             termos.push(dissecaTermo(termoAtual)) // adiciona o termoAtual como um termo dissecado.
             termoAtual = '*' // Inicia o próximo termo com '*'
-          } 
+          }
       }
       termoAtual += charAtual // Adiciona o caratere encontrado ao termo atual
     }
@@ -125,7 +113,18 @@ function calculadoraDerivadaIntegral() {
    * @returns {object}    Um objeto contendo todos os dados do termo
    */
   function dissecaTermo(termo) {
-    let valsTermo = { ...termoLimpo } // Inicia valsTermo como um termo com todos os dados zerados baseado em termoLimpo
+    let valsTermo = { // Inicia valsTermo como um termo com todos os dados zerados 
+      sinalCoeficiente: "+",  // Guarda o sinal do coeficiente do termo
+      valorCoeficiente: "",   // Guarda o valor do coeficiente do termo
+      temX: false,            // Guarda se o termo tem um x ou não]
+      temParenteses: false,   // Guarda se o termo tem um parênteses ou não
+      conteudoParenteses: '', // Gurda o conteúdo de um parênteses encontrado
+      temPotencia: false,     // Guarda se o termo tem uma potência ou não
+      sinalExpoente: "+",     // Guarda o sinal do expoente do termo
+      valorExpoente: "",      // Guarda o valor do expoente do termo
+      temProduto: false       // Guarda se o termo atual deve ter a regra doproduto aplicada
+    } 
+    if(termo === '' || termo === undefined) return {...valsTermo}
     /*
     // Identificando o padrão e^(bx)
     let i = 0
@@ -173,7 +172,7 @@ function calculadoraDerivadaIntegral() {
     }*/
 
     let qtdParenteses = 0 // Guarda quantos parênteses estão abertos
-
+    
     if (termo[0] === '-' || termo[0] === '*' && termo[1] === '-') valsTermo.sinalCoeficiente = '-' // Se o termo começa com menos define o sinal como -
 
     let charAtual // Guarda o caractere atual
@@ -214,12 +213,12 @@ function calculadoraDerivadaIntegral() {
       }
     }
 
-    if(isNaN(valsTermo.valorCoeficiente)) valsTermo.valorCoeficiente = '1' // Caso tenha algum erro no coeficiente, o reseta para 1
-    if(isNaN(valsTermo.valorExpoente)) { // Caso tenha algum erro no expoente, o reseta para 0 e atualiza temPotencia para falso
-      valsTermo.valorExpoente = '0' 
+    if (isNaN(valsTermo.valorCoeficiente)) valsTermo.valorCoeficiente = '1' // Caso tenha algum erro no coeficiente, o reseta para 1
+    if (isNaN(valsTermo.valorExpoente)) { // Caso tenha algum erro no expoente, o reseta para 0 e atualiza temPotencia para falso
+      valsTermo.valorExpoente = '0'
       valsTermo.temPotencia = false
     }
-    
+
     return valsTermo // Retorna o objeto contendo o termo dissecado
   }
 
@@ -322,15 +321,17 @@ function calculadoraDerivadaIntegral() {
         derivadas.push(derivarTermo(termos[i])) // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
       }
     }
-
+    
     let resultado = "" // Inicializa uma string vazia para construir a string da derivada resultante.
     for (i = 0; i < derivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
       if (derivadas[i] !== '') { // Disseca e monta cada termo derivado para correções na digitação
         if (resultado === '')
           resultado += montaTermo(dissecaTermo(derivadas[i]), true) // Primeiro termo e sem parênteses
-        else
+        else if (dissecaTermo(derivadas[i-1].temProduto)){
+          resultado += montaTermo(dissecaTermo(derivadas[i]), false, true) // Não é o primeiro termo e com parênteses
+        } else 
           resultado += montaTermo(dissecaTermo(derivadas[i])) // Não é o primeiro termo
-          //resultado += montaTermo(dissecaTermo(derivadas[i]), false, true) // Não é o primeiro termo e com parênteses
+        
       }
     }
     return resultado === "" ? "0" : resultado // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
