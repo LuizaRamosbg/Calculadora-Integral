@@ -99,7 +99,32 @@ function separarFuncao(funcaoOriginal) {
     return termos // Retorna o array 'termos' contendo os termos separados da função em forma de termo dissecado.
 }
 
+/**
+ * 
+ * @param {*} funcao 
+ * @param {*} separado 
+ */
+function simplificaFuncao(funcao, separado = false){
+    let termos, resultado, termoAtual
+    let i, j
+
+    if(!separado) {
+        termos = separarFuncao(funcao)
+    } else {
+        termos = funcao
+    }
+
+    for(i = 0; i < termos.length; i++){
+        termoAtual = termos[i]
+        for(j = i+1; j < termos.length; j++){
+            
+        }
+    }
+
+}
+
 module.exports = {
     limparFuncao,
-    separarFuncao
+    separarFuncao,
+    simplificaFuncao
 }

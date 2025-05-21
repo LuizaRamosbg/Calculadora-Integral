@@ -5,7 +5,8 @@ const {
 
 const {
     limparFuncao,
-    separarFuncao
+    separarFuncao,
+    simplificaFuncao
 } = require("./funcoes")
 /**
  * Deriva um único termo da função (considerando a regra do tombo para polinômios) sem usar métodos restritos.
@@ -92,6 +93,8 @@ function calcularDerivada(funcaoOriginal) {
                 resultado += montaTermo(termosDerivadas[i]) // Não é o primeiro termo
         }
     }
+
+    resultado = simplificaFuncao(resultado)
     return resultado === "" ? "0" : resultado // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
 }
 
