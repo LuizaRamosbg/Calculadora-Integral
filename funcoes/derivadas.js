@@ -82,15 +82,13 @@ function calcularDerivada(funcaoOriginal) {
     for (i = 0; i < derivadas.length; i++) {
         termosDerivadas.push(...separarFuncao(derivadas[i]))
     }
-
+    
     let resultado = "" // Inicializa uma string vazia para construir a string da derivada resultante.
     for (i = 0; i < termosDerivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
         if (termosDerivadas[i] !== '' && termosDerivadas !== '0') { // Disseca e monta cada termo derivado para correções na digitação
             if (resultado === '')
-                resultado += montaTermo(termosDerivadas[i], true) // Primeiro termo e sem parênteses
-            else if (termosDerivadas[i - 1].temProduto) {
-                resultado += montaTermo(termosDerivadas[i], false, true) // Não é o primeiro termo e com parênteses
-            } else
+                resultado += montaTermo(termosDerivadas[i], true) // Primeiro termo 
+            else
                 resultado += montaTermo(termosDerivadas[i]) // Não é o primeiro termo
         }
     }
