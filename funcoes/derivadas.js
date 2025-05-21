@@ -65,6 +65,7 @@ function derivarTermo(termo) {
 function calcularDerivada(funcaoOriginal) {
     const termos = separarFuncao(funcaoOriginal) // Separa a função original em um array de termos.
     const derivadas = [] // Inicializa um array para armazenar as derivadas de cada termo.
+    const termosDerivadas = [] // Inicializa um array para armazenar os termos da derivada.
     let produto // Guarda o produto de duas derivadas
     let i
 
@@ -78,17 +79,19 @@ function calcularDerivada(funcaoOriginal) {
             derivadas.push(derivarTermo(termos[i])) // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
         }
     }
+    for (i = 0; i < derivadas.length; i++) {
+        termosDerivadas.push(...separarFuncao(derivadas[i]))
+    }
 
     let resultado = "" // Inicializa uma string vazia para construir a string da derivada resultante.
-    for (i = 0; i < derivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
-        if (derivadas[i] !== '') { // Disseca e monta cada termo derivado para correções na digitação
+    for (i = 0; i < termosDerivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
+        if (termosDerivadas[i] !== '' && termosDerivadas !== '0') { // Disseca e monta cada termo derivado para correções na digitação
             if (resultado === '')
-                resultado += montaTermo(dissecaTermo(derivadas[i]), true) // Primeiro termo e sem parênteses
-            else if (dissecaTermo(derivadas[i - 1].temProduto)) {
-                resultado += montaTermo(dissecaTermo(derivadas[i]), false, true) // Não é o primeiro termo e com parênteses
+                resultado += montaTermo(termosDerivadas[i], true) // Primeiro termo e sem parênteses
+            else if (termosDerivadas[i - 1].temProduto) {
+                resultado += montaTermo(termosDerivadas[i], false, true) // Não é o primeiro termo e com parênteses
             } else
-                resultado += montaTermo(dissecaTermo(derivadas[i])) // Não é o primeiro termo
-
+                resultado += montaTermo(termosDerivadas[i]) // Não é o primeiro termo
         }
     }
     return resultado === "" ? "0" : resultado // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
