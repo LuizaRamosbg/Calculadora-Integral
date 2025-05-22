@@ -22,6 +22,13 @@ function calculadoraDerivadaIntegral() {
     return funcaoOriginal // Retorna a string da função inserida pelo usuário.
   }
 
+  function intervaloBusca() {
+    const intervaloMin = prompt("Digite o intervalo minimo da busca: ")
+    const intervaloMax = prompt("Digite o intervalo maximo da busca: ")
+
+    return { intervaloMin, intervaloMax }
+  }
+
   /**
    * Calcula a derivada de primeira ordem da função inserida sem usar métodos restritos.
    * Retorna A string representando a primeira derivada.
@@ -46,7 +53,8 @@ function calculadoraDerivadaIntegral() {
     const funcao = obterFuncaoDoUsuario() // Obtém a função inserida pelo usuário.
     const primeiraDerivada = calcularDerivada(funcao) // Calcula a primeira derivada da função.
     console.log(`A primeira derivada é: ${primeiraDerivada}`) // Exibe a primeira derivada no console.
-    const Xpc = pontoCritico(primeiraDerivada) // Exibe o ponto crítico da função da função.
+    const intervalo = intervaloBusca()
+    const Xpc = pontoCritico(primeiraDerivada, intervalo) // Exibe o ponto crítico da função da função.
     const segundaDerivada = calcularDerivada(primeiraDerivada)
     console.log(`A segunda derivada é: ${segundaDerivada}`) // Exibe a segunda derivada da função.
     const MaxMin = MaxeMin(segundaDerivada, Xpc)
