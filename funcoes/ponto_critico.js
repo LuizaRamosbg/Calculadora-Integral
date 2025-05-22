@@ -66,10 +66,10 @@ function pontoCritico(primeiraDerivada, intervalo = {intervaloMin: "-10", interv
         f1 = avaliarExpressao(primeiraDerivada, i)
         f2 = avaliarExpressao(primeiraDerivada, i + 0.1)
         
-        if (Math.abs(f1) < 0.00000000000000001) {
+        if (Math.abs(f1) < 0.00001) {
             existe = false
             for (let j = 0; j < pontosCriticos.length; j++) {// Verifica se o ponto no intervalo i. ja foi adicionado
-                if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 0.00000000000000001) {
+                if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 0.000001) {
                     existe = true
                     break;
                 }
@@ -90,7 +90,7 @@ function pontoCritico(primeiraDerivada, intervalo = {intervaloMin: "-10", interv
             let fb = f2
             let fm
 
-            while ((fim - ini) > 0.00000000000000001) {
+            while ((fim - ini) > 0.000001) {
                 meio = (ini + fim) / 2
                 fm = avaliarExpressao(primeiraDerivada, meio)
 
@@ -104,7 +104,7 @@ function pontoCritico(primeiraDerivada, intervalo = {intervaloMin: "-10", interv
             }
             existe = false
             for (let j = 0; j < pontosCriticos.length; j++) { // Verifica se o ponto meio já está muito próximo de algum ponto já encontrado se sim evita que seja adicionado o mesmo Ponto critico
-                if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 0.00000000000000001) {
+                if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 0.000001) {
                     existe = true
                     break;
                 }
