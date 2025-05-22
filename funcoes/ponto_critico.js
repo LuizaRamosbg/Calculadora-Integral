@@ -30,6 +30,16 @@ function avaliarExpressao(expr, x) {
                     }
                 }
                 break;
+            case 'e':
+                anterior = expr[i - 1]
+                if (anterior >= '0' && anterior <= '9' || anterior === ')') {
+
+                    expressaoComValor += '*' + Math.E.toFixed(2);
+                } else {
+
+                    expressaoComValor += Math.E.toFixed(2);
+                }
+                break;
             case '^':
                 expressaoComValor += '**' + expr[i + 1]
                 i++
@@ -54,7 +64,7 @@ function avaliarExpressao(expr, x) {
  * @param {*} primeiraDerivada 
  * @returns 
  */
-function pontoCritico(primeiraDerivada, intervalo = {intervaloMin: "-10", intervaloMax: "10"}) {
+function pontoCritico(primeiraDerivada, intervalo = { intervaloMin: "-10", intervaloMax: "10" }) {
     if (Number(primeiraDerivada) === 0) return console.log("Ponto crítico indefinido")
 
     let pontosCriticos = []
@@ -65,7 +75,7 @@ function pontoCritico(primeiraDerivada, intervalo = {intervaloMin: "-10", interv
     for (let i = Number(intervalo.intervaloMin); i < Number(intervalo.intervaloMax); i += 0.1) {
         f1 = avaliarExpressao(primeiraDerivada, i)
         f2 = avaliarExpressao(primeiraDerivada, i + 0.1)
-        
+
         if (Math.abs(f1) < 0.00001) {
             existe = false
             for (let j = 0; j < pontosCriticos.length; j++) {// Verifica se o ponto no intervalo i. ja foi adicionado
