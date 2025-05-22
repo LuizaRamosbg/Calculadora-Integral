@@ -73,9 +73,13 @@
     </div>
 
 
-
+    <script src="funcoes/termos.js"></script>
+    <script src="funcoes/ponto_critico.js"></script>
+    <script src="funcoes/funcoes.js"></script>
+    <script src="funcoes/derivadas.js"></script>
     <script src="derivadaFuncional.js"></script>
     <script src="calculadora.js"></script>
+    
     <script>
         function inserirInput(botao) {
             const visor = document.getElementById('funcao');
@@ -108,7 +112,7 @@
             const resultadoElemento = document.getElementById('resultado');
 
             try {
-                const resultado = calcularDerivada(entrada);
+                const resultado = calculadoraDerivadaIntegral(entrada);
                 console.log("Resultado da derivada:", resultado);
                 resultadoElemento.innerText = resultado;
             } catch (erro) {
