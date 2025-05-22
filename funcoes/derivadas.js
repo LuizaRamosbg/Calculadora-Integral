@@ -14,19 +14,28 @@ const {
  */
 function derivarTermo(termo) {
     // A regra do tombo é aplicada utilizando coeficienteOriginal e expoenteOriginal
-    const novoCoeficiente = termo.valorCoeficiente * termo.valorExpoente
-    const novoExpoente = termo.valorExpoente - 1
+    let novoCoeficiente 
+    let novoExpoente
+    if (!termo.temParentesesPot) {
+        novoCoeficiente = termo.coeficiente * termo.expoente
+        novoExpoente = termo.expoente - 1
+    } else {
+        novoCoeficiente = termo.expoente + termo.coeficiente
+        novoExpoente = "(" + termo.expoente + "-1)"
+    }
+
+    let res = "0" // Variável para guarda o conteúdo do resultado f'(g(x)) * g'(x)
 
     if (termo.temX) { // Tratamento para quando o termo tem um x
         if (novoExpoente === 0) {
-            return novoCoeficiente === 0 ? '0' : '' + novoCoeficiente // Se o novo expoente for 0 (x vai sumir) retorna somente o novo coeficiente
+            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente // Se o novo expoente for 0 (x vai sumir) retorna somente o novo coeficiente
         } else if (novoExpoente === 1) {
-            return novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x' // Se o novo expoente for 1 (pode ser omitido) retorna somente o novo coeficiente seguido de x
+            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x' // Se o novo expoente for 1 (pode ser omitido) retorna somente o novo coeficiente seguido de x
         } else {
-            return novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x^' + novoExpoente // Senão retorna o novo coeficiente seguido de x seguido do expoente
+            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x^' + novoExpoente // Senão retorna o novo coeficiente seguido de x seguido do expoente
         }
     } else if (termo.temParenteses) { // Tratamento para quando o termo tem um parênteses
-        let res // Variável para guarda o conteúdo do resultado f'(g(x)) * g'(x)
+        
 
         if (novoExpoente === 0) {
             res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente // Se o novo expoente for 0 (parenteses vai sumir) guarda somente o novo coeficiente
@@ -48,7 +57,11 @@ function derivarTermo(termo) {
         return res // Retorna o resultado da derivada completa
     }
 
-    return '0'
+    if(termo.temParentesesPot){
+        res += " * (" + calcularDerivada(termo.expoente) + ")"
+    }
+
+    return res
 }
 
 /**
