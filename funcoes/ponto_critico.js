@@ -46,7 +46,6 @@ function avaliarExpressao(expr, x) {
                 expressaoComValor += char
         }
     }
-    
     return eval(expressaoComValor)
 }
 

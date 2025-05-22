@@ -23,8 +23,14 @@ function calculadoraDerivadaIntegral() {
   }
 
   function intervaloBusca() {
-    const intervaloMin = prompt("Digite o intervalo minimo da busca: ")
-    const intervaloMax = prompt("Digite o intervalo maximo da busca: ")
+    let intervaloMin = (prompt("Digite o intervalo minimo da busca: "))
+    let intervaloMax = (prompt("Digite o intervalo maximo da busca: "))
+
+    if(isNaN(intervaloMin) || isNaN(intervaloMax) || intervaloMin === '' || intervaloMax === ''){
+      console.log("Valor inválido ou vazio para o intervalo mínimo ou máximo. Usando -10 a 10 como padrão.");
+      intervaloMin = "-10"
+      intervaloMax = "10"
+    }
 
     return { intervaloMin, intervaloMax }
   }
