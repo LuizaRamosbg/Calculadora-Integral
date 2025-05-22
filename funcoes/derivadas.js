@@ -13,15 +13,9 @@ const {
  * @returns {string} Rtorna a derivada do termo
  */
 function derivarTermo(termo) {
-    let coeficienteOriginal = parseFloat(termo.sinalCoeficiente + (termo.valorCoeficiente === '' ? '1' : termo.valorCoeficiente)) // Adiciona o sinal e valor do coeficiente em uma váriável nova
-    if (isNaN(coeficienteOriginal)) coeficienteOriginal = termo.sinalCoeficiente === '-' ? -1 : 1 // Caso algo errado tenha sido inserido reseta coeficienteOriginal para 1 ou -1
-
-    expoenteOriginal = parseInt(termo.sinalExpoente + (termo.valorExpoente === '' ? '1' : termo.valorExpoente)) // Adiciona o sinal e valor do expoente em uma váriável nova
-    if (isNaN(expoenteOriginal)) expoenteOriginal = 0 // Caso algo errado tenha sido inserido reseta expoenteOriginal para 0
-
     // A regra do tombo é aplicada utilizando coeficienteOriginal e expoenteOriginal
-    const novoCoeficiente = coeficienteOriginal * expoenteOriginal
-    const novoExpoente = expoenteOriginal - 1
+    const novoCoeficiente = termo.valorCoeficiente * termo.valorExpoente
+    const novoExpoente = termo.valorExpoente - 1
 
     if (termo.temX) { // Tratamento para quando o termo tem um x
         if (novoExpoente === 0) {
@@ -71,7 +65,7 @@ function calcularDerivada(funcaoOriginal) {
 
     for (i = 0; i < termos.length; i++) { // Loop através de cada termo.
         if (termos[i].temProduto) { // Caso o termo atual(g(x)) começe com um '*' aplica a regra do produdo com ele e o termo anterior(f(x))
-            produto = `(${derivadas[i - 1]} * ${montaTermo(termos[i], true, true)}${montaTermo(termos[i - 1])} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
+            produto = `(${derivadas[i - 1]}${montaTermo(termos[i], true, true)}${montaTermo(termos[i - 1])} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
             derivadas[i - 1] = '' // Zera a derivada anterior para que não seja repetida
             termos[i] = dissecaTermo(`(${montaTermo(termos[i - 1], true)}${montaTermo(termos[i])})`) // Transforma o termo atual em f(x) * g(x) para corresponder com sua derivada
             derivadas.push(produto) // Adiciona a nova derivada de f(x) * g(x) em derivadas
@@ -80,18 +74,17 @@ function calcularDerivada(funcaoOriginal) {
         }
     }
     for (i = 0; i < derivadas.length; i++) {
-        termosDerivadas.push(...separarFuncao(derivadas[i]))
+        if (derivadas[i] !== '' && derivadas[i] !== '0')
+            termosDerivadas.push(...separarFuncao(derivadas[i]))
     }
-    
     let resultado = "" // Inicializa uma string vazia para construir a string da derivada resultante.
     for (i = 0; i < termosDerivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
-        if (termosDerivadas[i] !== '' && termosDerivadas !== '0') { // Disseca e monta cada termo derivado para correções na digitação
-            if (resultado === '')
-                resultado += montaTermo(termosDerivadas[i], true) // Primeiro termo 
-            else
-                resultado += montaTermo(termosDerivadas[i]) // Não é o primeiro termo
-        }
+        if (resultado === '')
+            resultado += montaTermo(termosDerivadas[i], true) // Primeiro termo 
+        else
+            resultado += montaTermo(termosDerivadas[i]) // Não é o primeiro termo
     }
+    resultado = resultado.replaceAll("* +", "*")
     return resultado === "" ? "0" : resultado // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
 }
 
