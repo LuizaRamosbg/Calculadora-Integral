@@ -5,6 +5,7 @@
  * @param {*} x 
  * @returns 
  */
+
 function avaliarExpressao(expr, x) {
     let expressaoComValor = ''
 
@@ -45,6 +46,7 @@ function avaliarExpressao(expr, x) {
                 expressaoComValor += char
         }
     }
+    
     return eval(expressaoComValor)
 }
 
@@ -53,7 +55,7 @@ function avaliarExpressao(expr, x) {
  * @param {*} primeiraDerivada 
  * @returns 
  */
-function pontoCritico(primeiraDerivada) {
+function pontoCritico(primeiraDerivada, intervalo = {intervaloMin: "-10", intervaloMax: "10"}) {
     if (Number(primeiraDerivada) === 0) return console.log("Ponto crítico indefinido")
 
     let pontosCriticos = []
@@ -61,14 +63,14 @@ function pontoCritico(primeiraDerivada) {
     let existe
     // Esse Loop procura a troca de sinal das funções
     let f1, f2
-    for (let i = -10; i < 10; i += 0.1) {
+    for (let i = Number(intervalo.intervaloMin); i < Number(intervalo.intervaloMax); i += 0.1) {
         f1 = avaliarExpressao(primeiraDerivada, i)
         f2 = avaliarExpressao(primeiraDerivada, i + 0.1)
-
-        if (Math.abs(f1) < 0.00001) {
+        
+        if (Math.abs(f1) < 0.00000000000000001) {
             existe = false
             for (let j = 0; j < pontosCriticos.length; j++) {// Verifica se o ponto no intervalo i. ja foi adicionado
-                if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 0.0001) {
+                if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 0.00000000000000001) {
                     existe = true
                     break;
                 }
@@ -89,7 +91,7 @@ function pontoCritico(primeiraDerivada) {
             let fb = f2
             let fm
 
-            while ((fim - ini) > 0.00001) {
+            while ((fim - ini) > 0.00000000000000001) {
                 meio = (ini + fim) / 2
                 fm = avaliarExpressao(primeiraDerivada, meio)
 
@@ -101,10 +103,9 @@ function pontoCritico(primeiraDerivada) {
                     fa = fm
                 }
             }
-
             existe = false
             for (let j = 0; j < pontosCriticos.length; j++) { // Verifica se o ponto meio já está muito próximo de algum ponto já encontrado se sim evita que seja adicionado o mesmo Ponto critico
-                if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 0.0001) {
+                if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 0.00000000000000001) {
                     existe = true
                     break;
                 }
