@@ -29,6 +29,9 @@ function limparFuncao(funcao) {
             case 'X': // Corrige X -> x
                 resultado += 'x'
                 break;
+            case 'E':
+                resultado += 'e'
+                break;
             default: // Guarda o caractere atual no resultado
                 resultado += charAtual
         }
@@ -61,13 +64,19 @@ function separarFuncao(funcaoOriginal) {
                 termoAtual = '' // Inicia o próximo termo vazio
                 break;
             case 'x':
-                if (funcaoLimpa[i - 1] === ')') { // Se o termo atual já tem um parenteses, considera que são dois termos distintos se multiplicando
+                if (funcaoLimpa[i - 1] === ')' || funcaoLimpa[i-1] === 'e') { // Se o termo atual já tem um parenteses, considera que são dois termos distintos se multiplicando
+                    termos.push(dissecaTermo(termoAtual)) // adiciona o termoAtual como um termo dissecado.
+                    termoAtual = '*' // Inicia o próximo termo com '*'
+                }
+                break;
+            case 'e':
+                if (funcaoLimpa[i - 1] === ')' || funcaoLimpa[i-1] === 'x') { // Se o termo atual já tem um parenteses, considera que são dois termos distintos se multiplicando
                     termos.push(dissecaTermo(termoAtual)) // adiciona o termoAtual como um termo dissecado.
                     termoAtual = '*' // Inicia o próximo termo com '*'
                 }
                 break;
             case '(': // Ao encontrar o início de um parênteses colocorá todo o seu conteúdo em um único termo
-                if (funcaoLimpa[i - 1] === 'x') { // Se o termo atual já tem um x, considera que são dois termos distintos se multiplicando
+                if (funcaoLimpa[i - 1] === 'x' || funcaoLimpa[i-1] === 'e') { // Se o termo atual já tem um x, considera que são dois termos distintos se multiplicando
                     termos.push(dissecaTermo(termoAtual)) // adiciona o termoAtual como um termo dissecado.
                     termoAtual = '*' // Inicia o próximo termo com '*'
                 }
@@ -95,7 +104,10 @@ function separarFuncao(funcaoOriginal) {
         termoAtual += charAtual // Adiciona o caratere encontrado ao termo atual
     }
     termos.push(dissecaTermo(termoAtual)) // adiciona o termoAtual como um termo dissecado.
-
+/*
+    console.log(termos)
+    for(i = 0; i < termos.length; i++) console.log(montaTermo(termos))
+*/
     return termos // Retorna o array 'termos' contendo os termos separados da função em forma de termo dissecado.
 }
 

@@ -13,55 +13,57 @@ const {
  * @returns {string} Rtorna a derivada do termo
  */
 function derivarTermo(termo) {
-    // A regra do tombo é aplicada utilizando coeficienteOriginal e expoenteOriginal
-    let novoCoeficiente 
-    let novoExpoente
-    if (!termo.temParentesesPot) {
-        novoCoeficiente = termo.coeficiente * termo.expoente
-        novoExpoente = termo.expoente - 1
-    } else {
-        novoCoeficiente = termo.expoente + termo.coeficiente
-        novoExpoente = "(" + termo.expoente + "-1)"
-    }
+
 
     let res = "0" // Variável para guarda o conteúdo do resultado f'(g(x)) * g'(x)
-
-    if (termo.temX) { // Tratamento para quando o termo tem um x
-        if (novoExpoente === 0) {
-            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente // Se o novo expoente for 0 (x vai sumir) retorna somente o novo coeficiente
-        } else if (novoExpoente === 1) {
-            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x' // Se o novo expoente for 1 (pode ser omitido) retorna somente o novo coeficiente seguido de x
+    if (!termo.temE) {
+        // A regra do tombo é aplicada utilizando coeficienteOriginal e expoenteOriginal
+        let novoCoeficiente
+        let novoExpoente
+        if (!termo.temParentesesPot) {
+            novoCoeficiente = termo.coeficiente * termo.expoente
+            novoExpoente = termo.expoente - 1
         } else {
-            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x^' + novoExpoente // Senão retorna o novo coeficiente seguido de x seguido do expoente
+            novoCoeficiente = termo.expoente + " * " + termo.coeficiente
+            novoExpoente = "(" + termo.expoente + "-1)"
         }
-    } else if (termo.temParenteses) { // Tratamento para quando o termo tem um parênteses
-        
 
-        if (novoExpoente === 0) {
-            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente // Se o novo expoente for 0 (parenteses vai sumir) guarda somente o novo coeficiente
-        } else if (novoExpoente === 1) {
-            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + termo.conteudoParenteses // Se o novo expoente for 1 (pode ser omitido) guarda somente o novo coeficiente seguido do parênteses
-        } else {
-            res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + termo.conteudoParenteses + '^' + novoExpoente // Senão guarda o novo coeficiente seguido do parênteses seguido do expoente
+        if (termo.temX) { // Tratamento para quando o termo tem um x
+            if (novoExpoente === 0) {
+                res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente // Se o novo expoente for 0 (x vai sumir) retorna somente o novo coeficiente
+            } else if (novoExpoente === 1) {
+                res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x' // Se o novo expoente for 1 (pode ser omitido) retorna somente o novo coeficiente seguido de x
+            } else {
+                res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + 'x^' + novoExpoente // Senão retorna o novo coeficiente seguido de x seguido do expoente
+            }
+        } else if (termo.temParenteses) { // Tratamento para quando o termo tem um parênteses
+            if (novoExpoente === 0) {
+                res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente // Se o novo expoente for 0 (parenteses vai sumir) guarda somente o novo coeficiente
+            } else if (novoExpoente === 1) {
+                res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + termo.conteudoParenteses // Se o novo expoente for 1 (pode ser omitido) guarda somente o novo coeficiente seguido do parênteses
+            } else {
+                res = novoCoeficiente === 0 ? '0' : '' + novoCoeficiente + termo.conteudoParenteses + '^' + novoExpoente // Senão guarda o novo coeficiente seguido do parênteses seguido do expoente
+            }
+            if (res === '1') res = '' // Se o resultado do tombo do parênteses for 1 (pode ser omitido) limpa res para que fique somente g'(x)
+
+            if (termo.conteudoParenteses.charAt(0) === '+') termo.conteudoParenteses.slice(1) // Se o conteúdo do parenteses começar com um + (pode ser omitido), o retira
+
+            let derivadaParenteses = calcularDerivada(termo.conteudoParenteses) // Guarda o valor da derivada do parênteses(g'(x))
+            if (separarFuncao(derivadaParenteses).length > 1 || res !== '') derivadaParenteses = '(' + derivadaParenteses + ')' // Caso a derivada do parênteses tenha mais de um termo ou f(g(x)) não seja vazio, adiciona coloca a derivada do parênteses em um parênteses
+
+            if (termo.temPotencia) res += ' * ' // Caso não haja potência, ou seja, o resultado é somente um número, não é adicionado o ' * ' para que a vizualização fique melhor
+            res += derivadaParenteses // Adiciona a derivada do parênteses no resultado
         }
-        if (res === '1') res = '' // Se o resultado do tombo do parênteses for 1 (pode ser omitido) limpa res para que fique somente g'(x)
 
-        if (termo.conteudoParenteses.charAt(0) === '+') termo.conteudoParenteses.slice(1) // Se o conteúdo do parenteses começar com um + (pode ser omitido), o retira
-
-        let derivadaParenteses = calcularDerivada(termo.conteudoParenteses) // Guarda o valor da derivada do parênteses(g'(x))
-        if (separarFuncao(derivadaParenteses).length > 1 || res !== '') derivadaParenteses = '(' + derivadaParenteses + ')' // Caso a derivada do parênteses tenha mais de um termo ou f(g(x)) não seja vazio, adiciona coloca a derivada do parênteses em um parênteses
-
-        if (termo.temPotencia) res += ' * ' // Caso não haja potência, ou seja, o resultado é somente um número, não é adicionado o ' * ' para que a vizualização fique melhor
-        res += derivadaParenteses // Adiciona a derivada do parênteses no resultado
-
-        return res // Retorna o resultado da derivada completa
+    } else {
+        res = termo.coeficiente + "e^" + termo.expoente
     }
 
-    if(termo.temParentesesPot){
+    if (termo.temParentesesPot && termo.expoente !== 'x') {
         res += " * (" + calcularDerivada(termo.expoente) + ")"
     }
 
-    return res
+    return res // Retorna o resultado da derivada completa
 }
 
 /**
@@ -75,7 +77,6 @@ function calcularDerivada(funcaoOriginal) {
     const termosDerivadas = [] // Inicializa um array para armazenar os termos da derivada.
     let produto // Guarda o produto de duas derivadas
     let i
-
     for (i = 0; i < termos.length; i++) { // Loop através de cada termo.
         if (termos[i].temProduto) { // Caso o termo atual(g(x)) começe com um '*' aplica a regra do produdo com ele e o termo anterior(f(x))
             produto = `(${derivadas[i - 1]}${montaTermo(termos[i], true, true)}${montaTermo(termos[i - 1])} * ${derivarTermo(termos[i])})` // produto recebe "(f'(x) * g(x) + f(x) * g'(x))
@@ -86,10 +87,12 @@ function calcularDerivada(funcaoOriginal) {
             derivadas.push(derivarTermo(termos[i])) // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
         }
     }
+    
     for (i = 0; i < derivadas.length; i++) {
         if (derivadas[i] !== '' && derivadas[i] !== '0')
             termosDerivadas.push(...separarFuncao(derivadas[i]))
     }
+    
     let resultado = "" // Inicializa uma string vazia para construir a string da derivada resultante.
     for (i = 0; i < termosDerivadas.length; i++) { // Loop através de cada derivada no array 'derivadas'.
         if (resultado === '')

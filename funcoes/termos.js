@@ -7,70 +7,26 @@
 function dissecaTermo(termo) {
     let sinalCoeficiente = "+",  // Guarda o sinal do coeficiente do termo
         sinalExpoente = "+"     // Guarda o sinal do expoente do termo
-        
+
+    let i
+    
     let valsTermo = { // Inicia valsTermo como um termo com todos os dados zerados 
         coeficiente: "",        // Guarda o valor do coeficiente do termo
         temX: false,            // Guarda se o termo tem um x ou não]
         temParenteses: false,   // Guarda se o termo tem um parênteses ou não
         conteudoParenteses: '', // Gurda o conteúdo de um parênteses encontrado
         temPotencia: false,     // Guarda se o termo tem uma potência ou não
+        temE: false,
         temParentesesPot: false,
         expoente: "",           // Guarda o valor do expoente do termo
-        temProduto: false,      // Guarda se o termo atual deve ter a regra doproduto aplicada
-        temE: false,
-        valorE: ""
+        temProduto: false       // Guarda se o termo atual deve ter a regra do produto aplicada
     }
     if (termo === '' || termo === undefined) return { ...valsTermo }
-    /*
-        // Identificando o padrão e^(bx)
-        let i = 0
-        let achouE = false
-        let coefStr = ""
-        while (i < termo.length) {
-        const c = termo[i]
-        if (c === 'e' && i + 1 < termo.length && termo[i + 1] === '^') {
-            achouE = true
-            break;
-        }
-        coefStr += c
-        i++
-        }
-
-        if (achouE) {
-        let coef = parseFloat(coefStr)
-        if (isNaN(coef)) {
-            coef = 1 // Se não há coeficiente explícito, consideramos 1.
-        }
-
-        // Agora, extraímos o expoente
-        i += 2 // Pula o "e^"
-        let bStr = ""
-        let sinalExpoente = 1
-        if (i < termo.length && (termo[i] === '-' || termo[i] === '+')) {
-            sinalExpoente = (termo[i] === '-') ? -1 : 1
-            i++
-        }
-        while (i < termo.length && termo[i] !== 'x') {
-            bStr += termo[i]
-            i++
-        }
-
-        let b = parseFloat(bStr)
-        if (isNaN(b)) b = 1
-        b = b * sinalExpoente // Considera o sinal negativo.
-
-        let derivadaCoef = coef * b // A derivada de e^(bx) é b * e^(bx)
-        let sinalFinal = derivadaCoef < 0 ? '-' : ''
-        let coefFinal = Math.abs(derivadaCoef) === 1 ? '' : Math.abs(derivadaCoef)
-
-        let parteExp = 'e^' + (b < 0 ? '(' + b + 'x)' : b === 1 ? 'x' : b + 'x')
-        return sinalFinal + coefFinal + parteExp
-    }*/
 
     let qtdParenteses = 0 // Guarda quantos parênteses estão abertos
 
     if (termo[0] === '-' || termo[0] === '*' && termo[1] === '-') sinalCoeficiente = '-' // Se o termo começa com menos define o sinal como -
-
+    
     let charAtual // Guarda o caractere atual
     for (i = 0; i < termo.length; i++) {
         charAtual = termo[i] // Obtém o caractere atual
@@ -80,14 +36,22 @@ function dissecaTermo(termo) {
                 valsTermo.temProduto = true // Ao encontrar um * atualiza temProduto
                 break;
             case 'x':
-                valsTermo.temX = true // Ao encontrar um x atualiza temX
+                if (!valsTermo.temPotencia){
+                    valsTermo.temX = true // Ao encontrar um x atualiza temX
+                } else {
+                    valsTermo.expoente += 'x'
+                    valsTermo.temParentesesPot = true
+                }
                 break;
             case '+':
             case '-':
                 if (valsTermo.temPotencia) sinalExpoente = charAtual // Ao encontrar um sinal após encontrar um ^ atualiza o sinal do expoente 
                 break;
             case '^':
-                if (valsTermo.temX || valsTermo.temParenteses) valsTermo.temPotencia = true // Ao encontrar uma potência atualiza temPotencia
+                if (valsTermo.temX || valsTermo.temParenteses || valsTermo.temE) valsTermo.temPotencia = true // Ao encontrar uma potência atualiza temPotencia
+                break;
+            case 'e':
+                valsTermo.temE = true
                 break;
             case '(': // Ao encontrar o início de um parênteses colocorá seu conteúdo na variável conteudoParenteses
                 if (!valsTermo.temPotencia) {
@@ -116,7 +80,7 @@ function dissecaTermo(termo) {
             case '/':
                 break; // Ignora / e espaços vazios
             default: // qualquer outro caractere será adicionado no coeficiente ou no expoente
-                if (!valsTermo.temX && !valsTermo.temParenteses) valsTermo.coeficiente += charAtual // Enquanto um x ou parênteses não tiver sido encontrado, adiciona no coeficiente
+                if (!valsTermo.temX && !valsTermo.temParenteses && !valsTermo.temE) valsTermo.coeficiente += charAtual // Enquanto um x ou parênteses não tiver sido encontrado, adiciona no coeficiente
                 if (valsTermo.temPotencia) valsTermo.expoente += charAtual                          // Após encontrar uma potência adiciona no expoente
         }
     }
@@ -131,7 +95,7 @@ function dissecaTermo(termo) {
             valsTermo.temPotencia = false
         }
     } 
-
+    
     return valsTermo // Retorna o objeto contendo o termo dissecado
 }
 
@@ -151,12 +115,13 @@ function montaTermo(termo, primeiro = false, parenteses = false) {
         if (termo.temProduto) termoMontado = " * " + termoMontado
         return termoMontado.replace("  ", " ").replace("+  *", "*")
     }
-
-    if (!((termo.temParenteses || termo.temX) && termo.coeficiente === 1))
+    if (!((termo.temParenteses || termo.temX || termo.temE) && termo.coeficiente === 1))
         termoMontado += `${Math.abs(termo.coeficiente)}` // Inicia o termo com o valor do coeficiente
 
     if (termo.temX) { // Caso tenha x, o adiciona no termo
         termoMontado += "x"
+    } else if(termo.temE) {
+        termoMontado += "e"
     } else if (termo.temParenteses) { // Caso tenha um parênteses o adiciona no termo 
         termoMontado += termo.conteudoParenteses
     }

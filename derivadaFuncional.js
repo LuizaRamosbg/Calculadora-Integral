@@ -81,3 +81,4 @@ function calculadoraDerivadaIntegral() {
 }
 
 calculadoraDerivadaIntegral() // Chama a função principal da calculadora.
+// 2(3e^(2x+3x^2))^5x
