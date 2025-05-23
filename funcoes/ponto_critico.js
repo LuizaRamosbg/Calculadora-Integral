@@ -56,6 +56,7 @@ function avaliarExpressao(expr, x) {
                 expressaoComValor += char
         }
     }
+    //console.log(eval(expressaoComValor))
     return eval(expressaoComValor)
 }
 
@@ -76,10 +77,10 @@ function pontoCritico(primeiraDerivada, intervalo = { intervaloMin: "-10", inter
         f1 = avaliarExpressao(primeiraDerivada, i)
         f2 = avaliarExpressao(primeiraDerivada, i + 0.1)
 
-        if (Math.abs(f1) < 0.00001) {
+        if (Math.abs(f1) < 1e-7) {
             existe = false
-            for (let j = 0; j < pontosCriticos.length; j++) {// Verifica se o ponto no intervalo i. ja foi adicionado
-                if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 0.000001) {
+            for (let j = 0; j < pontosCriticos.length; j++) {// Verifica se o ponto no intervalo j. ja foi adicionado
+                if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 1e-7) {
                     existe = true
                     break;
                 }
@@ -92,7 +93,7 @@ function pontoCritico(primeiraDerivada, intervalo = { intervaloMin: "-10", inter
 
         }
         if (f1 * f2 < 0) {
-            // Busca Binaria entre i e i+1
+            // Busca Binaria entre i e i+0.1
             let ini = i
             let fim = i + 0.1
             let meio
