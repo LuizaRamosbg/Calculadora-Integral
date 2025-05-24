@@ -56,7 +56,10 @@ function derivarTermo(termo) {
         }
 
     } else {
-        res = termo.coeficiente + "e^" + termo.expoente
+        if (termo.expoente[0] == '(' ||  termo.expoente[termo.expoente.length - 1] == ')')
+            res = termo.coeficiente + "e^" + termo.expoente 
+        else 
+            res = termo.coeficiente + "e^(" + termo.expoente + ")"
     }
 
     if (termo.temParentesesPot && termo.expoente !== 'x') {
