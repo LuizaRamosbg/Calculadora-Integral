@@ -9,6 +9,11 @@ const {
   MaxeMin
 } = require("./funcoes/ponto_critico")
 
+const {
+  regradoTrapezio,
+  regradoSimpson
+} = require("./funcoes/integral")
+
 function calculadoraDerivadaIntegral() {
   const prompt = require("prompt-sync")() // Importa a biblioteca 'prompt-sync' para ler a entrada do usuário no terminal.
 
@@ -35,21 +40,27 @@ function calculadoraDerivadaIntegral() {
     return { intervaloMin, intervaloMax }
   }
 
-  /**
-   * Calcula a derivada de primeira ordem da função inserida sem usar métodos restritos.
-   * Retorna A string representando a primeira derivada.
-   */
-  function calcularDerivadaPrimeiraOrdem(funcaoOriginal) {
-    return "Ainda não implementado" // Retorna uma mensagem indicando que a derivação de primeira ordem ainda não foi implementada.
+    function pontoInicial_e_Final() {
+    let inicio = (prompt("Digite o ponto inicial da integral: "))
+    let fim = (prompt("Digite o ponto final da integral: "))
+
+    if(isNaN(inicio) || isNaN(fim) || inicio === '' || fim === ''){
+      console.log("Valor inválido ou vazio para o ponto inical ou final. Usando 0 a 10 como padrão.");
+      inicio = "0"
+      fim = "10"
+    }
+
+    return { inicio, fim }
   }
 
-  /**
-   * Calcula a derivada de segunda ordem da função, baseada na primeira derivada.
-   * @param {string} primeiraDerivada A string representando a primeira derivada.
-   * Retorna Uma mensagem indicando que a funcionalidade não está implementada.
-   */
-  function calcularDerivadaSegundaOrdem(primeiraDerivada) {
-    return "Ainda não implementado" // Retorna uma mensagem indicando que a derivação de segunda ordem ainda não foi implementada.
+  function numDivisoesIntegral(){
+    let quantidade = (prompt("Digite a quantidade de divisões da integral: "))
+    
+    if(isNaN(quantidade) || quantidade === ''){
+    console.log("Valor inválido ou vazio para o número de divisões. 10 como padrão.");
+    quantidade = "10"
+    }
+    return quantidade
   }
 
   /**
@@ -59,16 +70,22 @@ function calculadoraDerivadaIntegral() {
     const funcao = obterFuncaoDoUsuario() // Obtém a função inserida pelo usuário.
     const primeiraDerivada = calcularDerivada(funcao) // Calcula a primeira derivada da função.
     console.log(`A primeira derivada é: ${primeiraDerivada}`) // Exibe a primeira derivada no console.
-    const intervalo = intervaloBusca()
-    const Xpc = pontoCritico(primeiraDerivada, intervalo.intervaloMin, intervalo.intervaloMax) // Exibe o ponto crítico da função da função.
     const segundaDerivada = calcularDerivada(primeiraDerivada)
     console.log(`A segunda derivada é: ${segundaDerivada}`) // Exibe a segunda derivada da função.
+    const intervalo = intervaloBusca()
+    const Xpc = pontoCritico(primeiraDerivada, intervalo.intervaloMin, intervalo.intervaloMax) // Exibe o ponto crítico da função da função.
     const MaxMin = MaxeMin(segundaDerivada, Xpc)
     if (MaxMin) {
       MaxMin.minimos.length > 0 ? console.log(`Ponto min: ${MaxMin.minimos}`) : null
       MaxMin.inflexao.length > 0 ? console.log(`Ponto de inflexão: ${MaxMin.inflexao}`) : null
       MaxMin.maximos.length > 0 ? console.log(`Ponto max: ${MaxMin.maximos}`) : null
     }
+    const trapezio = numDivisoesIntegral()
+    const inicioFim = pontoInicial_e_Final()
+    const trap = regradoTrapezio(funcao, inicioFim.inicio, inicioFim.fim, trapezio)
+    console.log(`A integral por Trapézio é aproximadamente: ${trap}`)
+    const simpson = regradoSimpson(funcao, inicioFim.inicio, inicioFim.fim, trapezio)
+    console.log(`A integral por Simpson é aproximadamente: ${simpson}`)
     /*
       console.log(separarFuncao(primeiraDerivada))
       const segundaDerivada = calcularDerivada(primeiraDerivada) // Calcula a segunda derivada da função.
