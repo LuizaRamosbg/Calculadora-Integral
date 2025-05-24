@@ -60,7 +60,7 @@ function calculadoraDerivadaIntegral() {
     const primeiraDerivada = calcularDerivada(funcao) // Calcula a primeira derivada da função.
     console.log(`A primeira derivada é: ${primeiraDerivada}`) // Exibe a primeira derivada no console.
     const intervalo = intervaloBusca()
-    const Xpc = pontoCritico(primeiraDerivada, intervalo) // Exibe o ponto crítico da função da função.
+    const Xpc = pontoCritico(primeiraDerivada, intervalo.intervaloMin, intervalo.intervaloMax) // Exibe o ponto crítico da função da função.
     const segundaDerivada = calcularDerivada(primeiraDerivada)
     console.log(`A segunda derivada é: ${segundaDerivada}`) // Exibe a segunda derivada da função.
     const MaxMin = MaxeMin(segundaDerivada, Xpc)

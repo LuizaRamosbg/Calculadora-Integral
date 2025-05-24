@@ -65,7 +65,7 @@ function avaliarExpressao(expr, x) {
  * @param {*} primeiraDerivada 
  * @returns 
  */
-function pontoCritico(primeiraDerivada, intervalo = { intervaloMin: "-10", intervaloMax: "10" }) {
+function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10") {
     if (Number(primeiraDerivada) === 0) return console.log("Ponto crítico indefinido")
 
     let pontosCriticos = []
@@ -73,7 +73,7 @@ function pontoCritico(primeiraDerivada, intervalo = { intervaloMin: "-10", inter
     let existe
     // Esse Loop procura a troca de sinal das funções
     let f1, f2
-    for (let i = Number(intervalo.intervaloMin); i < Number(intervalo.intervaloMax); i += 0.1) {
+    for (let i = Number(intervaloMin); i < Number(intervaloMax); i += 0.1) {
         f1 = avaliarExpressao(primeiraDerivada, i)
         f2 = avaliarExpressao(primeiraDerivada, i + 0.1)
 
