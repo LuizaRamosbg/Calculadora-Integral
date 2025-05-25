@@ -41,11 +41,11 @@ function calculadoraDerivadaIntegral() {
   }
 
     function pontoInicial_e_Final() {
-    let inicio = (prompt("Digite o ponto inicial da integral: "))
-    let fim = (prompt("Digite o ponto final da integral: "))
+    let inicio = (prompt("Digite o ponto inicial da integral: ")) // Solicita ao usuário que digite o ponto inicial da integral
+    let fim = (prompt("Digite o ponto final da integral: ")) // Solicita ao usuário que digite o ponto final da integral
 
-    if(isNaN(inicio) || isNaN(fim) || inicio === '' || fim === ''){
-      console.log("Valor inválido ou vazio para o ponto inical ou final. Usando 0 a 10 como padrão.");
+    if(isNaN(inicio) || isNaN(fim) || inicio === '' || fim === ''){ // checa se é um numero válido
+      console.log("Valor inválido ou vazio para o ponto inical ou final. Usando 0 a 10 como padrão."); 
       inicio = "0"
       fim = "10"
     }
@@ -54,9 +54,9 @@ function calculadoraDerivadaIntegral() {
   }
 
   function numDivisoesIntegral(){
-    let quantidade = (prompt("Digite a quantidade de divisões da integral: "))
+    let quantidade = (prompt("Digite a quantidade de divisões da integral: ")) // Solicita ao usuário que digite o numero de divisões
     
-    if(isNaN(quantidade) || quantidade === ''){
+    if(isNaN(quantidade) || quantidade === ''){ // checa se é um numero válido
     console.log("Valor inválido ou vazio para o número de divisões. 10 como padrão.");
     quantidade = "10"
     }
@@ -83,9 +83,9 @@ function calculadoraDerivadaIntegral() {
     const trapezio = numDivisoesIntegral()
     const inicioFim = pontoInicial_e_Final()
     const trap = regradoTrapezio(funcao, inicioFim.inicio, inicioFim.fim, trapezio)
-    console.log(`A integral por Trapézio é aproximadamente: ${trap}`)
+    console.log(`A integral por Trapézio é aproximadamente: ${trap}`) // Exibe a integral por trapezio da função.
     const simpson = regradoSimpson(funcao, inicioFim.inicio, inicioFim.fim, trapezio)
-    console.log(`A integral por Simpson é aproximadamente: ${simpson}`)
+    console.log(`A integral por Simpson é aproximadamente: ${simpson}`) // Exibe a integral por simpson da função.
     /*
       console.log(separarFuncao(primeiraDerivada))
       const segundaDerivada = calcularDerivada(primeiraDerivada) // Calcula a segunda derivada da função.
