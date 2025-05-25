@@ -80,11 +80,11 @@ function calculadoraDerivadaIntegral() {
       MaxMin.inflexao.length > 0 ? console.log(`Ponto de inflexão: ${MaxMin.inflexao}`) : null
       MaxMin.maximos.length > 0 ? console.log(`Ponto max: ${MaxMin.maximos}`) : null
     }
-    const trapezio = numDivisoesIntegral()
+    const divisoes = numDivisoesIntegral()
     const inicioFim = pontoInicial_e_Final()
-    const trap = regradoTrapezio(funcao, inicioFim.inicio, inicioFim.fim, trapezio)
-    console.log(`A integral por Trapézio é aproximadamente: ${trap}`) // Exibe a integral por trapezio da função.
-    const simpson = regradoSimpson(funcao, inicioFim.inicio, inicioFim.fim, trapezio)
+    const trapezio = regradoTrapezio(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
+    console.log(`A integral por Trapézio é aproximadamente: ${trapezio}`) // Exibe a integral por trapezio da função.
+    const simpson = regradoSimpson(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
     console.log(`A integral por Simpson é aproximadamente: ${simpson}`) // Exibe a integral por simpson da função.
     /*
       console.log(separarFuncao(primeiraDerivada))

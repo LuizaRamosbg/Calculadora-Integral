@@ -16,9 +16,9 @@ function dissecaTermo(termo) {
         temParenteses: false,   // Guarda se o termo tem um parênteses ou não
         conteudoParenteses: '', // Gurda o conteúdo de um parênteses encontrado
         temPotencia: false,     // Guarda se o termo tem uma potência ou não
-        temE: false,
-        temParentesesPot: false,
+        temTermoPot: false,     // Guarda se o expoente tem um termo guardado em vez de um número
         expoente: "",           // Guarda o valor do expoente do termo
+        temE: false,            // Guarda se o termo tem o e de Euler
         temProduto: false       // Guarda se o termo atual deve ter a regra do produto aplicada
     }
     if (termo === '' || termo === undefined) return { ...valsTermo }
@@ -37,10 +37,10 @@ function dissecaTermo(termo) {
                 break;
             case 'x':
                 if (!valsTermo.temPotencia){
-                    valsTermo.temX = true // Ao encontrar um x atualiza temX
+                    valsTermo.temX = true // Ao encontrar um x antes de um ^ atualiza temX
                 } else {
-                    valsTermo.expoente += 'x'
-                    valsTermo.temParentesesPot = true
+                    valsTermo.expoente += 'x'    // Ao encontrar um x depois de um ^ adiciona um x no expoente
+                    valsTermo.temTermoPot = true // e atualiza temTermoPot para que a potência seja tratada corretamente
                 }
                 break;
             case '+':
@@ -48,13 +48,13 @@ function dissecaTermo(termo) {
                 if (valsTermo.temPotencia) sinalExpoente = charAtual // Ao encontrar um sinal após encontrar um ^ atualiza o sinal do expoente 
                 break;
             case '^':
-                if (valsTermo.temX || valsTermo.temParenteses || valsTermo.temE) valsTermo.temPotencia = true // Ao encontrar uma potência atualiza temPotencia
+                if (valsTermo.temX || valsTermo.temParenteses || valsTermo.temE) valsTermo.temPotencia = true // Ao encontrar uma potência após um x, 'e' ou parenteses atualiza temPotencia
                 break;
             case 'e':
-                valsTermo.temE = true
+                valsTermo.temE = true // Ao encontrar um e atualiza temE
                 break;
-            case '(': // Ao encontrar o início de um parênteses colocorá seu conteúdo na variável conteudoParenteses
-                if (!valsTermo.temPotencia) {
+            case '(': // Ao encontrar o início de um parênteses guardará seu conteúdo em uma varialvel adequada
+                if (!valsTermo.temPotencia) {      // Caso encontre antes de um ^ guardará em temParenteses
                     valsTermo.temParenteses = true // Atualiza temParenteses
                     qtdParenteses++                // Inicia a contagem de quantos parênteses estão abertos
                     valsTermo.conteudoParenteses = charAtual
@@ -64,13 +64,13 @@ function dissecaTermo(termo) {
                         if (termo[i] === '(') qtdParenteses++    // Ao encontrar um ínicio de um novo parênteses incrementa a quantidade de parênteses
                         if (termo[i] === ')') qtdParenteses--    // Ao encontrar o fim de um  parênteses decrementa a quantidade de parênteses
                     } while (qtdParenteses > 0) // Repete enquanto tiver algum parênteses aberto
-                } else {
-                    valsTermo.temParentesesPot = true // Atualiza temParenteses
+                } else { // Caso encontre depois de um ^ guardará em expoente
+                    valsTermo.temTermoPot = true   // Atualiza temTermoPot para que a potência seja tratada corretamente
                     qtdParenteses++                // Inicia a contagem de quantos parênteses estão abertos
                     valsTermo.expoente += charAtual
                     do {
                         i++                                      // Avança para o próximo termo
-                        valsTermo.expoente += termo[i] // Insere o termo atual em conteudoParenteses
+                        valsTermo.expoente += termo[i]           // Insere o termo atual em expoente
                         if (termo[i] === '(') qtdParenteses++    // Ao encontrar um ínicio de um novo parênteses incrementa a quantidade de parênteses
                         if (termo[i] === ')') qtdParenteses--    // Ao encontrar o fim de um  parênteses decrementa a quantidade de parênteses
                     } while (qtdParenteses > 0) // Repete enquanto tiver algum parênteses aberto
@@ -88,7 +88,7 @@ function dissecaTermo(termo) {
     valsTermo.coeficiente = parseFloat(sinalCoeficiente + (valsTermo.coeficiente === '' ? 1 : valsTermo.coeficiente)) // Adiciona o sinal ao valor do coeficiente
     if (isNaN(valsTermo.coeficiente)) valsTermo.coeficiente = sinalCoeficiente === '-' ? -1 : 1 // Caso tenha algum erro no coeficiente, o reseta para 1 ou -1
 
-    if(!valsTermo.temParentesesPot){
+    if(!valsTermo.temTermoPot){ // Caso o expoente seja um número e não um termo, o valida para um número em vez de texto
         valsTermo.expoente = parseInt(sinalExpoente + (valsTermo.expoente === '' ? 1 : valsTermo.expoente)) // Adiciona o sinal ao valor do expoente
         if (isNaN(valsTermo.expoente)) { // Caso tenha algum erro no expoente, o reseta para 0 e atualiza temPotencia para falso
             valsTermo.expoente = 0
@@ -101,50 +101,45 @@ function dissecaTermo(termo) {
 
 /**
  * Recebe um objeto termo dissecado e o monta em forma de texto
- * @param {object} termo Um termo em forma de termo dissecado
+ * @param {object} termo       Um termo em forma de termo dissecado
  * @param {boolean} primeiro   Define se o termo é o primeiro da expressão
  * @param {boolean} parenteses Define se o termo estará dentro de um parênteses
  * @returns {string} O termo montado em forma de texto
  */
 function montaTermo(termo, primeiro = false, parenteses = false) {
-    let termoMontado = ""
+    let termoMontado = "" // Inicia o termoMontado vazio
+    
+    if (!((termo.temParenteses || termo.temX || termo.temE) && termo.coeficiente === 1)) // Verifica se o termo tem x, 'e' ou parênteses juntamenente com um coeficiente 1, caso tenha não o adiciona ao termo montado
+        termoMontado += `${Math.abs(termo.coeficiente)}` // Em todos os outros casos adiciona o módulo do coeficiente no termo montado
 
-    if (termo.temParenteses && !termo.temPotencia && termo.coeficiente === 1) {
-        if (!primeiro) termoMontado += " + "
-        termoMontado += `${termo.conteudoParenteses}`
-        if (termo.temProduto) termoMontado = " * " + termoMontado
-        return termoMontado.replace("  ", " ").replace("+  *", "*")
-    }
-    if (!((termo.temParenteses || termo.temX || termo.temE) && termo.coeficiente === 1))
-        termoMontado += `${Math.abs(termo.coeficiente)}` // Inicia o termo com o valor do coeficiente
-
-    if (termo.temX) { // Caso tenha x, o adiciona no termo
+    if (termo.temX) {       // Caso tenha x, o adiciona no termo
         termoMontado += "x"
-    } else if(termo.temE) {
+    } else if(termo.temE) { // Caso tenha e, o adiciona no termo
         termoMontado += "e"
     } else if (termo.temParenteses) { // Caso tenha um parênteses o adiciona no termo 
         termoMontado += termo.conteudoParenteses
     }
-    if (termo.temPotencia) { // Caso tenha uma potência, a adiciona no termo
+    
+    if (termo.temPotencia) { // Caso tenha uma potência, a adiciona no termo 
         termoMontado += '^' + termo.expoente
     }
 
-    if (termo.coeficiente < 0)
+    if (termo.coeficiente < 0) // Se o coeficiente for negativo adiciona o sinal -
         if (primeiro)
-            termoMontado = `-${termoMontado}`
+            termoMontado = `-${termoMontado}`  // Caso seja o primeiro na expressão, o - ficará colado no termo
         else
-            termoMontado = ` - ${termoMontado}`
+            termoMontado = ` - ${termoMontado}` // Senão, será dado o espaçamento deviduo
 
-    if (!primeiro && termo.coeficiente > 0 && !termo.temProduto) // Adiciona o sinal no termo, exceto quando o termo é positivo e é o primeiro na expressão(pode ser omitido)
+    if (!primeiro && termo.coeficiente >= 0 && !termo.temProduto) // Adiciona o sinal de + quando o termo é positivo, o omite quando é o primeiro termo na expressão ou quando há uma multiplicação
         termoMontado = ` + ${termoMontado}`
 
-    if (parenteses && termo.coeficiente < 0) // Adiciona o termo dentro de parênteses quando parenteses é verdadeiro e o termo é negativo 
+    if (parenteses && termo.coeficiente < 0) // Adiciona o termo dentro de parênteses quando o termo deve estar dentro de um parênteses e o termo é negativo 
         termoMontado = '(' + termoMontado.replace(" - ", "-") + ')'
 
-    if (termo.temProduto)
+    if (termo.temProduto) // Se o termo contiver um *, adiciona " * " 
         termoMontado = ` * ${termoMontado}`
 
-    return termoMontado.replace("  ", " ") // Retorna o termo montado
+    return termoMontado.replace("  ", " ") // Retorna o termo montado substituindo redundâncias de espaços duplos
 }
 
 module.exports = {
