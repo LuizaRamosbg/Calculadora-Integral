@@ -104,9 +104,10 @@ function dissecaTermo(termo) {
  * @param {object} termo       Um termo em forma de termo dissecado
  * @param {boolean} primeiro   Define se o termo é o primeiro da expressão
  * @param {boolean} parenteses Define se o termo estará dentro de um parênteses
+ * @param {boolean} parentesesExpoente Define se o expoente do termo estará dentro de um parênteses
  * @returns {string} O termo montado em forma de texto
  */
-function montaTermo(termo, primeiro = false, parenteses = false) {
+function montaTermo(termo, primeiro = false, parenteses = false, parentesesExpoente = false) {
     let termoMontado = "" // Inicia o termoMontado vazio
     
     if (!((termo.temParenteses || termo.temX || termo.temE) && termo.coeficiente === 1)) // Verifica se o termo tem x, 'e' ou parênteses juntamenente com um coeficiente 1, caso tenha não o adiciona ao termo montado
@@ -121,7 +122,10 @@ function montaTermo(termo, primeiro = false, parenteses = false) {
     }
     
     if (termo.temPotencia) { // Caso tenha uma potência, a adiciona no termo 
-        termoMontado += '^' + termo.expoente
+        if (parentesesExpoente && termo.expoente[0] !== '(' || termo.expoente[0] !== ')') {
+            termoMontado += "^(" + termo.expoente + ')'
+        } else
+            termoMontado += '^' + termo.expoente
     }
 
     if (termo.coeficiente < 0) // Se o coeficiente for negativo adiciona o sinal -

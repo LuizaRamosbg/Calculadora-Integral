@@ -1,9 +1,14 @@
 const {
-    avaliarExpressao
+    avaliarExpressao,
 } = require("./ponto_critico")
+
+const {
+    corrigirFuncao
+} = require("./funcoes")
 
 // Calcula a integral pela regra do trapézio
 function regradoTrapezio(funcao, inicial, final, numeroDivisoes) {
+    funcao = corrigirFuncao(funcao)
     let h = (final - inicial) / numeroDivisoes // Calcula o valor de H(a base de x no gráfico)
     let soma = avaliarExpressao(funcao, inicial) + avaliarExpressao(funcao, final) // Calcula a soma do ponto inicial + final
     let resultado = 0
@@ -20,6 +25,7 @@ function regradoTrapezio(funcao, inicial, final, numeroDivisoes) {
 
 // Calcula a integral pela regra de Simpson
 function regradoSimpson(funcao, inicial, final, numeroDivisoes) {
+    funcao = corrigirFuncao(funcao)
     if (numeroDivisoes % 2 != 0) // Checa se o número de divisões é par, se não for, adiciona 1
         numeroDivisoes++
     let h = (final - inicial) / numeroDivisoes  // Calcula o valor de H(a base de x no gráfico)
