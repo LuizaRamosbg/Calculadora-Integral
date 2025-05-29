@@ -16,7 +16,7 @@ function avaliarExpressao(expr, x) {
         switch (char) {
             case 'x': // Caso o caractere seja 'x', substitui pelo valor passado (x)
                 if (i > 0) {
-                    anterior = expr[i - 1]                   
+                    anterior = expr[i - 1]
                     if (anterior >= '0' && anterior <= '9' || anterior === ')') { // Se antes do 'x' tem número ou fechamento de parênteses, adiciona operador '*'
                         expressaoComValor += `*(${x})`
                     }
@@ -51,6 +51,7 @@ function avaliarExpressao(expr, x) {
                 expressaoComValor += char
         }
     }
+    //console.log(expressaoComValor + '=' + eval(expressaoComValor))
     return eval(expressaoComValor) // Avalia a expressão montada e retorna o resultado numérico
 }
 
@@ -60,7 +61,7 @@ function avaliarExpressao(expr, x) {
  * @returns 
  */
 function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10") {
-    if (Number(primeiraDerivada) === 0){
+    if (Number(primeiraDerivada) === 0) {
         return console.log("Ponto crítico indefinido") // Se a derivada for constante zero (não é uma função válida para pontos críticos), retorna mensagem
     }
     let pontosCriticos = [] // Armazena pontos críticos encontrados
@@ -72,20 +73,31 @@ function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10
         f1 = avaliarExpressao(primeiraDerivada, i) // Avalia derivada em i
         f2 = avaliarExpressao(primeiraDerivada, i + 0.1) // Avalia derivada em i + 0.1
 
-        if (Math.abs(f1) < 1e-7) { // Se o valor da derivada estiver muito próximo de zero, considera ponto crítico
-            existe = false
-            for (let j = 0; j < pontosCriticos.length; j++) { // Verifica se ponto já está na lista para evitar duplicação
+        if (Math.abs(f1) < 1e-7) {
+            // Verifique valores da derivada um pouco antes e um pouco depois do ponto i
+            let delta = 0.0005; 
+            let fAntes = avaliarExpressao(primeiraDerivada, i - delta); // Avalia a derivada em i - delta 
+            let fDepois = avaliarExpressao(primeiraDerivada, i + delta); // Avalia a derivada em  + delta
+
+            // Se a derivada antes e depois estiver perto de zero (ex: e^(3x)), ignora (não é ponto crítico real)
+            if (Math.abs(fAntes) < 1e-7 && Math.abs(fDepois) < 1e-7) {
+                // provável falso positivo, não adiciona ponto crítico
+                continue;  // pula para próxima iteração do for
+            }
+
+            // Se a derivada troca de sinal ou não, adiciona ponto crítico, pois pode ser de ordem par (mínimo/máximo plano)
+            // Ou seja, aceita ponto crítico mesmo sem troca de sinal
+            existe = false;
+            for (let j = 0; j < pontosCriticos.length; j++) {
                 if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 1e-7) {
-                    existe = true
+                    existe = true;
                     break;
                 }
             }
-            if (!existe) { // Se não existe, adiciona o ponto critico
-                pontosCriticos.push(Number(i.toFixed(4)))
-                temCritico = true
+            if (!existe) {
+                pontosCriticos.push(Number(i.toFixed(4)));
+                temCritico = true;
             }
-
-
         }
         if (f1 * f2 < 0) {  // Verifica troca de sinal entre f1 e f2 (indica zero entre i e i+0.1)
 
