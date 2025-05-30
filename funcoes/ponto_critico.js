@@ -25,7 +25,8 @@ function avaliarExpressao(expr, x) {
                     } else { // Caso contrário, adiciona o valor de x entre parênteses para garantir precedência
                         expressaoComValor += `(${x})`
                     }
-                }
+                } else 
+                    expressaoComValor += `${x}`
                 break;
             case 'e': // Trata a constante matemática 'e'
                 anterior = expr[i - 1]
