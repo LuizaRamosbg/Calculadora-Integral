@@ -18,7 +18,7 @@ function derivarTermo(termo) {
         // Caso o termo tenha um e de Euler, aplica sua regra
         if (termo.expoente[0] !== '(' || termo.expoente[termo.expoente.length - 1] !== ')')
             res = termo.coeficiente + "e^(" + termo.expoente + ")" // Se o expoente não for um parênteses, adiciona o expoente do e^ em um
-        else 
+        else
             res = termo.coeficiente + "e^" + termo.expoente        // Se o expoente for um parênteses, não adiciona o expoente do e^ em um
     } else {
         let novoCoeficiente, novoExpoente
@@ -86,12 +86,12 @@ function calcularDerivada(funcaoOriginal) {
             derivadas.push(derivarTermo(termos[i])) // Deriva o termo atual e adiciona a derivada ao array 'derivadas'.
         }
     }
-    
+
     for (i = 0; i < derivadas.length; i++) {                     // Percorre o array derivadas
         if (derivadas[i] !== '' && derivadas[i] !== '0')         // se a derivada não estiver vazia e não for 0
             termosDerivadas.push(...separarFuncao(derivadas[i])) // são separados os termos da derivada e guardados em termosDerivadas
     }
-    
+
     let resultado = "" // Inicializa uma string vazia para construir a string da derivada resultante
     for (i = 0; i < termosDerivadas.length; i++) { // Loop através de cada termo da derivadas em termosDerivadas
         if (resultado === '')
@@ -99,6 +99,7 @@ function calcularDerivada(funcaoOriginal) {
         else
             resultado += montaTermo(termosDerivadas[i]) // Não é o primeiro termo
     }
+
     resultado = resultado.replaceAll("* +", "*")
     return resultado === "" ? "0" : resultado // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
 }

@@ -122,7 +122,7 @@ function montaTermo(termo, primeiro = false, parenteses = false, parentesesExpoe
     }
     
     if (termo.temPotencia) { // Caso tenha uma potência, a adiciona no termo 
-        if (parentesesExpoente && termo.expoente[0] !== '(' || termo.expoente[0] !== ')') {
+        if (parentesesExpoente && (termo.expoente[0] !== '(' || termo.expoente[0] !== ')')) {
             termoMontado += "^(" + termo.expoente + ')'
         } else
             termoMontado += '^' + termo.expoente

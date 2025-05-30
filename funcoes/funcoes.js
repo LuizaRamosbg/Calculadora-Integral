@@ -120,8 +120,35 @@ function corrigirFuncao(funcao) {
     return funcaoCorrigida
 }
 
+/**
+ * 
+ * @param {*} funcao 
+ * @param {*} separado 
+ */
+function simplificaFuncao(funcao, separado = false){
+    let termos, resultado, termoAtual
+    let i, j
+
+    if(!separado) {
+        termos = separarFuncao(funcao)
+    } else {
+        termos = funcao
+    }
+
+    for(i = 0; i < termos.length; i++){
+        termoAtual = termos[i]
+        for(j = i+1; j < termos.length; j++){
+            
+        }
+    }
+
+    return resultado
+}
+
+
 module.exports = {
     limparFuncao,
     separarFuncao,
-    corrigirFuncao
+    corrigirFuncao,
+    simplificaFuncao
 }
