@@ -43,7 +43,31 @@ function regradoSimpson(funcao, inicial, final, numeroDivisoes) {
     return resultado.toFixed(4)
 }
 
+function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 'meio') {
+    funcao = corrigirFuncao(funcao)
+    let h = (final - inicial) / numeroDivisoes // Calcula o valor de H(a base de x no gráfico)
+    let resultado = 0
+    let soma = 0
+
+    // Calcula o ponto entre todos os trapézios
+    for (let i = 1; i < numeroDivisoes; i++) {
+        let x 
+        if (tipo === 'esquerda') {
+            x = Number(inicial + i * h)
+        } else if (tipo === 'direita') {
+            x = Number(inicial + (i + 1) * h)
+        } else { // meio
+            x = Number(inicial + (i + 0.5) * h)
+        }
+        soma += avaliarExpressao(funcao, x) // Acumulam os cálculos na variavel soma
+    }
+    resultado = soma * h
+
+    return resultado.toFixed(4)
+}
+
 module.exports = {
     regradoTrapezio,
-    regradoSimpson
+    regradoSimpson,
+    regradoRetangulo
 }
