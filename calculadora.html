@@ -9,6 +9,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="calculadora.css">
+    <script src="funcoes/termos.js"></script>
+    <script src="funcoes/ponto_critico.js"></script>
+    <script src="funcoes/funcoes.js"></script>
+    <script src="funcoes/derivadas.js"></script>
+    <script src="derivadaFuncional.js"></script>
+    <script src="calculadora.js"></script>
     <title>Calculadora</title>
 </head>
 
@@ -72,15 +78,13 @@
         </div>
     </div>
 
-
-    <script src="funcoes/termos.js"></script>
-    <script src="funcoes/ponto_critico.js"></script>
-    <script src="funcoes/funcoes.js"></script>
-    <script src="funcoes/derivadas.js"></script>
-    <script src="derivadaFuncional.js"></script>
-    <script src="calculadora.js"></script>
-    
-    <script>
+    <script type="module">
+        
+        const {
+            derivarTermo,
+            calcularDerivada
+        } = require("./funcoes/derivadas")
+        
         function inserirInput(botao) {
             const visor = document.getElementById('funcao');
             visor.value += botao.innerText;
@@ -120,6 +124,7 @@
                 resultadoElemento.innerText = "Erro ao calcular";
             }
         }
+
 
 
     </script>
