@@ -49,8 +49,8 @@ function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 'meio')
     let resultado = 0
     let soma = 0
 
-    // Calcula o ponto entre todos os trapézios
-    for (let i = 1; i < numeroDivisoes; i++) {
+    // Calcula o ponto entre todos os Retângulo
+    for (let i = 0; i < numeroDivisoes; i++) {
         let x 
         if (tipo === 'esquerda') {
             x = Number(inicial + i * h)
