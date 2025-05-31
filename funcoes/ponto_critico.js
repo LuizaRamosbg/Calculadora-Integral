@@ -1,9 +1,12 @@
 
 /**
- * 
- * @param {*} expr 
- * @param {*} x 
- * @returns 
+ * Avalia uma expressão matemática substituindo 'x' por um valor numérico e tratando operadores e constantes.
+ * A função lida com 'x', 'e' (número de Euler), e o operador de potência '^' (convertendo para '**').
+ * Também adiciona operadores de multiplicação implícita quando necessário (ex: '2x' vira '2*x', '3(x+1)' vira '3*(x+1)').
+ *
+ * @param {string} expr A expressão matemática a ser avaliada. Ex: "2*x^2 + 3*x - 1", "e^(x)"
+ * @param {number} x O valor numérico que substituirá a variável 'x' na expressão.
+ * @returns {number} O resultado numérico da avaliação da expressão.
  */
 
 function avaliarExpressao(expr, x) {
@@ -151,6 +154,14 @@ function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10
     return console.log("Ponto crítico indefinido") // se não tem ponto crítico, retorna mensagem
 }
 
+/**
+ * Classifica os pontos críticos de uma função usando o teste da segunda derivada.
+ *
+ * @param {string} segundaDerivada A expressão da segunda derivada da função (string). Ex: "4*x"
+ * @param {number[]} Xpc Um array de números contendo os pontos críticos (valores de 'x') a serem classificados.
+ * @returns {object|null} Um objeto contendo três arrays: `maximos`, `minimos` e `inflexao`,
+ * ou `null` se nenhum ponto crítico for fornecido.
+ */
 function MaxeMin(segundaDerivada, Xpc) {
     let maximos = [] // Armazena pontos críticos classificados como máximos locais
     let minimos = [] // Armazena pontos críticos classificados como mínimos locais
