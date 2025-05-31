@@ -60,9 +60,13 @@ function avaliarExpressao(expr, x) {
 }
 
 /**
- * 
- * @param {*} primeiraDerivada 
- * @returns 
+ * Encontra os pontos críticos de uma função (raízes da sua primeira derivada) dentro de um intervalo.
+ * Utiliza uma abordagem iterativa e busca binária para refinar a precisão.
+ *
+ * @param {string} primeiraDerivada A expressão da primeira derivada da função (string). Ex: "2*x + 3"
+ * @param {string} [intervaloMin="-10"] O limite inferior do intervalo de busca (string numérica).
+ * @param {string} [intervaloMax="10"] O limite superior do intervalo de busca (string numérica).
+ * @returns {number[] || void} Um array de números contendo os pontos críticos encontrados, ou `undefined` se a derivada for constante zero ou nenhum ponto crítico for encontrado.
  */
 function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10") {
     if (Number(primeiraDerivada) === 0) {
@@ -77,14 +81,14 @@ function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10
         f1 = avaliarExpressao(primeiraDerivada, i) // Avalia derivada em i
         f2 = avaliarExpressao(primeiraDerivada, i + 0.1) // Avalia derivada em i + 0.1
 
-        if (Math.abs(f1) < 1e-7) {
+        if (Math.abs(f1) < 1e-15) {
             // Verifique valores da derivada um pouco antes e um pouco depois do ponto i
             let delta = 0.0005; 
             let fAntes = avaliarExpressao(primeiraDerivada, i - delta); // Avalia a derivada em i - delta 
             let fDepois = avaliarExpressao(primeiraDerivada, i + delta); // Avalia a derivada em  + delta
 
             // Se a derivada antes e depois estiver perto de zero (ex: e^(3x)), ignora (não é ponto crítico real)
-            if (Math.abs(fAntes) < 1e-7 && Math.abs(fDepois) < 1e-7) {
+            if (Math.abs(fAntes) < 1e-7 && Math.abs(fDepois) < 1e-15) {
                 // provável falso positivo, não adiciona ponto crítico
                 continue;  // pula para próxima iteração do for
             }
@@ -93,7 +97,7 @@ function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10
             // Ou seja, aceita ponto crítico mesmo sem troca de sinal
             existe = false;
             for (let j = 0; j < pontosCriticos.length; j++) {
-                if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 1e-7) {
+                if (Math.abs(pontosCriticos[j] - Number(i.toFixed(4))) < 1e-15) {
                     existe = true;
                     break;
                 }
@@ -113,7 +117,7 @@ function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10
             let fb = f2 // Armazena o valor da função no ponto fim (f2)
             let fm // Inicializa a variável que armazenará o valor da função no ponto médio
 
-            while ((fim - ini) > 1e-7) { // Enquanto a distância entre fim e ini for maior que uma precisão desejada (1e-7)
+            while ((fim - ini) > 1e-15) { // Enquanto a distância entre fim e ini for maior que uma precisão desejada (1e-7)
 
                 meio = (ini + fim) / 2 // Calcula o ponto médio entre ini e fim
                 fm = avaliarExpressao(primeiraDerivada, meio) // Avalia a função no ponto médio
@@ -128,7 +132,7 @@ function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10
             }
             existe = false
             for (let j = 0; j < pontosCriticos.length; j++) { // Verifica se o ponto meio já está muito próximo de algum ponto já encontrado se sim evita que seja adicionado o mesmo Ponto critico
-                if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 1e-7) {
+                if (Math.abs(pontosCriticos[j] - Number(meio.toFixed(4))) < 1e-15) {
                     existe = true
                     break;
                 }
