@@ -88,7 +88,7 @@ function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10
             let fDepois = avaliarExpressao(primeiraDerivada, i + delta); // Avalia a derivada em  + delta
 
             // Se a derivada antes e depois estiver perto de zero (ex: e^(3x)), ignora (não é ponto crítico real)
-            if (Math.abs(fAntes) < 1e-7 && Math.abs(fDepois) < 1e-15) {
+            if (Math.abs(fAntes) < 1e-15 && Math.abs(fDepois) < 1e-15) {
                 // provável falso positivo, não adiciona ponto crítico
                 continue;  // pula para próxima iteração do for
             }
