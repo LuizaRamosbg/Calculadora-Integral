@@ -45,7 +45,8 @@ function dissecaTermo(termo) {
                 break;
             case '+':
             case '-':
-                if (valsTermo.temPotencia) valsTermo.expoente = charAtual // Ao encontrar um sinal após encontrar um ^ atualiza o sinal do expoente 
+                if (valsTermo.temPotencia)sinalExpoente = charAtual // Ao encontrar um sinal após encontrar um ^ atualiza o sinal do expoente   
+                if(valsTermo.temE)valsTermo.expoente += charAtual
                 break;
             case '^':
                 if (valsTermo.temX || valsTermo.temParenteses || valsTermo.temE) valsTermo.temPotencia = true // Ao encontrar uma potência após um x, 'e' ou parenteses atualiza temPotencia
