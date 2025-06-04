@@ -91,15 +91,15 @@ function calculadoraDerivadaIntegral() {
     const inicioFim = pontoInicial_e_Final()
     console.log("\n<========== Resultado Integral ==========>")
     const trapezio = regradoTrapezio(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
-    console.log(`A integral por Trapézio é aproximadamente: = ${trapezio}`) // Exibe a integral por trapezio da função.
+    console.log(`A integral por Trapézio é aproximadamente: ${trapezio}`) // Exibe a integral por trapezio da função.
     const simpson = regradoSimpson(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
-    console.log(`A integral por Simpson é aproximadamente: = ${simpson}`) // Exibe a integral por simpson da função.
+    console.log(`A integral por Simpson é aproximadamente: ${simpson}`) // Exibe a integral por simpson da função.
     const esquerda = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'esquerda')
     const meio = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'meio')
     const direita = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'direita')
-    console.log(`A integral por Riemann(esquerda) é aproximadamente: = ${esquerda}`) // Exibe a integral por Riemann da função.
-    console.log(`A integral por Riemann(meio) é aproximadamente: = ${meio}`) // Exibe a integral por Riemann da função.
-    console.log(`A integral por Riemann(direita) é aproximadamente: = ${direita}`) // Exibe a integral por Riemann da função.
+    console.log(`A integral por Riemann(esquerda) é aproximadamente: ${esquerda}`) // Exibe a integral por Riemann da função.
+    console.log(`A integral por Riemann(meio) é aproximadamente: ${meio}`) // Exibe a integral por Riemann da função.
+    console.log(`A integral por Riemann(direita) é aproximadamente: ${direita}`) // Exibe a integral por Riemann da função.
     /*
       console.log(separarFuncao(primeiraDerivada))
       const segundaDerivada = calcularDerivada(primeiraDerivada) // Calcula a segunda derivada da função.
