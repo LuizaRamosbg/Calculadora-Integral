@@ -23,7 +23,7 @@ function calculadoraDerivadaIntegral() {
    * Retorna A função matemática como uma string.
    */
   function obterFuncaoDoUsuario() {
-    const funcaoOriginal = prompt("Digite uma função (ex: 2x^3 + 5x - e^x): ") // Solicita ao usuário que digite uma função matemática e armazena a entrada na variável 'funcaoOriginal'.
+    const funcaoOriginal = prompt("Digite uma função (ex: 2x^3 + 5x - e^x): f(x) = ") // Solicita ao usuário que digite uma função matemática e armazena a entrada na variável 'funcaoOriginal'.
     console.log(`Função digitada: ${funcaoOriginal}`) // Exibe a função que o usuário digitou no console.
     return funcaoOriginal // Retorna a string da função inserida pelo usuário.
   }
@@ -69,30 +69,37 @@ function calculadoraDerivadaIntegral() {
    */
   function main() {
     const funcao = obterFuncaoDoUsuario() // Obtém a função inserida pelo usuário.
+    console.log("\n<========== Derivando ==========>")
     const primeiraDerivada = calcularDerivada(funcao) // Calcula a primeira derivada da função.
     console.log(`A primeira derivada é: ${primeiraDerivada}`) // Exibe a primeira derivada no console.
     const segundaDerivada = calcularDerivada(primeiraDerivada)
     console.log(`A segunda derivada é: ${segundaDerivada}`) // Exibe a segunda derivada da função.
+    console.log("\n<========== Escolha dos Intervalos de busca ==========>")
     const intervalo = intervaloBusca()
+    console.log("\n<========== Ponto Crítico ==========>")
     const Xpc = pontoCritico(primeiraDerivada, intervalo.intervaloMin, intervalo.intervaloMax) // Exibe o ponto crítico da função da função.
+    console.log("\n<========== Pontos Max e Min ==========>")
     const MaxMin = MaxeMin(segundaDerivada, Xpc)
     if (MaxMin) {
-      MaxMin.minimos.length > 0 ? console.log(`Ponto min: ${MaxMin.minimos}`) : null
-      MaxMin.inflexao.length > 0 ? console.log(`Ponto de inflexão: ${MaxMin.inflexao}`) : null
-      MaxMin.maximos.length > 0 ? console.log(`Ponto max: ${MaxMin.maximos}`) : null
+      MaxMin.minimos.length > 0 ? console.log(`Ponto min: [${MaxMin.minimos}]`) : null
+      MaxMin.inflexao.length > 0 ? console.log(`Ponto de inflexão: [${MaxMin.inflexao}]`) : null
+      MaxMin.maximos.length > 0 ? console.log(`Ponto max: [${MaxMin.maximos}]`) : null
     }
+    console.log("\n<========== Integral Nº Divisão ==========>")
     const divisoes = numDivisoesIntegral()
+    console.log("\n<========== Escolha dos Intervalos da Integral ==========>")
     const inicioFim = pontoInicial_e_Final()
+    console.log("\n<========== Resultado Integral ==========>")
     const trapezio = regradoTrapezio(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
-    console.log(`A integral por Trapézio é aproximadamente: ${trapezio}`) // Exibe a integral por trapezio da função.
+    console.log(`A integral por Trapézio é aproximadamente: = ${trapezio}`) // Exibe a integral por trapezio da função.
     const simpson = regradoSimpson(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
-    console.log(`A integral por Simpson é aproximadamente: ${simpson}`) // Exibe a integral por simpson da função.
-    const esquerda = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'esquerda');
-    const direita = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'direita');
+    console.log(`A integral por Simpson é aproximadamente: = ${simpson}`) // Exibe a integral por simpson da função.
+    const esquerda = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'esquerda')
     const meio = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'meio')
-    console.log(`A integral por Riemann(esquerda) é aproximadamente: ${esquerda}`) // Exibe a integral por Riemann da função.
-    console.log(`A integral por Riemann(direita) é aproximadamente: ${direita}`) // Exibe a integral por Riemann da função.
-    console.log(`A integral por Riemann(meio) é aproximadamente: ${meio}`) // Exibe a integral por Riemann da função.
+    const direita = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'direita')
+    console.log(`A integral por Riemann(esquerda) é aproximadamente: = ${esquerda}`) // Exibe a integral por Riemann da função.
+    console.log(`A integral por Riemann(meio) é aproximadamente: = ${meio}`) // Exibe a integral por Riemann da função.
+    console.log(`A integral por Riemann(direita) é aproximadamente: = ${direita}`) // Exibe a integral por Riemann da função.
     /*
       console.log(separarFuncao(primeiraDerivada))
       const segundaDerivada = calcularDerivada(primeiraDerivada) // Calcula a segunda derivada da função.
