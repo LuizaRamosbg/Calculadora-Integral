@@ -45,7 +45,7 @@ function dissecaTermo(termo) {
                 break;
             case '+':
             case '-':
-                if (valsTermo.temPotencia) sinalExpoente = charAtual // Ao encontrar um sinal após encontrar um ^ atualiza o sinal do expoente 
+                if (valsTermo.temPotencia) valsTermo.expoente = charAtual // Ao encontrar um sinal após encontrar um ^ atualiza o sinal do expoente 
                 break;
             case '^':
                 if (valsTermo.temX || valsTermo.temParenteses || valsTermo.temE) valsTermo.temPotencia = true // Ao encontrar uma potência após um x, 'e' ou parenteses atualiza temPotencia
@@ -81,7 +81,7 @@ function dissecaTermo(termo) {
                 break; // Ignora / e espaços vazios
             default: // qualquer outro caractere será adicionado no coeficiente ou no expoente
                 if (!valsTermo.temX && !valsTermo.temParenteses && !valsTermo.temE) valsTermo.coeficiente += charAtual // Enquanto um x ou parênteses não tiver sido encontrado, adiciona no coeficiente
-                if (valsTermo.temPotencia) valsTermo.expoente += charAtual                          // Após encontrar uma potência adiciona no expoente
+                if (valsTermo.temPotencia)valsTermo.expoente += charAtual                          // Após encontrar uma potência adiciona no expoente
         }
     }
 
@@ -95,7 +95,6 @@ function dissecaTermo(termo) {
             valsTermo.temPotencia = false
         }
     } 
-    
     return valsTermo // Retorna o objeto contendo o termo dissecado
 }
 
