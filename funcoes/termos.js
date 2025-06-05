@@ -4,7 +4,7 @@
  * @param {string} termo O termo que será dissecado
  * @returns {object}    Um objeto contendo todos os dados do termo
  */
-function dissecaTermo(termo) {
+export function dissecaTermo(termo) {
     let sinalCoeficiente = "+",  // Guarda o sinal do coeficiente do termo
         sinalExpoente = "+"     // Guarda o sinal do expoente do termo
 
@@ -46,7 +46,7 @@ function dissecaTermo(termo) {
             case '+':
             case '-':
                 if (valsTermo.temPotencia)sinalExpoente = charAtual // Ao encontrar um sinal após encontrar um ^ atualiza o sinal do expoente   
-                if(valsTermo.temE)valsTermo.expoente += charAtual
+                if (valsTermo.temE)valsTermo.expoente += charAtual
                 break;
             case '^':
                 if (valsTermo.temX || valsTermo.temParenteses || valsTermo.temE) valsTermo.temPotencia = true // Ao encontrar uma potência após um x, 'e' ou parenteses atualiza temPotencia
@@ -107,7 +107,7 @@ function dissecaTermo(termo) {
  * @param {boolean} parentesesExpoente Define se o expoente do termo estará dentro de um parênteses
  * @returns {string} O termo montado em forma de texto
  */
-function montaTermo(termo, primeiro = false, parenteses = false, parentesesExpoente = false) {
+export function montaTermo(termo, primeiro = false, parenteses = false, parentesesExpoente = false) {
     let termoMontado = "" // Inicia o termoMontado vazio
     
     if (!((termo.temParenteses || termo.temX || termo.temE) && termo.coeficiente === 1)) // Verifica se o termo tem x, 'e' ou parênteses juntamenente com um coeficiente 1, caso tenha não o adiciona ao termo montado
@@ -144,9 +144,4 @@ function montaTermo(termo, primeiro = false, parenteses = false, parentesesExpoe
         termoMontado = ` * ${termoMontado}`
 
     return termoMontado.replace("  ", " ") // Retorna o termo montado substituindo redundâncias de espaços duplos
-}
-
-module.exports = {
-    dissecaTermo,
-    montaTermo
 }

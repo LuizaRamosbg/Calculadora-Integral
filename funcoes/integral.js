@@ -1,13 +1,13 @@
-const {
+import {
     avaliarExpressao,
-} = require("./ponto_critico")
+} from "./ponto_critico.js";
 
-const {
+import {
     corrigirFuncao
-} = require("./funcoes")
+} from "./funcoes.js";
 
 // Calcula a integral pela regra do trapézio
-function regradoTrapezio(funcao, inicial, final, numeroDivisoes) {
+export function regradoTrapezio(funcao, inicial, final, numeroDivisoes) {
     funcao = corrigirFuncao(funcao)
     let h = (final - inicial) / numeroDivisoes // Calcula o valor de H(a base de x no gráfico)
     let soma = avaliarExpressao(funcao, inicial) + avaliarExpressao(funcao, final) // Calcula a soma do ponto inicial + final
@@ -23,7 +23,7 @@ function regradoTrapezio(funcao, inicial, final, numeroDivisoes) {
 }
 
 // Calcula a integral pela regra de Simpson
-function regradoSimpson(funcao, inicial, final, numeroDivisoes) {
+export function regradoSimpson(funcao, inicial, final, numeroDivisoes) {
     funcao = corrigirFuncao(funcao)
     if (numeroDivisoes % 2 != 0) // Checa se o número de divisões é par, se não for, adiciona 1
         numeroDivisoes++
@@ -42,7 +42,7 @@ function regradoSimpson(funcao, inicial, final, numeroDivisoes) {
     return resultado.toFixed(4)
 }
 
-function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 'meio') {
+export function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 'meio') {
     funcao = corrigirFuncao(funcao)
     let h = (final - inicial) / numeroDivisoes // Calcula o valor de H(a base de x no gráfico)
     let resultado = 0
@@ -63,10 +63,4 @@ function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 'meio')
     resultado = soma * h
 
     return resultado.toFixed(4)
-}
-
-module.exports = {
-    regradoTrapezio,
-    regradoSimpson,
-    regradoRetangulo
 }

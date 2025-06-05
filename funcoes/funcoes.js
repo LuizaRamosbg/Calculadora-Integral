@@ -1,14 +1,14 @@
-const {
+import {
     dissecaTermo,
     montaTermo
-} = require("./termos")
+} from "./termos.js";
 
 /**
  * Remove os espaços em branco, corrige X -> x e remove parênteses inúteis de uma função.
  * @param {string} funcao A função a ser limpa.
  * Retorna a função corrigida.
  */
-function limparFuncao(funcao) {
+export function limparFuncao(funcao) {
     let resultado = "" // Inicializa uma string vazia para armazenar o resultado limpo.
 
     if (funcao[0] === '(' && funcao[funcao.length - 1] === ')') { // Verifica se a função está em um parênteses
@@ -22,7 +22,7 @@ function limparFuncao(funcao) {
     }
 
     for (let i = 0; i < funcao.length; i++) { // Loop através de cada termo.
-        charAtual = funcao[i] // Armazena o caractere atual.
+        let charAtual = funcao[i] // Armazena o caractere atual.
         switch (charAtual) {
             case ' ': // Ignora espaços vazios
                 break;
@@ -45,7 +45,7 @@ function limparFuncao(funcao) {
  * @param {string} funcaoOriginal A função matemática como uma string.
  * @returns {string[]} Um array contendo os termos da função.
  */
-function separarFuncao(funcaoOriginal) {
+export function separarFuncao(funcaoOriginal) {
     const termos = []         // Inicializa um array vazio para armazenar os termos separados.
     let termoAtual = ""       // Inicializa uma string vazia para construir o termo atual que está sendo lido.
     let qtdParenteses = 0     // Conta quantos parênteses estão abertos em um dado momento
@@ -111,9 +111,9 @@ function separarFuncao(funcaoOriginal) {
     return termos // Retorna o array 'termos' contendo os termos separados da função em forma de termo dissecado.
 }
 
-function corrigirFuncao(funcao) {
+export function corrigirFuncao(funcao) {
     let termos = separarFuncao(funcao)
-    funcaoCorrigida = montaTermo(termos[0], true, false, true)
+    let funcaoCorrigida = montaTermo(termos[0], true, false, true)
     for (let i = 1; i < termos.length; i++) {
         funcaoCorrigida += montaTermo(termos[i], false, false, true)
     }
@@ -125,7 +125,7 @@ function corrigirFuncao(funcao) {
  * @param {*} funcao 
  * @param {*} separado 
  */
-function simplificaFuncao(funcao, separado = false){
+export function simplificaFuncao(funcao, separado = false){
     let termos, resultado, termoAtual
     let i, j
 
@@ -143,12 +143,4 @@ function simplificaFuncao(funcao, separado = false){
     }
 
     return resultado
-}
-
-
-module.exports = {
-    limparFuncao,
-    separarFuncao,
-    corrigirFuncao,
-    simplificaFuncao
 }

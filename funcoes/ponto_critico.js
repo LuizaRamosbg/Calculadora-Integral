@@ -9,7 +9,7 @@
  * @returns {number} O resultado numérico da avaliação da expressão.
  */
 
-function avaliarExpressao(expr, x) {
+export function avaliarExpressao(expr, x) {
     let expressaoComValor = ''// Inicializa uma string vazia para montar a expressão com 'x' substituído.
     let char // Variável para armazenar o caractere atual da expressão.
     let anterior // Variável para armazenar o caractere anterior para decisões contextuais.
@@ -68,7 +68,7 @@ function avaliarExpressao(expr, x) {
  * @param {string} [intervaloMax="10"] O limite superior do intervalo de busca (string numérica).
  * @returns {number[] || void} Um array de números contendo os pontos críticos encontrados, ou `undefined` se a derivada for constante zero ou nenhum ponto crítico for encontrado.
  */
-function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10") {
+export function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10") {
     if (Number(primeiraDerivada) === 0) {
         return console.log("Ponto crítico indefinido") // Se a derivada for constante zero (não é uma função válida para pontos críticos), retorna mensagem
     }
@@ -166,7 +166,7 @@ function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10
  * @returns {object|null} Um objeto contendo três arrays: `maximos`, `minimos` e `inflexao`,
  * ou `null` se nenhum ponto crítico for fornecido.
  */
-function MaxeMin(segundaDerivada, Xpc) {
+export function MaxeMin(segundaDerivada, Xpc) {
     let maximos = [] // Armazena pontos críticos classificados como máximos locais
     let minimos = [] // Armazena pontos críticos classificados como mínimos locais
     let inflexao = [] // Armazena pontos críticos classificados como pontos de inflexão
@@ -188,10 +188,4 @@ function MaxeMin(segundaDerivada, Xpc) {
     }
 
     return { maximos, minimos, inflexao } // Retorna objeto com as classificações
-}
-
-module.exports = {
-    avaliarExpressao,
-    pontoCritico,
-    MaxeMin
 }

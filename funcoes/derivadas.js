@@ -1,18 +1,18 @@
-const {
+import {
     dissecaTermo,
     montaTermo
-} = require("./termos")
+} from "./termos.js";
 
-const {
-    limparFuncao,
+import {
+    limparFuncao, 
     separarFuncao
-} = require("./funcoes")
+} from "./funcoes.js";
 /**
  * Deriva um único termo da função (considerando a regra do tombo para polinômios) sem usar métodos restritos.
  * @param {object} termo O termo a ser derivado.
  * @returns {string} Rtorna a derivada do termo
  */
-function derivarTermo(termo) {
+export function derivarTermo(termo) {
     let res = "0" // Variável para guardar o conteúdo do resultado
     if (termo.temE) {
         // Caso o termo tenha um e de Euler, aplica sua regra
@@ -70,7 +70,7 @@ function derivarTermo(termo) {
  * @param {string} funcaoOriginal Função que será derivada
  * @returns {string} Retorna A string representando a derivada.
  */
-function calcularDerivada(funcaoOriginal) {
+export function calcularDerivada(funcaoOriginal) {
     const termos = separarFuncao(funcaoOriginal) // Separa a função original em um array de termos.
     const derivadas = []        // Inicializa um array para armazenar as derivadas de cada termo.
     const termosDerivadas = []  // Inicializa um array para armazenar os termos da derivada.
@@ -102,9 +102,4 @@ function calcularDerivada(funcaoOriginal) {
 
     resultado = resultado.replaceAll("* +", "*")
     return resultado === "" ? "0" : resultado // Retorna a string da derivada resultante (ou "0" se todas as derivadas forem zero).
-}
-
-module.exports = {
-    derivarTermo,
-    calcularDerivada
 }

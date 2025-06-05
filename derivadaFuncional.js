@@ -1,22 +1,10 @@
-const {
-  derivarTermo,
-  calcularDerivada
-} = require("./funcoes/derivadas")
-
-const {
-  avaliarExpressao,
-  pontoCritico,
-  MaxeMin
-} = require("./funcoes/ponto_critico")
-
-const {
-  regradoTrapezio,
-  regradoSimpson,
-  regradoRetangulo
-} = require("./funcoes/integral")
+import { derivarTermo, calcularDerivada } from "./funcoes/derivadas.js";
+import { avaliarExpressao, pontoCritico, MaxeMin } from "./funcoes/ponto_critico.js"; 
+import { regradoTrapezio, regradoSimpson, regradoRetangulo } from "./funcoes/integral.js"; 
+import promptSync from "prompt-sync"; // Importa a função prompt-sync como padrão
 
 function calculadoraDerivadaIntegral() {
-  const prompt = require("prompt-sync")() // Importa a biblioteca 'prompt-sync' para ler a entrada do usuário no terminal.
+  const prompt = promptSync();// Importa a biblioteca 'prompt-sync' para ler a entrada do usuário no terminal.
 
   /**
    * Obtém a função matemática inserida pelo usuário.
