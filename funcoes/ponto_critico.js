@@ -55,7 +55,7 @@ export function avaliarExpressao(expr, x) {
                 expressaoComValor += char
         }
     }
-    console.log(expressaoComValor + '=' + eval(expressaoComValor))
+    //console.log(expressaoComValor + '=' + eval(expressaoComValor))
     return eval(expressaoComValor) // Avalia a expressão montada e retorna o resultado numérico
 }
 
