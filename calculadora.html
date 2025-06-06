@@ -9,12 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="calculadora.css">
-    <script src="funcoes/termos.js"></script>
-    <script src="funcoes/ponto_critico.js"></script>
-    <script src="funcoes/funcoes.js"></script>
-    <script src="funcoes/derivadas.js"></script>
-    <script src="derivadaFuncional.js"></script>
-    <script src="calculadora.js"></script>
     <title>Calculadora</title>
 </head>
 
@@ -63,7 +57,7 @@
 
             <button type="button" class="btn " onclick="inserirInput(this)">x</button>
             <button type="button" class="btn " onclick="inserirInput(this)">e</button>
-            <button type="button" class="igual" onclick="executarCalculo(funcao)">Calcular</button>
+            <button type="button" class="igual" onclick="executarCalculo()">Calcular</button>
             <button type="button" class="btn " onclick="inserirInput(this)">(</button>
 
             <button type="button" class="btn " onclick="inserirInput(this)">0</button>
@@ -78,13 +72,7 @@
         </div>
     </div>
 
-    <script type="module">
-        
-        const {
-            derivarTermo,
-            calcularDerivada
-        } = require("./funcoes/derivadas")
-        
+    <script>
         function inserirInput(botao) {
             const visor = document.getElementById('funcao');
             visor.value += botao.innerText;
@@ -111,20 +99,92 @@
                 'https://img.icons8.com/emoji/48/sun-emoji.png';
         }
 
+    </script>
+
+    <script type="module">
+
+        import { realizarCalculos } from "./calculadoraCore.js";
+
+
         function executarCalculo() {
-            const entrada = document.getElementById('funcao').value;
-            const resultadoElemento = document.getElementById('resultado');
+            const funcaoOriginal = document.getElementById('funcao').value;
+            const intervaloMin = parseFloat(document.getElementById('intervaloMin').value);
+            const intervaloMax = parseFloat(document.getElementById('intervaloMax').value);
+            const integralInicio = parseFloat(document.getElementById('integralInicio').value);
+            const integralFim = parseFloat(document.getElementById('integralFim').value);
+            const numDivisoes = parseInt(document.getElementById('numDivisoes').value, 10);
+
+
+
+
+            // Validação de inputs (repetida do exemplo anterior)
+            if (!funcaoOriginal) {
+                alert("Por favor, digite uma função para calcular.");
+                return;
+            }
+            if (isNaN(intervaloMin) || isNaN(intervaloMax) || isNaN(integralInicio) || isNaN(integralFim) || isNaN(numDivisoes)) {
+                alert("Por favor, preencha todos os parâmetros numéricos corretamente.");
+                return;
+            }
+            if (numDivisoes <= 0) {
+                alert("O número de divisões deve ser um inteiro positivo.");
+                return;
+            }
+            if (intervaloMin >= intervaloMax) {
+                alert("O intervalo mínimo para pontos críticos deve ser menor que o intervalo máximo.");
+                return;
+            }
+            if (integralInicio >= integralFim) {
+                alert("O ponto inicial da integral deve ser menor que o ponto final.");
+                return;
+            }
 
             try {
-                const resultado = calculadoraDerivadaIntegral(entrada);
-                console.log("Resultado da derivada:", resultado);
-                resultadoElemento.innerText = resultado;
+                // Chama a função central de cálculo (o motor)
+                const resultados = realizarCalculos(funcaoOriginal, intervaloMin, intervaloMax, integralInicio, integralFim, numDivisoes);
+
+                if (resultados.error) {
+                    throw new Error(resultados.error + (resultados.details ? ` (${resultados.details})` : ''));
+                }
+
+                // Exibir resultados na página
+                document.getElementById('res-funcao-original').innerText = funcaoOriginal;
+                document.getElementById('res-primeira-derivada').innerText = resultados.primeiraDerivada;
+                document.getElementById('res-segunda-derivada').innerText = resultados.segundaDerivada;
+                document.getElementById('res-pontos-criticos').innerText = resultados.pontosCriticos.length > 0 ? resultados.pontosCriticos.join(', ') : 'Nenhum encontrado ou indefinido.';
+                document.getElementById('res-maximos').innerText = resultados.classificacaoPontos.maximos.length > 0 ? resultados.classificacaoPontos.maximos.join(', ') : 'Nenhum.';
+                document.getElementById('res-minimos').innerText = resultados.classificacaoPontos.minimos.length > 0 ? resultados.classificacaoPontos.minimos.join(', ') : 'Nenhum.';
+                document.getElementById('res-inflexao').innerText = resultados.classificacaoPontos.inflexao.length > 0 ? resultados.classificacaoPontos.inflexao.join(', ') : 'Nenhum.';
+                document.getElementById('res-integral-trapezio').innerText = resultados.integralTrapezio;
+                document.getElementById('res-integral-simpson').innerText = resultados.integralSimpson;
+                document.getElementById('res-integral-riemann-esquerda').innerText = resultados.integralRiemannEsquerda;
+                document.getElementById('res-integral-riemann-meio').innerText = resultados.integralRiemannMeio;
+                document.getElementById('res-integral-riemann-direita').innerText = resultados.integralRiemannDireita;
+
             } catch (erro) {
                 console.error("Erro durante o cálculo:", erro);
-                resultadoElemento.innerText = "Erro ao calcular";
+                // Resetar resultados para "Erro" ou vazio em caso de falha
+                document.getElementById('res-funcao-original').innerText = funcaoOriginal;
+                document.getElementById('res-primeira-derivada').innerText = 'Erro';
+                document.getElementById('res-segunda-derivada').innerText = 'Erro';
+                document.getElementById('res-pontos-criticos').innerText = 'Erro';
+                document.getElementById('res-maximos').innerText = 'Erro';
+                document.getElementById('res-minimos').innerText = 'Erro';
+                document.getElementById('res-inflexao').innerText = 'Erro';
+                document.getElementById('res-integral-trapezio').innerText = 'Erro';
+                document.getElementById('res-integral-simpson').innerText = 'Erro';
+                document.getElementById('res-integral-riemann-esquerda').innerText = 'Erro';
+                document.getElementById('res-integral-riemann-meio').innerText = 'Erro';
+                document.getElementById('res-integral-riemann-direita').innerText = 'Erro';
+                alert(`Ocorreu um erro ao calcular a função: ${erro.message}. Por favor, verifique a sintaxe da função ou os parâmetros.`);
             }
         }
-
+        // Expor as funções ao escopo global (window) para que os onclicks no HTML funcionem
+        window.inserirInput = inserirInput;
+        window.limpartexto = limpartexto;
+        window.apagar = apagar;
+        window.alternarModo = alternarModo;
+        window.executarCalculo = executarCalculo;
 
 
     </script>
