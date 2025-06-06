@@ -19,7 +19,7 @@ export function regradoTrapezio(funcao, inicial, final, numeroDivisoes) {
         soma += 2 * avaliarExpressao(funcao, x) // multiplica o calculo dos trapézios por 2 e acumulam eles na variavel soma
     }
     resultado = soma * (h / 2)
-    return resultado.toFixed(4)
+    return Number(resultado.toFixed(4))
 }
 
 // Calcula a integral pela regra de Simpson
@@ -39,7 +39,7 @@ export function regradoSimpson(funcao, inicial, final, numeroDivisoes) {
     }
     resultado = soma * (h / 3)
 
-    return resultado.toFixed(4)
+    return Number(resultado.toFixed(4))
 }
 
 export function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 'meio') {
@@ -62,5 +62,5 @@ export function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 
     }
     resultado = soma * h
 
-    return resultado.toFixed(4)
+    return Number(resultado.toFixed(4))
 }

@@ -26,19 +26,42 @@
         <button class="toggle-dark" onclick="alternarModo()">
             <img id="icone-tema" src="https://img.icons8.com/emoji/48/sun-emoji.png" alt="tema">
         </button>
+        <button type="button" class="toggle-parametros" onclick="toggleParametros()">
+            Configurações Avançadas
+        </button>
     </div>
 
-
+    <div class="parametros-calculo" id="parametrosSecao" style="display: none;" role="group" aria-label="Parâmetros de Cálculo">
+        <h2 class="subtitulo-parametros">Intervalos e Divisões</h2>
+        <div class="grupo-input">
+            <label for="intervaloMin">Pontos Críticos (Min):</label>
+            <input type="number" id="intervaloMin" value="-10">
+        </div>
+        <div class="grupo-input">
+            <label for="intervaloMax">Pontos Críticos (Max):</label>
+            <input type="number" id="intervaloMax" value="10">
+        </div>
+        <div class="grupo-input">
+            <label for="integralInicio">Integral (Início):</label>
+            <input type="number" id="integralInicio" value="0">
+        </div>
+        <div class="grupo-input">
+            <label for="integralFim">Integral (Fim):</label>
+            <input type="number" id="integralFim" value="1">
+        </div>
+        <div class="grupo-input">
+            <label for="numDivisoes">Num. Divisões (Integral):</label>
+            <input type="number" id="numDivisoes" value="100">
+        </div>
+    </div>
 
     <div class="calculadora" role="toolbar" aria-label="calculadora">
         <input type="text" id="funcao" placeholder="Digite a função (ex: x^2 + 3*x)">
 
         <div class="botoes btn-group me-2" role="group" aria-label="Numerais">
-
             <button type="button" class="btn " onclick="inserirInput(this)">9</button>
             <button type="button" class="btn " onclick="inserirInput(this)">8</button>
             <button type="button" class="btn " onclick="inserirInput(this)">7</button>
-
             <button type="button" class="btn " onclick="inserirInput(this)">+</button>
             <button type="button" class="btn " onclick="inserirInput(this)">-</button>
             <button type="button" class="limpar " onclick="apagar()">⌫</button>
@@ -46,7 +69,6 @@
             <button type="button" class="btn " onclick="inserirInput(this)">4</button>
             <button type="button" class="btn " onclick="inserirInput(this)">5</button>
             <button type="button" class="btn " onclick="inserirInput(this)">6</button>
-
             <button type="button" class="btn " onclick="inserirInput(this)">*</button>
             <button type="button" class="btn " onclick="inserirInput(this)">÷</button>
             <button type="button" class="limpar " onclick="limpartexto()">C</button>
@@ -54,7 +76,6 @@
             <button type="button" class="btn " onclick="inserirInput(this)">3</button>
             <button type="button" class="btn " onclick="inserirInput(this)">2</button>
             <button type="button" class="btn " onclick="inserirInput(this)">1</button>
-
             <button type="button" class="btn " onclick="inserirInput(this)">x</button>
             <button type="button" class="btn " onclick="inserirInput(this)">e</button>
             <button type="button" class="igual" onclick="executarCalculo()">Calcular</button>
@@ -64,12 +85,9 @@
             <button type="button" class="btn " onclick="inserirInput(this)">)</button>
             <button type="button" class="btn " onclick="inserirInput(this)">^</button>
             <button type="button" class="btn " onclick="inserirInput(this)">=</button>
-
         </div>
 
-        <div class="resultados">
-            <p id="resultado"></p>
-        </div>
+        <output id="resultadoDisplay" aria-live="polite"></output>
     </div>
 
     <script>
@@ -78,13 +96,36 @@
             visor.value += botao.innerText;
         }
 
+        // Variáveis para o ciclo de resultados
+        let resultadosParaExibir = [];
+        let resultadoAtualIndex = 0;
+        let intervaloResultados = null; // Para armazenar o ID do setInterval
+
+        // Função para parar o ciclo de exibição
+        function pararCicloResultados() {
+            if (intervaloResultados) {
+                clearInterval(intervaloResultados);
+                intervaloResultados = null;
+                console.log("Ciclo de resultados parado.");
+            }
+        }
+
         function limpartexto() {
             document.getElementById('funcao').value = '';
+            document.getElementById('resultadoDisplay').value = ''; // Limpa também o display de resultados
+            pararCicloResultados(); // Para o ciclo
+            resultadosParaExibir = []; // Limpa o array
+            resultadoAtualIndex = 0; // Reseta o índice
         }
 
         function apagar() {
             const visor = document.getElementById('funcao');
             visor.value = visor.value.slice(0, -1);
+            // Poderíamos parar o ciclo aqui também, se desejado,
+            // ou deixar que o próximo cálculo reinicie ele.
+            // pararCicloResultados();
+            // resultadosParaExibir = [];
+            // resultadoAtualIndex = 0;
         }
 
         function alternarModo() {
@@ -99,14 +140,59 @@
                 'https://img.icons8.com/emoji/48/sun-emoji.png';
         }
 
+        function toggleParametros() {
+            const parametrosDiv = document.getElementById('parametrosSecao');
+            const buttonText = document.querySelector('.toggle-parametros');
+            if (parametrosDiv.style.display === 'none' || parametrosDiv.style.display === '') {
+                parametrosDiv.style.display = 'block';
+                buttonText.innerText = 'Esconder Configurações';
+            } else {
+                parametrosDiv.style.display = 'none';
+                buttonText.innerText = 'Configurações Avançadas';
+            }
+        }
+
+        function exibirProximoResultado() {
+            if (resultadosParaExibir.length === 0) {
+                document.getElementById('resultadoDisplay').value = 'Nenhum resultado para exibir.';
+                pararCicloResultados(); // Parar se não houver resultados
+                return;
+            }
+
+            const resultadoDisplay = document.getElementById('resultadoDisplay');
+            resultadoDisplay.value = resultadosParaExibir[resultadoAtualIndex];
+
+            // Avança para o próximo resultado
+            resultadoAtualIndex++;
+
+            // Verifica se chegamos ao final do array
+            if (resultadoAtualIndex >= resultadosParaExibir.length) {
+                // Se sim, exibimos o último resultado por mais 2 segundos e paramos o ciclo
+                // Ou você pode reiniciar para o primeiro resultado após um pequeno delay,
+                // ou simplesmente parar e deixar o último resultado visível.
+                
+                // Opção 1: Para no último resultado exibido (mais simples para "parar de fazer os cálculos")
+                pararCicloResultados();
+                resultadoAtualIndex = 0; // Reseta o índice para um eventual novo cálculo
+
+                // Opção 2: Reinicia o ciclo do zero após um pequeno tempo, para que o usuário veja tudo novamente
+                // resultadoAtualIndex = 0;
+                // // Não chamar pararCicloResultados aqui, apenas deixar ele rodar novamente ou
+                // // configurar um setTimeout para reiniciar se quiser um "delay" antes de repetir
+                // console.log("Ciclo de resultados reiniciado.");
+
+
+            }
+        }
+
     </script>
 
     <script type="module">
 
         import { realizarCalculos } from "./calculadoraCore.js";
 
-
         function executarCalculo() {
+            // ... (suas validações de input existentes) ...
             const funcaoOriginal = document.getElementById('funcao').value;
             const intervaloMin = parseFloat(document.getElementById('intervaloMin').value);
             const intervaloMax = parseFloat(document.getElementById('intervaloMax').value);
@@ -114,78 +200,119 @@
             const integralFim = parseFloat(document.getElementById('integralFim').value);
             const numDivisoes = parseInt(document.getElementById('numDivisoes').value, 10);
 
-
-
-
-            // Validação de inputs (repetida do exemplo anterior)
             if (!funcaoOriginal) {
                 alert("Por favor, digite uma função para calcular.");
                 return;
             }
             if (isNaN(intervaloMin) || isNaN(intervaloMax) || isNaN(integralInicio) || isNaN(integralFim) || isNaN(numDivisoes)) {
-                alert("Por favor, preencha todos os parâmetros numéricos corretamente.");
+                alert("Por favor, preencha todos os parâmetros numéricos corretamente na seção de 'Configurações Avançadas'.");
+                const parametrosDiv = document.getElementById('parametrosSecao');
+                if (parametrosDiv.style.display === 'none' || parametrosDiv.style.display === '') {
+                    toggleParametros();
+                }
                 return;
             }
             if (numDivisoes <= 0) {
                 alert("O número de divisões deve ser um inteiro positivo.");
+                const parametrosDiv = document.getElementById('parametrosSecao');
+                if (parametrosDiv.style.display === 'none' || parametrosDiv.style.display === '') {
+                    toggleParametros();
+                }
                 return;
             }
             if (intervaloMin >= intervaloMax) {
                 alert("O intervalo mínimo para pontos críticos deve ser menor que o intervalo máximo.");
+                const parametrosDiv = document.getElementById('parametrosSecao');
+                if (parametrosDiv.style.display === 'none' || parametrosDiv.style.display === '') {
+                    toggleParametros();
+                }
                 return;
             }
             if (integralInicio >= integralFim) {
                 alert("O ponto inicial da integral deve ser menor que o ponto final.");
+                const parametrosDiv = document.getElementById('parametrosSecao');
+                if (parametrosDiv.style.display === 'none' || parametrosDiv.style.display === '') {
+                    toggleParametros();
+                }
                 return;
             }
 
+            // Limpa o ciclo anterior se houver
+            pararCicloResultados(); // Use a nova função para parar
+            resultadosParaExibir = []; // Limpa o array de resultados
+            resultadoAtualIndex = 0; // Reseta o índice
+
             try {
-                // Chama a função central de cálculo (o motor)
                 const resultados = realizarCalculos(funcaoOriginal, intervaloMin, intervaloMax, integralInicio, integralFim, numDivisoes);
 
                 if (resultados.error) {
                     throw new Error(resultados.error + (resultados.details ? ` (${resultados.details})` : ''));
                 }
 
-                // Exibir resultados na página
-                document.getElementById('res-funcao-original').innerText = funcaoOriginal;
-                document.getElementById('res-primeira-derivada').innerText = resultados.primeiraDerivada;
-                document.getElementById('res-segunda-derivada').innerText = resultados.segundaDerivada;
-                document.getElementById('res-pontos-criticos').innerText = resultados.pontosCriticos.length > 0 ? resultados.pontosCriticos.join(', ') : 'Nenhum encontrado ou indefinido.';
-                document.getElementById('res-maximos').innerText = resultados.classificacaoPontos.maximos.length > 0 ? resultados.classificacaoPontos.maximos.join(', ') : 'Nenhum.';
-                document.getElementById('res-minimos').innerText = resultados.classificacaoPontos.minimos.length > 0 ? resultados.classificacaoPontos.minimos.join(', ') : 'Nenhum.';
-                document.getElementById('res-inflexao').innerText = resultados.classificacaoPontos.inflexao.length > 0 ? resultados.classificacaoPontos.inflexao.join(', ') : 'Nenhum.';
-                document.getElementById('res-integral-trapezio').innerText = resultados.integralTrapezio;
-                document.getElementById('res-integral-simpson').innerText = resultados.integralSimpson;
-                document.getElementById('res-integral-riemann-esquerda').innerText = resultados.integralRiemannEsquerda;
-                document.getElementById('res-integral-riemann-meio').innerText = resultados.integralRiemannMeio;
-                document.getElementById('res-integral-riemann-direita').innerText = resultados.integralRiemannDireita;
+                // Função auxiliar para formatar resultados numéricos ou exibir "Erro"
+                const formatarNumero = (valor, casasDecimais) => {
+                    if (typeof valor === 'number' && !isNaN(valor)) {
+                        return valor.toFixed(casasDecimais);
+                    }
+                    return 'Inválido'; // Ou 'Erro de Cálculo', 'N/A'
+                };
+
+                // Preencher o array de resultados para exibição ciclagem
+                resultadosParaExibir.push(`Função: ${funcaoOriginal}`);
+                resultadosParaExibir.push(`1ª Derivada: ${resultados.primeiraDerivada || 'N/A'}`);
+                resultadosParaExibir.push(`2ª Derivada: ${resultados.segundaDerivada || 'N/A'}`);
+
+                const pontosCriticosFormatados = resultados.pontosCriticos.length > 0 ?
+                    resultados.pontosCriticos.map(p => formatarNumero(p, 4)).join(', ') : 'Nenhum';
+                resultadosParaExibir.push(`Pontos Críticos: ${pontosCriticosFormatados}`);
+
+                if (resultados.classificacaoPontos.maximos.length > 0) {
+                    const maximosFormatados = resultados.classificacaoPontos.maximos.map(p => formatarNumero(p, 4)).join(', ');
+                    resultadosParaExibir.push(`Máximos Locais: ${maximosFormatados}`);
+                } else {
+                    resultadosParaExibir.push(`Máximos Locais: Nenhum`);
+                }
+
+                if (resultados.classificacaoPontos.minimos.length > 0) {
+                    const minimosFormatados = resultados.classificacaoPontos.minimos.map(p => formatarNumero(p, 4)).join(', ');
+                    resultadosParaExibir.push(`Mínimos Locais: ${minimosFormatados}`);
+                } else {
+                    resultadosParaExibir.push(`Mínimos Locais: Nenhum`);
+                }
+
+                if (resultados.classificacaoPontos.inflexao.length > 0) {
+                    const inflexaoFormatada = resultados.classificacaoPontos.inflexao.map(p => formatarNumero(p, 4)).join(', ');
+                    resultadosParaExibir.push(`Inflexão: ${inflexaoFormatada}`);
+                } else {
+                    resultadosParaExibir.push(`Inflexão: Nenhum`);
+                }
+
+                resultadosParaExibir.push(`Integral (Trapézio): ${formatarNumero(resultados.integralTrapezio, 6)}`);
+                resultadosParaExibir.push(`Integral (Simpson): ${formatarNumero(resultados.integralSimpson, 6)}`);
+                resultadosParaExibir.push(`Integral (Riemann Esquerda): ${formatarNumero(resultados.integralRiemannEsquerda, 6)}`);
+                resultadosParaExibir.push(`Integral (Riemann Meio): ${formatarNumero(resultados.integralRiemannMeio, 6)}`);
+                resultadosParaExibir.push(`Integral (Riemann Direita): ${formatarNumero(resultados.integralRiemannDireita, 6)}`);
+
+                // Iniciar o ciclo de exibição
+                exibirProximoResultado(); // Exibe o primeiro resultado imediatamente
+                // Inicia o intervalo, mas ele será parado ao final da lista na função exibirProximoResultado
+                intervaloResultados = setInterval(exibirProximoResultado, 2000);
 
             } catch (erro) {
                 console.error("Erro durante o cálculo:", erro);
-                // Resetar resultados para "Erro" ou vazio em caso de falha
-                document.getElementById('res-funcao-original').innerText = funcaoOriginal;
-                document.getElementById('res-primeira-derivada').innerText = 'Erro';
-                document.getElementById('res-segunda-derivada').innerText = 'Erro';
-                document.getElementById('res-pontos-criticos').innerText = 'Erro';
-                document.getElementById('res-maximos').innerText = 'Erro';
-                document.getElementById('res-minimos').innerText = 'Erro';
-                document.getElementById('res-inflexao').innerText = 'Erro';
-                document.getElementById('res-integral-trapezio').innerText = 'Erro';
-                document.getElementById('res-integral-simpson').innerText = 'Erro';
-                document.getElementById('res-integral-riemann-esquerda').innerText = 'Erro';
-                document.getElementById('res-integral-riemann-meio').innerText = 'Erro';
-                document.getElementById('res-integral-riemann-direita').innerText = 'Erro';
+                resultadosParaExibir = [`Erro: ${erro.message}`];
+                exibirProximoResultado(); // Exibe a mensagem de erro
+                pararCicloResultados(); // Garante que o ciclo pare se houver um erro
                 alert(`Ocorreu um erro ao calcular a função: ${erro.message}. Por favor, verifique a sintaxe da função ou os parâmetros.`);
             }
         }
-        // Expor as funções ao escopo global (window) para que os onclicks no HTML funcionem
+        // Expor as funções ao escopo global (window)
         window.inserirInput = inserirInput;
         window.limpartexto = limpartexto;
         window.apagar = apagar;
         window.alternarModo = alternarModo;
         window.executarCalculo = executarCalculo;
-
+        window.toggleParametros = toggleParametros;
 
     </script>
 

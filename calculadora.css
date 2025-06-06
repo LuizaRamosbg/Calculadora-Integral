@@ -184,3 +184,126 @@
   word-wrap: break-word;
   min-height: 50px;
 }
+
+/* ...CSS DA LU Acima ... */
+
+/* Ajustes no body (mantido do último feedback) */
+body {
+    font-family: 'Press Start 2P', cursive;
+    background-image: url('imagens/background_teste.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;
+    margin-top: 0;
+    gap: 30px;
+    min-height: 100vh;
+    padding-bottom: 50px;
+}
+
+body.dark-mode {
+    background-image: url('imagens/background_darkmode.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center, fixed;
+    color: var(--cor-texto-escuro);
+}
+
+.alternarModo {
+    position: fixed;
+    top: 80px;
+    right: 80px;
+    z-index: 1001;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Estilo para o campo de saída de resultados ciclados */
+#resultadoDisplay {
+    /* Herda o estilo de input/output, mas pode ser ajustado */
+    background-color: var(--cor-visor-claro);
+    color: var(--cor-texto-claro);
+    font-size: 16px; /* Tamanho de fonte ajustado para caber mais texto */
+    padding: 12px;
+    width: 100%;
+    text-align: left; /* Alinhar texto à esquerda para leitura de frases */
+    border: 2px solid #3b1c1c;
+    margin-top: 15px; /* Espaço entre os botões e o resultado */
+    font-family: 'Press Start 2P', monospace; /* Fonte pixelada, mas monoespaçada para clareza */
+    border-radius: 6px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+    min-height: 50px; /* Garante que tenha altura suficiente */
+    display: flex; /* Para alinhar o texto verticalmente se for menor que a altura */
+    align-items: center; /* Centraliza verticalmente o texto */
+    white-space: normal; /* Permite que o texto quebre linhas */
+    overflow: hidden; /* Esconde o texto que ultrapassar */
+    text-overflow: ellipsis; /* Adiciona reticências se o texto for cortado */
+    line-height: 1.2; /* Ajusta a altura da linha */
+}
+
+body.dark-mode #resultadoDisplay {
+    background-color: var(--cor-visor-escuro);
+    color: var(--cor-texto-escuro);
+}
+
+/* Calculadora (mantida a largura) */
+.calculadora {
+    background-color: #df2f2f;
+    border: 5px solid #3b1c1c;
+    border-radius: 20px;
+    padding: 30px;
+    width: 600px; /* Largura da calculadora */
+    box-shadow: 0 0 20px #000;
+    margin-bottom: 20px; /* Adiciona espaço para a seção de resultados comentada */
+}
+
+/* Parâmetros (mantida a largura) */
+.parametros-calculo {
+    background-color: #df2f2f;
+    border: 5px solid #3b1c1c;
+    border-radius: 20px;
+    padding: 25px 30px;
+    width: 450px; /* Largura ajustada */
+    box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.6);
+    margin-top: 0;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    text-align: left;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Ajustes no button.toggle-parametros (já feito) */
+.toggle-parametros {
+    background-color: #f3d75c;
+    color: #3b1c1c;
+    padding: 10px 18px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8em;
+    border: 3px solid #3b1c1c;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 0 #b39a3f;
+    transition: all 0.1s ease;
+}
+
+.toggle-parametros:hover {
+    background-color: #e6c547;
+    color: #1c1c1c;
+    box-shadow: 0 3px 0 0 #b39a3f;
+    transform: translateY(1px);
+}
+
+.toggle-parametros:active {
+    background-color: #d8b23c;
+    box-shadow: 0 0 0 0 #b39a3f;
+    transform: translateY(3px);
+}
+
