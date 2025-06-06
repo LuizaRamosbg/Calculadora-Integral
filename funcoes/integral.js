@@ -1,5 +1,5 @@
 import {
-    avaliarExpressao,
+    avaliarExpressao
 } from "./ponto_critico.js";
 
 import {

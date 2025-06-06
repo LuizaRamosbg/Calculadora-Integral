@@ -55,7 +55,7 @@ export function avaliarExpressao(expr, x) {
                 expressaoComValor += char
         }
     }
-    //console.log(expressaoComValor + '=' + eval(expressaoComValor))
+    console.log(expressaoComValor + '=' + eval(expressaoComValor))
     return eval(expressaoComValor) // Avalia a expressão montada e retorna o resultado numérico
 }
 
@@ -78,8 +78,15 @@ export function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMa
     let f1, f2 // Valores da função derivada nos pontos i e i+0.1 para verificar troca de sinal
 
     for (let i = Number(intervaloMin); i < Number(intervaloMax); i += 0.1) {
-        f1 = avaliarExpressao(primeiraDerivada, i) // Avalia derivada em i
-        f2 = avaliarExpressao(primeiraDerivada, i + 0.1) // Avalia derivada em i + 0.1
+        let correção_i = Number(i.toFixed(10)); // Aumente a precisão para 10 casas decimais para o loop
+        f1 = avaliarExpressao(primeiraDerivada,correção_i ) // Avalia derivada em i
+        f2 = avaliarExpressao(primeiraDerivada,correção_i+ 0.1) // Avalia derivada em i + 0.1
+
+        // IGNORAR SE FOR NaN ou Infinity
+        if (isNaN(f1) || isNaN(f2) || !isFinite(f1) || !isFinite(f2)) {
+            //console.log(`Pulando intervalo [${correção_i}, ${correção_i + 0.1}] devido a NaN/Infinity.`);
+            continue;
+        }
 
         if (Math.abs(f1) < 1e-15) {
             // Verifique valores da derivada um pouco antes e um pouco depois do ponto i
