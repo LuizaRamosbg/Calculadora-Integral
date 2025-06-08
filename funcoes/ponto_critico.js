@@ -181,8 +181,8 @@ export function MaxeMin(segundaDerivada, Xpc) {
     let maximos = [] // Armazena pontos críticos classificados como máximos locais
     let minimos = [] // Armazena pontos críticos classificados como mínimos locais
     let inflexao = [] // Armazena pontos críticos classificados como pontos de inflexão
-    if (!Xpc) { // Se não houver pontos críticos, retorna null
-        return null
+    if (!Xpc) { // Se não houver pontos críticos retorna arrays vazio
+        return { maximos, minimos, inflexao }
     }
     for (let i = 0; i < Xpc.length; i++) { // Para cada ponto crítico, avalia a segunda derivada e classifica
         let valor = Number(avaliarExpressao(segundaDerivada, Xpc[i]))
