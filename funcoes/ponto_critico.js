@@ -69,13 +69,16 @@ export function avaliarExpressao(expr, x) {
  * @returns {number[] || void} Um array de números contendo os pontos críticos encontrados, ou `undefined` se a derivada for constante zero ou nenhum ponto crítico for encontrado.
  */
 export function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMax = "10") {
-    if (Number(primeiraDerivada) === 0) {
-        return console.log("Ponto crítico indefinido") // Se a derivada for constante zero (não é uma função válida para pontos críticos), retorna mensagem
-    }
     let pontosCriticos = [] // Armazena pontos críticos encontrados
     let temCritico = false // Flag para indicar se encontrou algum ponto crítico
     let existe // Variável auxiliar para evitar duplicatas de ponto crítico
     let f1, f2 // Valores da função derivada nos pontos i e i+0.1 para verificar troca de sinal
+
+    if (Number(primeiraDerivada) === 0) {
+        console.log("Ponto crítico indefinido") // Se a derivada for constante zero (não é uma função válida para pontos críticos), retorna mensagem
+        return pontosCriticos
+    }
+ 
 
     for (let i = Number(intervaloMin); i < Number(intervaloMax); i += 0.1) {
         let correção_i = Number(i.toFixed(10)); // Aumente a precisão para 10 casas decimais para o loop
@@ -162,7 +165,8 @@ export function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMa
         return pontosCriticos
     }
 
-    return console.log("Ponto crítico indefinido") // se não tem ponto crítico, retorna mensagem
+    console.log("Ponto crítico indefinido") // se não tem ponto crítico, retorna mensagem
+    return pontosCriticos 
 }
 
 /**
