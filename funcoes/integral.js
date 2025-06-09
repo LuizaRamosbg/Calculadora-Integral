@@ -19,6 +19,9 @@ export function regradoTrapezio(funcao, inicial, final, numeroDivisoes) {
         soma += 2 * avaliarExpressao(funcao, x) // multiplica o calculo dos trapézios por 2 e acumulam eles na variavel soma
     }
     resultado = soma * (h / 2)
+    if(!isFinite(resultado)){
+        return "Indefinido"
+    }
     return Number(resultado.toFixed(4))
 }
 
@@ -38,7 +41,9 @@ export function regradoSimpson(funcao, inicial, final, numeroDivisoes) {
         soma += peso * avaliarExpressao(funcao, x) // multiplica o calculo das parábolas pelo peso e acumulam eles na variavel soma
     }
     resultado = soma * (h / 3)
-
+    if(!isFinite(resultado)){
+        return "Indefinido"
+    }
     return Number(resultado.toFixed(4))
 }
 
@@ -61,6 +66,9 @@ export function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 
         soma += avaliarExpressao(funcao, x) // Acumulam os cálculos na variavel soma
     }
     resultado = soma * h
-
+       if(!isFinite(resultado)){
+        return "Indefinido"
+    }
+ 
     return Number(resultado.toFixed(4))
 }
