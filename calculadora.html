@@ -90,7 +90,7 @@
             <button type="button" class="btn " onclick="inserirInput(this)">=</button>
         </div>
 
-        <div id="resultadoDisplay" aria-live="polite"></div>
+        <div class="respostas" id="resultadoDisplay" aria-live="polite"></div>
     </div>
 
     <script>
@@ -115,11 +115,12 @@
 
         function limpartexto() {
             document.getElementById('funcao').value = '';
-            document.getElementById('resultadoDisplay').value = ''; // Limpa também o display de resultados
-            pararCicloResultados(); // Para o ciclo
+            document.getElementById('resultadoDisplay').innerHTML = ''; // Corrigido: limpa os <p>
+            pararCicloResultados(); // Para o ciclo de exibição
             resultadosParaExibir = []; // Limpa o array
-            resultadoAtualIndex = 0; // Reseta o índice
+            resultadoAtualIndex = 0;   // Reseta o índice
         }
+
 
         function apagar() {
             const visor = document.getElementById('funcao');
@@ -168,8 +169,7 @@
 
             const novoResultado = document.createElement('p');
             novoResultado.textContent = resultadosParaExibir[resultadoAtualIndex];
-            const pularLinha = novoResultado.insertBefore('p')
-            resultadoDisplay.appendChild(novoResultado);
+            resultadoDisplay.appendChild(novoResultado); // Adiciona como novo parágrafo, com quebra automática
 
             resultadoAtualIndex++;
 
@@ -180,13 +180,14 @@
         }
 
 
+
     </script>
 
     <script type="module">
 
         import { realizarCalculos } from "./calculadoraCore.js";
 
-         function validarExpressaoMatematica(expressao) {
+        function validarExpressaoMatematica(expressao) {
             // Permite números, operadores, parênteses, x, e, E, ponto decimal e espaços
             const regex = /^[0-9+\-*/^xXeE().% \t]+$/;
             return regex.test(expressao);
@@ -205,7 +206,7 @@
                 alert("Por favor, digite uma função para calcular.");
                 return;
             }
-             if (!validarExpressaoMatematica(funcaoOriginal)) {
+            if (!validarExpressaoMatematica(funcaoOriginal)) {
                 alert("A função contém caracteres inválidos");
                 return;
             }
@@ -301,7 +302,7 @@
                 // Iniciar o ciclo de exibição
                 exibirProximoResultado(); // Exibe o primeiro resultado imediatamente
                 // Inicia o intervalo, mas ele será parado ao final da lista na função exibirProximoResultado
-                intervaloResultados = setInterval(exibirProximoResultado, 2000);
+                intervaloResultados = setInterval(exibirProximoResultado, 500);
 
             } catch (erro) {
                 console.error("Erro durante o cálculo:", erro);
