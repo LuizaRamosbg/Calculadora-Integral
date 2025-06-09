@@ -32,11 +32,9 @@ function calculadoraDerivadaIntegral() {
     let intervaloMin = (prompt("Digite o intervalo minimo da busca: "))
     let intervaloMax = (prompt("Digite o intervalo maximo da busca: "))
 
-<<<<<<< Updated upstream
-    if (isNaN(intervaloMin) || isNaN(intervaloMax) || intervaloMin === '' || intervaloMax === '') {
-=======
+
+
     if (isNaN(intervaloMin) || isNaN(intervaloMax) || intervaloMin === '' || intervaloMax === '' || intervaloMin >= intervaloMax) {
->>>>>>> Stashed changes
       console.log("Valor inválido ou vazio para o intervalo mínimo ou máximo. Usando -10 a 10 como padrão.");
       intervaloMin = "-10"
       intervaloMax = "10"
@@ -48,11 +46,9 @@ function calculadoraDerivadaIntegral() {
     let inicio = (prompt("Digite o ponto inicial da integral: ")) // Solicita ao usuário que digite o ponto inicial da integral
     let fim = (prompt("Digite o ponto final da integral: ")) // Solicita ao usuário que digite o ponto final da integral
 
-<<<<<<< Updated upstream
-    if (isNaN(inicio) || isNaN(fim) || inicio === '' || fim === '') { // checa se é um numero válido
-=======
+
     if (isNaN(inicio) || isNaN(fim) || inicio === '' || fim === '' || inicio >= fim) { // checa se é um numero válido
->>>>>>> Stashed changes
+
       console.log("Valor inválido ou vazio para o ponto inical ou final. Usando 0 a 10 como padrão.");
       inicio = "0"
       fim = "10"
@@ -64,63 +60,61 @@ function calculadoraDerivadaIntegral() {
   function numDivisoesIntegral() {
     let quantidade = (prompt("Digite a quantidade de divisões da integral: ")) // Solicita ao usuário que digite o numero de divisões
 
-<<<<<<< Updated upstream
-    if (isNaN(quantidade) || quantidade === '') { // checa se é um numero válido
-=======
-    if (isNaN(quantidade) || quantidade === '' || quantidade === '0') { // checa se é um numero válido
->>>>>>> Stashed changes
-      console.log("Valor inválido ou vazio para o número de divisões. 10 como padrão.");
-      quantidade = "10"
+
+      if (isNaN(quantidade) || quantidade === '' || quantidade === '0') { // checa se é um numero válido
+
+        console.log("Valor inválido ou vazio para o número de divisões. 10 como padrão.");
+        quantidade = "10"
+      }
+      return quantidade
     }
-    return quantidade
+
+    /**
+     * Função principal que coordena o processo.
+     */
+    function main() {
+      const funcao = obterFuncaoDoUsuario() // Obtém a função inserida pelo usuário.
+      console.log("\n<========== Derivando ==========>")
+      const primeiraDerivada = calcularDerivada(funcao) // Calcula a primeira derivada da função.
+      console.log(`A primeira derivada é: ${primeiraDerivada}`) // Exibe a primeira derivada no console.
+      const segundaDerivada = calcularDerivada(primeiraDerivada)
+      console.log(`A segunda derivada é: ${segundaDerivada}`) // Exibe a segunda derivada da função.
+      console.log("\n<========== Escolha dos Intervalos de busca ==========>")
+      const intervalo = intervaloBusca()
+      console.log("\n<========== Ponto Crítico ==========>")
+      const Xpc = pontoCritico(primeiraDerivada, intervalo.intervaloMin, intervalo.intervaloMax) // Exibe o ponto crítico da função da função.
+      console.log("\n<========== Pontos Max e Min ==========>")
+      const MaxMin = MaxeMin(segundaDerivada, Xpc)
+      if (MaxMin) {
+        MaxMin.minimos.length > 0 ? console.log(`Ponto min: [${MaxMin.minimos}]`) : null
+        MaxMin.inflexao.length > 0 ? console.log(`Ponto de inflexão: [${MaxMin.inflexao}]`) : null
+        MaxMin.maximos.length > 0 ? console.log(`Ponto max: [${MaxMin.maximos}]`) : null
+      }
+      console.log("\n<========== Integral Nº Divisão ==========>")
+      const divisoes = numDivisoesIntegral()
+      console.log("\n<========== Escolha dos Intervalos da Integral ==========>")
+      const inicioFim = pontoInicial_e_Final()
+      console.log("\n<========== Resultado Integral ==========>")
+      const trapezio = regradoTrapezio(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
+      console.log(`A integral por Trapézio é aproximadamente: ${trapezio}`) // Exibe a integral por trapezio da função.
+      const simpson = regradoSimpson(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
+      console.log(`A integral por Simpson é aproximadamente: ${simpson}`) // Exibe a integral por simpson da função.
+      const esquerda = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'esquerda')
+      const meio = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'meio')
+      const direita = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'direita')
+      console.log(`A integral por Riemann(esquerda) é aproximadamente: ${esquerda}`) // Exibe a integral por Riemann da função.
+      console.log(`A integral por Riemann(meio) é aproximadamente: ${meio}`) // Exibe a integral por Riemann da função.
+      console.log(`A integral por Riemann(direita) é aproximadamente: ${direita}`) // Exibe a integral por Riemann da função.
+      /*
+        console.log(separarFuncao(primeiraDerivada))
+        const segundaDerivada = calcularDerivada(primeiraDerivada) // Calcula a segunda derivada da função.
+        console.log(`A segunda derivada é: ${segundaDerivada}`) // Exibe a segunda derivada no console.
+      */
+
+    }
+
+    main() // Chama a função principal para iniciar o programa.
   }
 
-  /**
-   * Função principal que coordena o processo.
-   */
-  function main() {
-    const funcao = obterFuncaoDoUsuario() // Obtém a função inserida pelo usuário.
-    console.log("\n<========== Derivando ==========>")
-    const primeiraDerivada = calcularDerivada(funcao) // Calcula a primeira derivada da função.
-    console.log(`A primeira derivada é: ${primeiraDerivada}`) // Exibe a primeira derivada no console.
-    const segundaDerivada = calcularDerivada(primeiraDerivada)
-    console.log(`A segunda derivada é: ${segundaDerivada}`) // Exibe a segunda derivada da função.
-    console.log("\n<========== Escolha dos Intervalos de busca ==========>")
-    const intervalo = intervaloBusca()
-    console.log("\n<========== Ponto Crítico ==========>")
-    const Xpc = pontoCritico(primeiraDerivada, intervalo.intervaloMin, intervalo.intervaloMax) // Exibe o ponto crítico da função da função.
-    console.log("\n<========== Pontos Max e Min ==========>")
-    const MaxMin = MaxeMin(segundaDerivada, Xpc)
-    if (MaxMin) {
-      MaxMin.minimos.length > 0 ? console.log(`Ponto min: [${MaxMin.minimos}]`) : null
-      MaxMin.inflexao.length > 0 ? console.log(`Ponto de inflexão: [${MaxMin.inflexao}]`) : null
-      MaxMin.maximos.length > 0 ? console.log(`Ponto max: [${MaxMin.maximos}]`) : null
-    }
-    console.log("\n<========== Integral Nº Divisão ==========>")
-    const divisoes = numDivisoesIntegral()
-    console.log("\n<========== Escolha dos Intervalos da Integral ==========>")
-    const inicioFim = pontoInicial_e_Final()
-    console.log("\n<========== Resultado Integral ==========>")
-    const trapezio = regradoTrapezio(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
-    console.log(`A integral por Trapézio é aproximadamente: ${trapezio}`) // Exibe a integral por trapezio da função.
-    const simpson = regradoSimpson(funcao, inicioFim.inicio, inicioFim.fim, divisoes)
-    console.log(`A integral por Simpson é aproximadamente: ${simpson}`) // Exibe a integral por simpson da função.
-    const esquerda = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'esquerda')
-    const meio = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'meio')
-    const direita = regradoRetangulo(funcao, inicioFim.inicio, inicioFim.fim, divisoes, 'direita')
-    console.log(`A integral por Riemann(esquerda) é aproximadamente: ${esquerda}`) // Exibe a integral por Riemann da função.
-    console.log(`A integral por Riemann(meio) é aproximadamente: ${meio}`) // Exibe a integral por Riemann da função.
-    console.log(`A integral por Riemann(direita) é aproximadamente: ${direita}`) // Exibe a integral por Riemann da função.
-    /*
-      console.log(separarFuncao(primeiraDerivada))
-      const segundaDerivada = calcularDerivada(primeiraDerivada) // Calcula a segunda derivada da função.
-      console.log(`A segunda derivada é: ${segundaDerivada}`) // Exibe a segunda derivada no console.
-    */
-
-  }
-
-  main() // Chama a função principal para iniciar o programa.
-}
-
-calculadoraDerivadaIntegral() // Chama a função principal da calculadora.
+  calculadoraDerivadaIntegral() // Chama a função principal da calculadora.
 // 2(3e^(2x+3x^2))^5x
