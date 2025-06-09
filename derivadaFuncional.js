@@ -32,12 +32,15 @@ function calculadoraDerivadaIntegral() {
     let intervaloMin = (prompt("Digite o intervalo minimo da busca: "))
     let intervaloMax = (prompt("Digite o intervalo maximo da busca: "))
 
+<<<<<<< Updated upstream
     if (isNaN(intervaloMin) || isNaN(intervaloMax) || intervaloMin === '' || intervaloMax === '') {
+=======
+    if (isNaN(intervaloMin) || isNaN(intervaloMax) || intervaloMin === '' || intervaloMax === '' || intervaloMin >= intervaloMax) {
+>>>>>>> Stashed changes
       console.log("Valor inválido ou vazio para o intervalo mínimo ou máximo. Usando -10 a 10 como padrão.");
       intervaloMin = "-10"
       intervaloMax = "10"
     }
-
     return { intervaloMin, intervaloMax }
   }
 
@@ -45,7 +48,11 @@ function calculadoraDerivadaIntegral() {
     let inicio = (prompt("Digite o ponto inicial da integral: ")) // Solicita ao usuário que digite o ponto inicial da integral
     let fim = (prompt("Digite o ponto final da integral: ")) // Solicita ao usuário que digite o ponto final da integral
 
+<<<<<<< Updated upstream
     if (isNaN(inicio) || isNaN(fim) || inicio === '' || fim === '') { // checa se é um numero válido
+=======
+    if (isNaN(inicio) || isNaN(fim) || inicio === '' || fim === '' || inicio >= fim) { // checa se é um numero válido
+>>>>>>> Stashed changes
       console.log("Valor inválido ou vazio para o ponto inical ou final. Usando 0 a 10 como padrão.");
       inicio = "0"
       fim = "10"
@@ -57,7 +64,11 @@ function calculadoraDerivadaIntegral() {
   function numDivisoesIntegral() {
     let quantidade = (prompt("Digite a quantidade de divisões da integral: ")) // Solicita ao usuário que digite o numero de divisões
 
+<<<<<<< Updated upstream
     if (isNaN(quantidade) || quantidade === '') { // checa se é um numero válido
+=======
+    if (isNaN(quantidade) || quantidade === '' || quantidade === '0') { // checa se é um numero válido
+>>>>>>> Stashed changes
       console.log("Valor inválido ou vazio para o número de divisões. 10 como padrão.");
       quantidade = "10"
     }
