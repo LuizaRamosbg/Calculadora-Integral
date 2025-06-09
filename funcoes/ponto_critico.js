@@ -165,7 +165,7 @@ export function pontoCritico(primeiraDerivada, intervaloMin = "-10", intervaloMa
         return pontosCriticos
     }
 
-    console.log("Ponto crítico indefinido") // se não tem ponto crítico, retorna mensagem
+    console.log("Nenhum ponto crítico encontrado no intervalo especificado.") // se não tem ponto crítico, retorna mensagem
     return pontosCriticos 
 }
 
