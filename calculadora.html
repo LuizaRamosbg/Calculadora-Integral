@@ -186,6 +186,12 @@
 
         import { realizarCalculos } from "./calculadoraCore.js";
 
+         function validarExpressaoMatematica(expressao) {
+            // Permite números, operadores, parênteses, x, e, E, ponto decimal e espaços
+            const regex = /^[0-9+\-*/^xXeE().% \t]+$/;
+            return regex.test(expressao);
+        }
+
         function executarCalculo() {
             // ... (suas validações de input existentes) ...
             const funcaoOriginal = document.getElementById('funcao').value;
@@ -197,6 +203,10 @@
 
             if (!funcaoOriginal) {
                 alert("Por favor, digite uma função para calcular.");
+                return;
+            }
+             if (!validarExpressaoMatematica(funcaoOriginal)) {
+                alert("A função contém caracteres inválidos");
                 return;
             }
             if (isNaN(intervaloMin) || isNaN(intervaloMax) || isNaN(integralInicio) || isNaN(integralFim) || isNaN(numDivisoes)) {

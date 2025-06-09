@@ -10,11 +10,23 @@ function calculadoraDerivadaIntegral() {
    * Obtém a função matemática inserida pelo usuário.
    * Retorna A função matemática como uma string.
    */
-  function obterFuncaoDoUsuario() {
-    const funcaoOriginal = prompt("Digite uma função (ex: 2x^3 + 5x - e^x): f(x) = ") // Solicita ao usuário que digite uma função matemática e armazena a entrada na variável 'funcaoOriginal'.
-    console.log(`Função digitada: ${funcaoOriginal}`) // Exibe a função que o usuário digitou no console.
-    return funcaoOriginal // Retorna a string da função inserida pelo usuário.
+    function obterFuncaoDoUsuario() {
+  let funcaoOriginal;
+  const caracteresValidos = /^[0-9+\-*/^().%xeE\s]+$/i;
+  while (true) {
+    funcaoOriginal = prompt("Digite uma função (ex: 2x^3 + 5x - e^x): f(x) = ");
+
+    // Verifica se há apenas caracteres válidos
+    if (!caracteresValidos.test(funcaoOriginal)) {
+      console.log("Expressão inválida.");
+      continue;
+    }
+
+    // Aqui você pode adicionar um teste com `eval`, se quiser, ou apenas aceitar
+    console.log(`Função digitada: ${funcaoOriginal}`);
+    return funcaoOriginal;
   }
+}
 
   function intervaloBusca() {
     let intervaloMin = (prompt("Digite o intervalo minimo da busca: "))
