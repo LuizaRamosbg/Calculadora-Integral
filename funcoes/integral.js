@@ -20,7 +20,7 @@ export function regradoTrapezio(funcao, inicial, final, numeroDivisoes) {
     }
     resultado = soma * (h / 2)
     if(!isFinite(resultado)){
-        return "Indefinido"
+        return "Divergente/Indefinido"
     }
     return Number(resultado.toFixed(4))
 }
@@ -42,7 +42,7 @@ export function regradoSimpson(funcao, inicial, final, numeroDivisoes) {
     }
     resultado = soma * (h / 3)
     if(!isFinite(resultado)){
-        return "Indefinido"
+        return "Divergente/Indefinido"
     }
     return Number(resultado.toFixed(4))
 }
@@ -67,7 +67,7 @@ export function regradoRetangulo(funcao, inicial, final, numeroDivisoes, tipo = 
     }
     resultado = soma * h
        if(!isFinite(resultado)){
-        return "Indefinido"
+        return "Divergente/Indefinido"
     }
  
     return Number(resultado.toFixed(4))
