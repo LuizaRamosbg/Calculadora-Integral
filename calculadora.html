@@ -29,31 +29,34 @@
         <button type="button" class="toggle-parametros" onclick="toggleParametros()">
             Configurações Avançadas
         </button>
+
+        <div class="parametros-calculo" id="parametrosSecao" style="display: none;" role="group"
+            aria-label="Parâmetros de Cálculo">
+            <h2 class="subtitulo-parametros">Intervalos e Divisões</h2>
+            <div class="grupo-input">
+                <label for="intervaloMin" style="font-size: small;">Pontos Críticos (Min):</label>
+                <input type="number" id="intervaloMin" value="-10">
+            </div>
+            <div class="grupo-input">
+                <label for="intervaloMax" style="font-size: small;">Pontos Críticos (Max):</label>
+                <input type="number" id="intervaloMax" value="10">
+            </div>
+            <div class="grupo-input">
+                <label for="integralInicio" style="font-size: small;">Integral (Início):</label>
+                <input type="number" id="integralInicio" value="0">
+            </div>
+            <div class="grupo-input">
+                <label for="integralFim" style="font-size: small;">Integral (Fim):</label>
+                <input type="number" id="integralFim" value="1">
+            </div>
+            <div class="grupo-input">
+                <label for="numDivisoes" style="font-size: small;">Num. Divisões (Integral):</label>
+                <input type="number" id="numDivisoes" value="100">
+            </div>
+        </div>
     </div>
 
-    <div class="parametros-calculo" id="parametrosSecao" style="display: none;" role="group" aria-label="Parâmetros de Cálculo">
-        <h2 class="subtitulo-parametros">Intervalos e Divisões</h2>
-        <div class="grupo-input">
-            <label for="intervaloMin">Pontos Críticos (Min):</label>
-            <input type="number" id="intervaloMin" value="-10">
-        </div>
-        <div class="grupo-input">
-            <label for="intervaloMax">Pontos Críticos (Max):</label>
-            <input type="number" id="intervaloMax" value="10">
-        </div>
-        <div class="grupo-input">
-            <label for="integralInicio">Integral (Início):</label>
-            <input type="number" id="integralInicio" value="0">
-        </div>
-        <div class="grupo-input">
-            <label for="integralFim">Integral (Fim):</label>
-            <input type="number" id="integralFim" value="1">
-        </div>
-        <div class="grupo-input">
-            <label for="numDivisoes">Num. Divisões (Integral):</label>
-            <input type="number" id="numDivisoes" value="100">
-        </div>
-    </div>
+
 
     <div class="calculadora" role="toolbar" aria-label="calculadora">
         <input type="text" id="funcao" placeholder="Digite a função (ex: x^2 + 3*x)">
@@ -87,7 +90,7 @@
             <button type="button" class="btn " onclick="inserirInput(this)">=</button>
         </div>
 
-        <output id="resultadoDisplay" aria-live="polite"></output>
+        <div id="resultadoDisplay" aria-live="polite"></div>
     </div>
 
     <script>
@@ -153,37 +156,29 @@
         }
 
         function exibirProximoResultado() {
+            const resultadoDisplay = document.getElementById('resultadoDisplay');
+
             if (resultadosParaExibir.length === 0) {
-                document.getElementById('resultadoDisplay').value = 'Nenhum resultado para exibir.';
-                pararCicloResultados(); // Parar se não houver resultados
+                const p = document.createElement('p');
+                p.textContent = 'Nenhum resultado para exibir.';
+                resultadoDisplay.appendChild(p);
+                pararCicloResultados();
                 return;
             }
 
-            const resultadoDisplay = document.getElementById('resultadoDisplay');
-            resultadoDisplay.value = resultadosParaExibir[resultadoAtualIndex];
+            const novoResultado = document.createElement('p');
+            novoResultado.textContent = resultadosParaExibir[resultadoAtualIndex];
+            const pularLinha = novoResultado.insertBefore('p')
+            resultadoDisplay.appendChild(novoResultado);
 
-            // Avança para o próximo resultado
             resultadoAtualIndex++;
 
-            // Verifica se chegamos ao final do array
             if (resultadoAtualIndex >= resultadosParaExibir.length) {
-                // Se sim, exibimos o último resultado por mais 2 segundos e paramos o ciclo
-                // Ou você pode reiniciar para o primeiro resultado após um pequeno delay,
-                // ou simplesmente parar e deixar o último resultado visível.
-                
-                // Opção 1: Para no último resultado exibido (mais simples para "parar de fazer os cálculos")
                 pararCicloResultados();
-                resultadoAtualIndex = 0; // Reseta o índice para um eventual novo cálculo
-
-                // Opção 2: Reinicia o ciclo do zero após um pequeno tempo, para que o usuário veja tudo novamente
-                // resultadoAtualIndex = 0;
-                // // Não chamar pararCicloResultados aqui, apenas deixar ele rodar novamente ou
-                // // configurar um setTimeout para reiniciar se quiser um "delay" antes de repetir
-                // console.log("Ciclo de resultados reiniciado.");
-
-
+                resultadoAtualIndex = 0;
             }
         }
+
 
     </script>
 

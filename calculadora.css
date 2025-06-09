@@ -188,22 +188,7 @@
 /* ...CSS DA LU Acima ... */
 
 /* Ajustes no body (mantido do último feedback) */
-body {
-    font-family: 'Press Start 2P', cursive;
-    background-image: url('imagens/background_teste.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 100px;
-    margin-top: 0;
-    gap: 30px;
-    min-height: 100vh;
-    padding-bottom: 50px;
-}
+
 
 body.dark-mode {
     background-image: url('imagens/background_darkmode.jpg');
@@ -254,15 +239,6 @@ body.dark-mode #resultadoDisplay {
 }
 
 /* Calculadora (mantida a largura) */
-.calculadora {
-    background-color: #df2f2f;
-    border: 5px solid #3b1c1c;
-    border-radius: 20px;
-    padding: 30px;
-    width: 600px; /* Largura da calculadora */
-    box-shadow: 0 0 20px #000;
-    margin-bottom: 20px; /* Adiciona espaço para a seção de resultados comentada */
-}
 
 /* Parâmetros (mantida a largura) */
 .parametros-calculo {
@@ -270,13 +246,13 @@ body.dark-mode #resultadoDisplay {
     border: 5px solid #3b1c1c;
     border-radius: 20px;
     padding: 25px 30px;
-    width: 450px; /* Largura ajustada */
+    width: 300px; /* Largura ajustada */
     box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.6);
     margin-top: 0;
     color: white;
     font-family: 'Press Start 2P', cursive;
     text-align: left;
-    position: relative;
+    position: bottom;
     transition: all 0.3s ease-in-out;
 }
 
