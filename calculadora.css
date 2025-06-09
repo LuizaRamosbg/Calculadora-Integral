@@ -2,26 +2,6 @@
   box-sizing: border-box;
 }
 
-@media (max-width: 480px) {
-  .alternarModo {
-    width: 90%;
-  }
-
-  .calculadora {
-    top: 20%;
-    width: 80%;
-  }
-}
-@media (max-width: 600px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  input, select, button {
-    font-size: 0.9rem;
-  }
-}
-
 
 :root {
   --cor-fundo-claro: #f5e6c9;
