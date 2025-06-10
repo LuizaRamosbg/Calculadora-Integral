@@ -4,7 +4,7 @@ import {
 } from "./termos.js";
 
 import {
-    limparFuncao, 
+    simplificaFuncao, 
     separarFuncao
 } from "./funcoes.js";
 /**

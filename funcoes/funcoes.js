@@ -125,22 +125,44 @@ export function corrigirFuncao(funcao) {
  * @param {*} funcao 
  * @param {*} separado 
  */
-export function simplificaFuncao(funcao, separado = false){
-    let termos, resultado, termoAtual
+export function simplificaFuncao(funcao, separado = false) {
+    let termos, resultado = '', termoAtual, achouZero
     let i, j
-
-    if(!separado) {
+    if (!separado) {
         termos = separarFuncao(funcao)
     } else {
         termos = funcao
     }
 
-    for(i = 0; i < termos.length; i++){
+    console.log(termos.length)
+    for (i = 0; i < termos.length; i++) {
         termoAtual = termos[i]
-        for(j = i+1; j < termos.length; j++){
-            
-        }
-    }
 
+        achouZero = false
+        console.log(i)
+        if (i < termos.length - 1) if (termos[i + 1].temProduto) {
+            j = i
+            if (termos[j].coeficiente == 0) achouZero = true
+            while (termos[j + 1].temProduto) {
+                if (termos[j + 1].coeficiente == 0) achouZero = true
+                j++
+                if (j >= termos.length - 1) break
+            }
+
+            if (achouZero) i = j;
+        } else {
+            if (termoAtual.coeficiente == 1 && !termoAtual.temParenteses && termos[i + 1].temProduto) i++;
+        }
+
+        if (i >= termos.length) break
+        if (resultado == '')
+            resultado += montaTermo(termos[i], true) // Primeiro termo 
+        else
+            resultado += montaTermo(termos[i]) // Não é o primeiro termo
+    }
+console.log(resultado)
+    if (resultado == '') resultado = '0'
+    if (resultado.slice(0, 3) == " * ") resultado = resultado.slice(3)
+        console.log(resultado)
     return resultado
 }
