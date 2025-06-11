@@ -7,6 +7,7 @@
     <link rel="icon" href="https://img.icons8.com/color/48/pokeball-2.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="calculadora.css">
     <title>Calculadora</title>
@@ -91,6 +92,9 @@
         </div>
 
         <div class="respostas" id="resultadoDisplay" aria-live="polite"></div>
+
+        <div id="graficoFuncao" style="width: 100%; height: 400px;"></div>
+
     </div>
 
     <script>
@@ -180,6 +184,42 @@
         }
 
 
+        google.charts.load('current', { 'packages': ['corechart'] });
+
+        function plotarGrafico(funcao, xMin, xMax) {
+            // Gera pontos (x, y) da função
+            const pontos = [];
+            const parser = math.parser(); // Use math.js para segurança
+
+            for (let x = xMin; x <= xMax; x += (xMax - xMin) / 100) {
+                parser.set('x', x);
+                try {
+                    const y = parser.evaluate(funcao);
+                    if (!isNaN(y) && isFinite(y)) {
+                        pontos.push([x, y]);
+                    }
+                } catch (err) {
+                    console.warn("Erro ao calcular ponto no gráfico:", err);
+                }
+            }
+
+            const data = new google.visualization.DataTable();
+            data.addColumn('number', 'x');
+            data.addColumn('number', 'f(x)');
+            data.addRows(pontos);
+
+            const options = {
+                title: `Gráfico de f(x) = ${funcao}`,
+                legend: 'none',
+                hAxis: { title: 'x' },
+                vAxis: { title: 'f(x)' },
+                curveType: 'function',
+                pointSize: 2
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('graficoFuncao'));
+            chart.draw(data, options);
+        }
 
     </script>
 
