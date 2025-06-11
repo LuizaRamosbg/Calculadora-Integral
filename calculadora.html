@@ -226,6 +226,7 @@
     <script type="module">
 
         import { realizarCalculos } from "./calculadoraCore.js";
+        import { avaliarExpressao, pontoCritico, MaxeMin } from "./funcoes/ponto_critico.js";
 
         function validarExpressaoMatematica(expressao) {
             // Permite números, operadores, parênteses, x, e, E, ponto decimal e espaços
@@ -312,6 +313,27 @@
                 const pontosCriticosFormatados = resultados.pontosCriticos.length > 0 ?
                     resultados.pontosCriticos.map(p => formatarNumero(p, 4)).join(', ') : 'Nenhum';
                 resultadosParaExibir.push(`Pontos Críticos: ${pontosCriticosFormatados}`);
+
+                if (resultados.pontosCriticos.length > 0) {
+                    const pontosCriticosComY = [];
+                    resultados.pontosCriticos.forEach(xCrítico => {
+                        try {
+                            const yCrítico = avaliarExpressao(funcaoOriginal, xCrítico);
+
+                            if (!isNaN(yCrítico) && isFinite(yCrítico)) {
+                                pontosCriticosComY.push(`(${formatarNumero(xCrítico, 4)}, ${formatarNumero(yCrítico, 4)})`);
+                            } else {
+                                pontosCriticosComY.push(`(${formatarNumero(xCrítico, 4)}, Indefinido)`);
+                            }
+                        } catch (e) {
+                            console.warn(`Erro ao avaliar Y para ponto crítico X=${xCrítico} usando avaliarExpressao:`, e);
+                            pontosCriticosComY.push(`(${formatarNumero(xCrítico, 4)}, Erro)`);
+                        }
+                    });
+                    resultadosParaExibir.push(`Pontos (X,Y): ${pontosCriticosComY.join('; ')}`);
+                } else {
+                    resultadosParaExibir.push(`Pontos (X,Y): Nenhum`);
+                }
 
                 if (resultados.classificacaoPontos.maximos.length > 0) {
                     const maximosFormatados = resultados.classificacaoPontos.maximos.map(p => formatarNumero(p, 4)).join(', ');
