@@ -184,42 +184,7 @@
         }
 
 
-        google.charts.load('current', { 'packages': ['corechart'] });
-
-        function plotarGrafico(funcao, xMin, xMax) {
-            // Gera pontos (x, y) da função
-            const pontos = [];
-            const parser = math.parser(); // Use math.js para segurança
-
-            for (let x = xMin; x <= xMax; x += (xMax - xMin) / 100) {
-                parser.set('x', x);
-                try {
-                    const y = parser.evaluate(funcao);
-                    if (!isNaN(y) && isFinite(y)) {
-                        pontos.push([x, y]);
-                    }
-                } catch (err) {
-                    console.warn("Erro ao calcular ponto no gráfico:", err);
-                }
-            }
-
-            const data = new google.visualization.DataTable();
-            data.addColumn('number', 'x');
-            data.addColumn('number', 'f(x)');
-            data.addRows(pontos);
-
-            const options = {
-                title: `Gráfico de f(x) = ${funcao}`,
-                legend: 'none',
-                hAxis: { title: 'x' },
-                vAxis: { title: 'f(x)' },
-                curveType: 'function',
-                pointSize: 2
-            };
-
-            const chart = new google.visualization.LineChart(document.getElementById('graficoFuncao'));
-            chart.draw(data, options);
-        }
+       
 
     </script>
 
@@ -366,6 +331,7 @@
                 exibirProximoResultado(); // Exibe o primeiro resultado imediatamente
                 // Inicia o intervalo, mas ele será parado ao final da lista na função exibirProximoResultado
                 intervaloResultados = setInterval(exibirProximoResultado, 500);
+                google.charts.setOnLoadCallback(() => plotarGrafico(funcaoOriginal, intervaloMin, intervaloMax));
 
             } catch (erro) {
                 console.error("Erro durante o cálculo:", erro);
@@ -374,6 +340,46 @@
                 pararCicloResultados(); // Garante que o ciclo pare se houver um erro
                 alert(`Ocorreu um erro ao calcular a função: ${erro.message}. Por favor, verifique a sintaxe da função ou os parâmetros.`);
             }
+        }
+
+            google.charts.load('current', { 'packages': ['corechart'] });
+
+        function plotarGrafico(funcao, xMin, xMax) {
+            // Gera pontos (x, y) da função
+            const pontos = [];
+
+
+
+            for (let x = xMin; x <= xMax; x += (xMax - xMin) /200) {
+                try {
+                    
+                    const y = avaliarExpressao(funcao, x); // Chamando sua função!
+
+                    if (!isNaN(y) && isFinite(y)) {
+                        pontos.push([x, y]);
+                    }
+                } catch (err) {
+                    console.warn("Erro ao calcular ponto no gráfico usando avaliarExpressao:", err);
+                    // Pode ser útil mostrar um erro na interface se a função for inválida
+                }
+            }
+
+            const data = new google.visualization.DataTable();
+            data.addColumn('number', 'x');
+            data.addColumn('number', 'f(x)');
+            data.addRows(pontos);
+
+            const options = {
+                title: `Gráfico de f(x) = ${funcao}`,
+                legend: 'none',
+                hAxis: { title: 'x' },
+                vAxis: { title: 'f(x)' },
+                curveType: 'function',
+                pointSize: 2
+            };
+
+            const chart = new google.visualization.LineChart(document.getElementById('graficoFuncao'));
+            chart.draw(data, options);
         }
         // Expor as funções ao escopo global (window)
         window.inserirInput = inserirInput;
